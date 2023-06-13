@@ -10,7 +10,7 @@
 
     You first need to clone with [git](https://git-scm.com) the [repository](https://github.com/Horizon-NTH/HorizonGUI.git)
 
-    ⚠️ Watch out! The repository contains submodules, don't forget to add --recurse-submodules when cloning.  
+    ⚠️ Watch out! The repository contains submodules, don't forget to add `--recurse-submodules` when cloning.  
 
 
 ```bash
@@ -43,7 +43,7 @@
 
     You can also use [Microsoft Visual Studio](https://visualstudio.microsoft.com/) to launch the project and build it. Simply open the `horizongui.sln` file with Microsoft Visual Studio.
 
-## DependenciesCreate window and handle input
+## Dependencies
 
 * **[OpenGL](https://www.opengl.org)** is used for all graphics in the application.
 
