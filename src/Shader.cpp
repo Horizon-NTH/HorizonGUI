@@ -1,7 +1,7 @@
 #include <hgui/header/Shader.h>
 
-hgui::kernel::Shader::Shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode) :
-	m_id(load_shader(vertexShaderCode, fragmentShaderCode))
+hgui::kernel::Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader, const std::string& geometryShader) :
+	m_id(load_shader(vertexShader, fragmentShader, geometryShader))
 {
 }
 
@@ -56,36 +56,59 @@ const hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const char* uniformNa
 	return *this;
 }
 
-const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode)
+const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)
 {
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER),
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER),
-		shaderProgram = glCreateProgram();
-	const char* srcVertexShader = vertexShaderCode.c_str(),
-		* srcFragmentShader = fragmentShaderCode.c_str();
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	GLuint geometryShader = 0;
+
+	const char* srcVertexShader = vertexShaderCode.c_str();
+	const char* srcFragmentShader = fragmentShaderCode.c_str();
 
 	glShaderSource(vertexShader, 1, &srcVertexShader, NULL);
 	glShaderSource(fragmentShader, 1, &srcFragmentShader, NULL);
 	glCompileShader(vertexShader);
 	glCompileShader(fragmentShader);
 
+	if (!geometryShaderCode.empty())
+	{
+		geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+		const char* srcGeometryShader = geometryShaderCode.c_str();
+		glShaderSource(geometryShader, 1, &srcGeometryShader, NULL);
+		glCompileShader(geometryShader);
+	}
+
+	GLuint shaderProgram = glCreateProgram();
+
 	try
 	{
-		check_compile_error(vertexShader, fragmentShader);
+		check_compile_error(vertexShader, fragmentShader, geometryShader);
 
 		glAttachShader(shaderProgram, vertexShader);
 		glAttachShader(shaderProgram, fragmentShader);
+		if (geometryShader)
+		{
+			glAttachShader(shaderProgram, geometryShader);
+		}
 		glLinkProgram(shaderProgram);
 
 		check_linking_error(shaderProgram);
 
 		glDeleteShader(vertexShader);
-		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		if (geometryShader)
+		{
+			glDeleteShader(geometryShader);
+		}
 	}
 	catch (const std::exception& e)
 	{
 		glDeleteShader(vertexShader);
-		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		if (geometryShader)
+		{
+			glDeleteShader(geometryShader);
+		}
 		std::cout << e.what() << std::endl;
 		throw e;
 	}
@@ -93,13 +116,17 @@ const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCo
 	return shaderProgram;
 }
 
-void hgui::kernel::Shader::check_compile_error(GLuint vertexShader, GLuint fragmentShader) const
+void hgui::kernel::Shader::check_compile_error(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader) const
 {
-	int  vertex_success, fragment_success;
+	int  vertex_success, fragment_success, geometry_success;
 	char infoLog[512];
 	std::stringstream errorMessage;
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertex_success);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragment_success);
+	if (geometryShader)
+	{
+		glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &geometry_success);
+	}
 	if (!vertex_success)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
@@ -109,6 +136,11 @@ void hgui::kernel::Shader::check_compile_error(GLuint vertexShader, GLuint fragm
 	{
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		errorMessage << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	if (geometryShader && !geometry_success)
+	{
+		glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+		errorMessage << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 	if (!errorMessage.str().empty())
 	{

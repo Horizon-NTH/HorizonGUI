@@ -15,7 +15,7 @@ namespace hgui
 	class ResourceManager
 	{
 	public:
-		static std::shared_ptr<kernel::Shader>& load_shader(const std::string& shaderName, const std::string& vertexShaderCode, const std::string& fragmentShaderCode);
+		static std::shared_ptr<kernel::Shader>& load_shader(const std::string& shaderName, const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode = "");
 		static std::shared_ptr<kernel::Shader>& get_shader(const std::string& shaderName);
 		static void delete_shaders(std::initializer_list<std::string> shadersNames);
 

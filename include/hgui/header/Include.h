@@ -21,8 +21,8 @@
 #include <variant>
 #include <numeric>
 //STBI library
-#include <stbi/stb_image.h>
-#include <stbi/stb_image_write.h>
+#include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
 //GLM library
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,5 +30,3 @@
 //FreeType library
 #include <ft2build.h>
 #include FT_FREETYPE_H
-//HGUI CONSTANTS
-#define HGUI_VERSION_DEBUG

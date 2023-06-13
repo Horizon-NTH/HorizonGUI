@@ -28,7 +28,7 @@ void hgui::kernel::init_glad()
 			glfwTerminate();
 			throw std::exception("ERROR WITH GLAD LOADING");
 		}
-#ifdef DEBHGUI_VERSION_DEBUGUG
+#ifdef HGUI_VERSION_DEBUG
 		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
 		{
@@ -52,6 +52,7 @@ void hgui::kernel::init_resources()
 	ResourceManager::load_shader(HGUI_SHADER_BUTTON, ResourceManager::m_glsl["VertexShaderButton.glsl"], ResourceManager::m_glsl["FragmentShaderButton.glsl"]);
 	ResourceManager::load_shader(HGUI_SHADER_TEXTAREA, ResourceManager::m_glsl["VertexShaderText.glsl"], ResourceManager::m_glsl["FragmentShaderText.glsl"]);
 	ResourceManager::load_shader(HGUI_SHADER_SPRITE, ResourceManager::m_glsl["VertexShaderSprites.glsl"], ResourceManager::m_glsl["FragmentShaderSprites.glsl"]);
+	ResourceManager::load_shader(HGUI_SHADER_CANVA, ResourceManager::m_glsl["VertexShaderCanva.glsl"], ResourceManager::m_glsl["FragmentShaderCanva.glsl"]);
 }
 
 void hgui::kernel::resources_cleaner()

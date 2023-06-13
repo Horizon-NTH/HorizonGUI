@@ -18,3 +18,4 @@
 #include "header/Timer.h"
 #include "header/Tools.h"
 #include "header/Function.h"
+#include "header/CanvaManager.h"

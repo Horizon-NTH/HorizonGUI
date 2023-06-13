@@ -10,7 +10,7 @@ namespace hgui
 		class Shader
 		{
 		public:
-			Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+			Shader(const std::string& vertexShader, const std::string& fragmentShader, const std::string& geometryShader);
 			~Shader();
 
 			const Shader& use() const;
@@ -26,8 +26,8 @@ namespace hgui
 		private:
 			GLuint m_id;
 
-			const GLuint load_shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-			void check_compile_error(GLuint vertexShader, GLuint fragmentShader) const;
+			const GLuint load_shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode);
+			void check_compile_error(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader) const;
 			void check_linking_error(GLuint shaderProgram) const;
 		};
 	}

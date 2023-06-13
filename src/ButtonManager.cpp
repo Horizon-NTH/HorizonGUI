@@ -37,14 +37,18 @@ void hgui::ButtonManager::delete_button(std::initializer_list<std::string> butto
 {
 	if (buttonsNames.size())
 	{
-		for (const std::string& str : buttonsNames)
+		for (const std::string& button : buttonsNames)
 		{
-			WidgetManager::delete_widget(m_buttons[str]);
-			m_buttons.erase(str);
+			WidgetManager::delete_widget(m_buttons[button]);
+			m_buttons.erase(button);
 		}
 	}
 	else
 	{
+		for (auto& button : m_buttons)
+		{
+			WidgetManager::delete_widget(button.second);
+		}
 		m_buttons.clear();
 	}
 }

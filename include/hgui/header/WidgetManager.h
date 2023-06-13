@@ -22,10 +22,11 @@ namespace hgui
 	class WidgetManager
 	{
 		friend class RenderManager;
+		friend class MouseManager;
 		friend class SpriteManager;
 		friend class TextManager;
 		friend class ButtonManager;
-		friend class MouseManager;
+		friend class CanvaManager;
 
 	public:
 		static std::string create_tag(const std::string& newTag);

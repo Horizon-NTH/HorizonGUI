@@ -33,14 +33,18 @@ void hgui::SpriteManager::delete_sprites(std::initializer_list<std::string> spri
 {
 	if (spritesNames.size())
 	{
-		for (const std::string& str : spritesNames)
+		for (const std::string& sprite : spritesNames)
 		{
-			WidgetManager::delete_widget(m_sprites[str]);
-			m_sprites.erase(str);
+			WidgetManager::delete_widget(m_sprites[sprite]);
+			m_sprites.erase(sprite);
 		}
 	}
 	else
 	{
+		for (auto& sprite : m_sprites)
+		{
+			WidgetManager::delete_widget(sprite.second);
+		}
 		m_sprites.clear();
 	}
 }

@@ -19,6 +19,22 @@ void main()
     texturePosition = vertex.zw;
 }
 )"},
+    {"FragmentShaderText.glsl",
+R"(
+#version 330 core
+
+in vec2 texturePosition;
+out vec4 fragmentColor;
+
+uniform sampler2D text;
+uniform vec3 textColor;
+
+void main()
+{
+    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, texturePosition).r);
+    fragmentColor = vec4(textColor, 1.0) * sampled;
+}
+)"},
 	{"VertexShaderSprites.glsl",
 R"(
 #version 330 core
@@ -35,52 +51,7 @@ void main()
     gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
 }
 )"},
-	{"VertexShaderFrameBuffer.glsl",
-R"(
-#version 330 core
-layout (location = 0) in vec4 vertex;
-
-out vec2 texturePosition;
-
-void main()
-{
-    texturePosition = vertex.zw;
-    gl_Position = vec4(vertex.xy, 0.0, 1.0);
-}
-)"},
-	{"VertexShaderButton.glsl",
-R"(
-#version 330 core
-
-layout (location = 0) in vec4 vertex;
-out vec2 texturePosition;
-
-uniform mat4 modelMatrix;
-uniform mat4 projectionMatrix;
-
-void main()
-{
-    gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
-    texturePosition = vertex.zw;
-}
-)"},
-	{"FragmentShaderText.glsl",
-R"(
-#version 330 core
-
-in vec2 texturePosition;
-out vec4 fragmentColor;
-
-uniform sampler2D text;
-uniform vec3 textColor;
-
-void main()
-{
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, texturePosition).r);
-    fragmentColor = vec4(textColor, 1.0) * sampled;
-}
-)"},
-	{"FragmentShaderSprites.glsl",
+    {"FragmentShaderSprites.glsl",
 R"(
 #version 330 core
 
@@ -95,6 +66,19 @@ void main()
     fragmentColor = vec4(spriteColor, 1.0) * texture(sprite, texturePosition);
     if (fragmentColor.w < 1)
         discard;
+}
+)"},
+	{"VertexShaderFrameBuffer.glsl",
+R"(
+#version 330 core
+layout (location = 0) in vec4 vertex;
+
+out vec2 texturePosition;
+
+void main()
+{
+    texturePosition = vertex.zw;
+    gl_Position = vec4(vertex.xy, 0.0, 1.0);
 }
 )"},
 	{"FragmentShaderFrameBuffer.glsl",
@@ -151,6 +135,22 @@ void main()
     }
 }
 )"},
+    { "VertexShaderButton.glsl",
+R"(
+#version 330 core
+
+layout (location = 0) in vec4 vertex;
+out vec2 texturePosition;
+
+uniform mat4 modelMatrix;
+uniform mat4 projectionMatrix;
+
+void main()
+{
+    gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
+    texturePosition = vertex.zw;
+}
+)" },
     {"FragmentShaderButton.glsl",
 R"(
 #version 330 core
@@ -210,14 +210,59 @@ void main()
         }
     }
 }
-)"}
+)"},
+    {"VertexShaderCanva.glsl",
+R"(
+#version 330 core
+
+layout (location = 0) in vec2 vertex;
+layout (location = 1) in vec3 vertexColor;
+
+out vec3 color;
+
+uniform mat4 modelMatrix;
+uniform mat4 projectionMatrix;
+
+void main()
+{
+    gl_Position = projectionMatrix * modelMatrix * vec4(vertex, 0.0, 1.0);
+    color = vertexColor;
+}
+)"
+    },
+        { "FragmentShaderCanva.glsl",
+R"(
+#version 330 core
+
+layout(origin_upper_left) in vec4 gl_FragCoord;
+
+in vec3 color;
+
+out vec4 fragmentColor;
+
+uniform vec2 canvaPosition;
+uniform vec2 canvaSize;
+
+void main()
+{
+    if (gl_FragCoord.x < canvaPosition.x || gl_FragCoord.x > canvaPosition.x + canvaSize.x || 
+            gl_FragCoord.y < canvaPosition.y || gl_FragCoord.y > canvaPosition.y + canvaSize.y)
+    {
+        discard;
+    }
+    else
+    {
+        fragmentColor = vec4(color, 1.0);
+    }
+}
+)" }
 };
 
-std::shared_ptr<hgui::kernel::Shader>& hgui::ResourceManager::load_shader(const std::string& shaderName, const std::string& vertexShaderCode, const std::string& fragmentShaderCode)
+std::shared_ptr<hgui::kernel::Shader>& hgui::ResourceManager::load_shader(const std::string& shaderName, const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)
 {
 	if (m_shaders.find(shaderName) == m_shaders.end())
 	{
-		m_shaders[shaderName] = std::make_shared<kernel::Shader>(vertexShaderCode, fragmentShaderCode);
+		m_shaders[shaderName] = std::make_shared<kernel::Shader>(vertexShaderCode, fragmentShaderCode, geometryShaderCode);
 		return m_shaders[shaderName];
 	}
 	else

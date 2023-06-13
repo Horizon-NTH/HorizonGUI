@@ -32,14 +32,18 @@ void hgui::TextManager::delete_textArea(std::initializer_list<std::string> textA
 {
 	if (textAreasNames.size())
 	{
-		for (const std::string& str : textAreasNames)
+		for (const std::string& text : textAreasNames)
 		{
-			WidgetManager::delete_widget(m_textAreas[str]);
-			m_textAreas.erase(str);
+			WidgetManager::delete_widget(m_textAreas[text]);
+			m_textAreas.erase(text);
 		}
 	}
 	else
 	{
+		for (auto& text : m_textAreas)
+		{
+			WidgetManager::delete_widget(text.second);
+		}
 		m_textAreas.clear();
 	}
 }
