@@ -16,9 +16,9 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/KHR ${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image.h
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image_write.h
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/ft2build.h
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype ${CMAKE_CURRENT_SOURCE_DIR}/include/freetype
     COMMENT "Moving include files"
 )
