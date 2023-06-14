@@ -1,0 +1,16 @@
+[submodule "deps/glfw"]
+	path = deps/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "deps/freetype"]
+	path = deps/freetype
+	url = https://github.com/freetype/freetype.git
+[submodule "deps/glm"]
+	path = deps/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "deps/stb"]
+	path = deps/stb
+	url = https://github.com/nothings/stb.git
+[submodule "deps/glad"]
+	path = deps/glad
+	url = https://github.com/Dav1dde/glad.git
+	branch = c
