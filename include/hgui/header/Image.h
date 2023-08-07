@@ -1,25 +1,18 @@
 #pragma once
 
 #include "Include.h"
+#include "Define.h"
 #include "MonitorManager.h"
 
 namespace hgui
 {
 	namespace kernel
 	{
-		enum ImageChannel
-		{
-			GRAYSCALE = 0x1903,
-			GRAYSCALE_ALPHA = 0x8227,
-			RGB = 0x1907,
-			RGBA = 0x1908
-		};
-
 		struct ImageData
 		{
 			int width;
 			int height;
-			ImageChannel channel;
+			channels channel;
 			unsigned char* pixels;
 		};
 

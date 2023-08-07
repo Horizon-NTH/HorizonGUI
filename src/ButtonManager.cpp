@@ -2,17 +2,34 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonName, std::function<void()> function, glm::vec2 size, glm::vec2 position, std::shared_ptr<kernel::Texture> texture, glm::vec3 color, const std::string& text, const std::shared_ptr<kernel::Font>& font, std::tuple<unsigned int, glm::vec3, float> textOptions, float angularRotation)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonName, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
 {
 	if (m_buttons.find(buttonName) == m_buttons.end())
 	{
-		float cornerAngularRadius = std::min(size.x, size.y) * 0.5f;
-		m_buttons[buttonName] = std::make_shared<kernel::Button>(function, ResourceManager::get_shader(HGUI_SHADER_BUTTON), size, position, font ? TextManager::create("HGUI_BUTTON_TEXT_" + buttonName, text, position, font, textOptions) : nullptr, color, angularRotation, cornerAngularRadius, texture);
-		WidgetManager::m_widgets[WidgetManager::m_currentTag].push_back(m_buttons[buttonName]);
-		WidgetManager::bind(m_buttons[buttonName], input::OVER, [buttonName]() { ButtonManager::get(buttonName)->set_state(kernel::HOVER); CursorManager::set(HGUI_CURSOR_HAND); });
-		WidgetManager::bind(m_buttons[buttonName], input::NOVER, [buttonName]() { ButtonManager::get(buttonName)->set_state(kernel::NORMAL); CursorManager::set(HGUI_CURSOR_ARROW); });
-		WidgetManager::bind(m_buttons[buttonName], MouseCombinationAction(input::OVER, input::LEFT, input::REPEAT), [buttonName]() { ButtonManager::get(buttonName)->set_state(kernel::PRESS); });
-		WidgetManager::bind(m_buttons[buttonName], MouseCombinationAction(input::OVER, input::LEFT, input::RELEASE), [buttonName]() { ButtonManager::get(buttonName)->press(); });
+		float cornerAngularRadius = std::min(size.width, size.height) * 0.5f;
+		m_buttons[buttonName] = std::make_shared<kernel::Button>(function, 
+			ResourceManager::get_shader(HGUI_SHADER_BUTTON), size, position, 
+			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonName, text, position, font, textOptions) : nullptr, 
+			color, angularRotation, cornerAngularRadius, texture);
+		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_buttons[buttonName]);
+		Widget::bind(m_buttons[buttonName], inputs::OVER, [buttonName]() 
+			{ 
+				ButtonManager::get(buttonName)->set_state(state::HOVER); 
+				CursorManager::set(HGUI_CURSOR_HAND); 
+			});
+		Widget::bind(m_buttons[buttonName], inputs::NOVER, [buttonName]() 
+			{
+				ButtonManager::get(buttonName)->set_state(state::NORMAL); 
+				CursorManager::set(HGUI_CURSOR_ARROW); 
+			});
+		Widget::bind(m_buttons[buttonName], MouseCombinationAction(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonName]() 
+			{
+				ButtonManager::get(buttonName)->set_state(state::PRESS); 
+			});
+		Widget::bind(m_buttons[buttonName], MouseCombinationAction(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonName]() 
+			{
+				ButtonManager::get(buttonName)->press(); 
+			});
 		return m_buttons[buttonName];
 	}
 	else
@@ -33,13 +50,13 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std:
 	}
 }
 
-void hgui::ButtonManager::delete_button(std::initializer_list<std::string> buttonsNames)
+void hgui::ButtonManager::delete_button(const std::initializer_list<std::string>& buttonsNames)
 {
 	if (buttonsNames.size())
 	{
 		for (const std::string& button : buttonsNames)
 		{
-			WidgetManager::delete_widget(m_buttons[button]);
+			Widget::delete_widget(m_buttons[button]);
 			m_buttons.erase(button);
 		}
 	}
@@ -47,7 +64,7 @@ void hgui::ButtonManager::delete_button(std::initializer_list<std::string> butto
 	{
 		for (auto& button : m_buttons)
 		{
-			WidgetManager::delete_widget(button.second);
+			Widget::delete_widget(button.second);
 		}
 		m_buttons.clear();
 	}

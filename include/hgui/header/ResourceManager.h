@@ -17,11 +17,11 @@ namespace hgui
 	public:
 		static std::shared_ptr<kernel::Shader>& load_shader(const std::string& shaderName, const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode = "");
 		static std::shared_ptr<kernel::Shader>& get_shader(const std::string& shaderName);
-		static void delete_shaders(std::initializer_list<std::string> shadersNames);
+		static void delete_shaders(const std::initializer_list<std::string>& shadersNames);
 
 		static std::shared_ptr<kernel::Texture>& load_texture(const std::string& textureName, const std::shared_ptr<kernel::Image>& image);
 		static std::shared_ptr<kernel::Texture>& get_texture(const std::string& textureName);
-		static void delete_textures(std::initializer_list<std::string> texturesnames);
+		static void delete_textures(const std::initializer_list<std::string>& texturesnames);
 
 	private:
 		ResourceManager();

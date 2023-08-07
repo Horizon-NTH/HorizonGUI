@@ -19,7 +19,7 @@ void main()
     texturePosition = vertex.zw;
 }
 )"},
-    {"FragmentShaderText.glsl",
+	{"FragmentShaderText.glsl",
 R"(
 #version 330 core
 
@@ -51,7 +51,7 @@ void main()
     gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
 }
 )"},
-    {"FragmentShaderSprites.glsl",
+	{"FragmentShaderSprites.glsl",
 R"(
 #version 330 core
 
@@ -135,7 +135,7 @@ void main()
     }
 }
 )"},
-    { "VertexShaderButton.glsl",
+	{ "VertexShaderButton.glsl",
 R"(
 #version 330 core
 
@@ -151,7 +151,7 @@ void main()
     texturePosition = vertex.zw;
 }
 )" },
-    {"FragmentShaderButton.glsl",
+	{"FragmentShaderButton.glsl",
 R"(
 #version 330 core
 in vec2 texturePosition;
@@ -211,7 +211,7 @@ void main()
     }
 }
 )"},
-    {"VertexShaderCanva.glsl",
+	{"VertexShaderCanva.glsl",
 R"(
 #version 330 core
 
@@ -229,12 +229,10 @@ void main()
     color = vertexColor;
 }
 )"
-    },
-        { "FragmentShaderCanva.glsl",
+	},
+		{ "FragmentShaderCanva.glsl",
 R"(
 #version 330 core
-
-layout(origin_upper_left) in vec4 gl_FragCoord;
 
 in vec3 color;
 
@@ -245,15 +243,7 @@ uniform vec2 canvaSize;
 
 void main()
 {
-    if (gl_FragCoord.x < canvaPosition.x || gl_FragCoord.x > canvaPosition.x + canvaSize.x || 
-            gl_FragCoord.y < canvaPosition.y || gl_FragCoord.y > canvaPosition.y + canvaSize.y)
-    {
-        discard;
-    }
-    else
-    {
-        fragmentColor = vec4(color, 1.0);
-    }
+    fragmentColor = vec4(color, 1.0);
 }
 )" }
 };
@@ -283,7 +273,7 @@ std::shared_ptr<hgui::kernel::Shader>& hgui::ResourceManager::get_shader(const s
 	}
 }
 
-void hgui::ResourceManager::delete_shaders(std::initializer_list<std::string> shadersNames)
+void hgui::ResourceManager::delete_shaders(const std::initializer_list<std::string>& shadersNames)
 {
 	if (shadersNames.size())
 	{
@@ -328,7 +318,7 @@ std::shared_ptr<hgui::kernel::Texture>& hgui::ResourceManager::get_texture(const
 	}
 }
 
-void hgui::ResourceManager::delete_textures(std::initializer_list<std::string> texturesnames)
+void hgui::ResourceManager::delete_textures(const std::initializer_list<std::string>& texturesnames)
 {
 	if (texturesnames.size())
 	{

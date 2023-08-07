@@ -7,8 +7,8 @@ void hgui::init()
 	{
 		kernel::init_glfw();
 		MonitorManager::init();
-		WidgetManager::create_tag(HGUI_TAG_MAIN);
-		WidgetManager::set_current_tag(HGUI_TAG_MAIN);
+		TagManager::create_tag(HGUI_TAG_MAIN);
+		TagManager::set_current_tag(HGUI_TAG_MAIN);
 		CursorManager::init();
 		alreadyInitialize = true;
 	}
@@ -47,12 +47,19 @@ void hgui::kernel::init_glad()
 
 void hgui::kernel::init_resources()
 {
-	ResourceManager::load_shader(HGUI_SHADER_FRAMEBUFFER, ResourceManager::m_glsl["VertexShaderFrameBuffer.glsl"], ResourceManager::m_glsl["FragmentShaderFrameBuffer.glsl"]);
-	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING, ResourceManager::get_shader(HGUI_SHADER_FRAMEBUFFER));
-	ResourceManager::load_shader(HGUI_SHADER_BUTTON, ResourceManager::m_glsl["VertexShaderButton.glsl"], ResourceManager::m_glsl["FragmentShaderButton.glsl"]);
-	ResourceManager::load_shader(HGUI_SHADER_TEXTAREA, ResourceManager::m_glsl["VertexShaderText.glsl"], ResourceManager::m_glsl["FragmentShaderText.glsl"]);
-	ResourceManager::load_shader(HGUI_SHADER_SPRITE, ResourceManager::m_glsl["VertexShaderSprites.glsl"], ResourceManager::m_glsl["FragmentShaderSprites.glsl"]);
-	ResourceManager::load_shader(HGUI_SHADER_CANVA, ResourceManager::m_glsl["VertexShaderCanva.glsl"], ResourceManager::m_glsl["FragmentShaderCanva.glsl"]);
+	kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+	ResourceManager::load_shader(HGUI_SHADER_FRAMEBUFFER, 
+		ResourceManager::m_glsl["VertexShaderFrameBuffer.glsl"], ResourceManager::m_glsl["FragmentShaderFrameBuffer.glsl"]);
+	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING, 
+		ResourceManager::get_shader(HGUI_SHADER_FRAMEBUFFER), window->get_size());
+	ResourceManager::load_shader(HGUI_SHADER_BUTTON, 
+		ResourceManager::m_glsl["VertexShaderButton.glsl"], ResourceManager::m_glsl["FragmentShaderButton.glsl"]);
+	ResourceManager::load_shader(HGUI_SHADER_TEXTAREA, 
+		ResourceManager::m_glsl["VertexShaderText.glsl"], ResourceManager::m_glsl["FragmentShaderText.glsl"]);
+	ResourceManager::load_shader(HGUI_SHADER_SPRITE, 
+		ResourceManager::m_glsl["VertexShaderSprites.glsl"], ResourceManager::m_glsl["FragmentShaderSprites.glsl"]);
+	ResourceManager::load_shader(HGUI_SHADER_CANVA, 
+		ResourceManager::m_glsl["VertexShaderCanva.glsl"], ResourceManager::m_glsl["FragmentShaderCanva.glsl"]);
 }
 
 void hgui::kernel::resources_cleaner()
@@ -63,9 +70,9 @@ void hgui::kernel::resources_cleaner()
 	BufferManager::m_buffers.clear();
 	ButtonManager::m_buttons.clear();
 	SpriteManager::m_sprites.clear();
-	TextManager::m_textAreas.clear();
-	WidgetManager::m_binds.clear();
-	WidgetManager::m_tags.clear();
+	LabelManager::m_textAreas.clear();
+	Widget::m_binds.clear();
+	TagManager::m_tags.clear();
 	MonitorManager::m_monitors.clear();
 	WindowManager::m_windows.clear();
 }

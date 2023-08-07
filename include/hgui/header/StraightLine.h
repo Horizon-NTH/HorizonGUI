@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Shape.h"
 
 namespace hgui
@@ -12,7 +13,7 @@ namespace hgui
 			class StraightLine : public Shape
 			{
 			public:
-				StraightLine(glm::vec2 firstVertex, glm::vec2 secondVertex, glm::vec3 color, float thickness);
+				StraightLine(const point& firstVertex, const point& secondVertex, const color& color, float thickness);
 
 				void draw(const std::shared_ptr<Shader>& shader) const override;
 

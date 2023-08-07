@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Define.h"
-#include "WidgetManager.h"
 #include "Sprite.h"
 #include "ResourceManager.h"
 #include "Image.h"
-#include "Tools.h"
+#include "TagManager.h"
 
 namespace hgui
 {
@@ -19,9 +19,9 @@ namespace hgui
 	class SpriteManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteName, const std::shared_ptr<kernel::Image>& image, glm::vec2 size, glm::vec2 position, glm::vec3 color = glm::vec3(1.0), float angularRotation = 0.0f);
+		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteName, const std::shared_ptr<kernel::Image>& image, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, float angularRotation = 0.0f);
 		static const std::shared_ptr<kernel::Sprite>& get(const std::string& spriteName);
-		static void delete_sprites(std::initializer_list<std::string> spritesNames = {});
+		static void delete_sprites(const std::initializer_list<std::string>& spritesNames = {});
 
 	private:
 		SpriteManager();

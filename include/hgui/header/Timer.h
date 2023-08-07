@@ -14,7 +14,7 @@ namespace hgui
 		void stop();
 		void reset();
 		double get_time();	
-		bool counting() const;
+		bool is_counting() const;
 
 	private:
 		bool m_counting;

@@ -2,13 +2,15 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Window>> hgui::WindowManager::m_windows;
 
-const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const std::string& windowName, glm::vec2 size, glm::vec2 position = glm::vec2(0.0), const std::shared_ptr<kernel::Image>& icon, std::initializer_list<std::pair<kernel::WindowOptions, bool>> options)
+const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon, const std::initializer_list<std::pair<options, bool>>& options)
 {
 	if (m_windows.find(windowName) == m_windows.end())
 	{
 		m_windows[windowName] = std::make_shared<kernel::Window>(windowName, size, position, icon, options);
 		glfwMakeContextCurrent(m_windows[windowName]->get_windowPTR());
 		glfwSetScrollCallback(m_windows[windowName]->get_windowPTR(), MouseManager::scroll);
+		glfwSetKeyCallback(m_windows[windowName]->get_windowPTR(), KeyBoardManager::input);
+		glfwSetMouseButtonCallback(m_windows[windowName]->get_windowPTR(), MouseManager::input);
 		kernel::init_glad();
 		kernel::init_resources();
 		return m_windows[windowName];
@@ -31,7 +33,7 @@ const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::get(const std:
 	}
 }
 
-void hgui::WindowManager::delete_windows(std::initializer_list<std::string> windowsNames)
+void hgui::WindowManager::delete_windows(const std::initializer_list<std::string>& windowsNames)
 {
 	if (windowsNames.size())
 	{

@@ -1,9 +1,8 @@
 #include <hgui/header/Tools.h>
 
-void hgui::after(std::chrono::milliseconds delay, std::function<void()> function)
+void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
-	std::thread thread([delay, function]() { std::this_thread::sleep_for(delay); function(); });
-	thread.detach();
+	hgui::TaskManager::program(delay, function);
 }
 
 std::string hgui::file_reader(const std::string& filePath)

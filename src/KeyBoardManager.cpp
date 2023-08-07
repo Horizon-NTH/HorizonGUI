@@ -1,13 +1,13 @@
 #include <hgui/header/KeyBoardManager.h>
 
-bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair<key::KeyBoardKey, key::Action>, std::pair<std::vector<key::KeyBoardKey>, key::Action>>& leftSide, const std::variant<std::pair<key::KeyBoardKey, key::Action>, std::pair<std::vector<key::KeyBoardKey>, key::Action>>& rightSide) const
+bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& leftSide, const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& rightSide) const
 {
 	if (leftSide.index() == rightSide.index())
 	{
 		if (!leftSide.index())
 		{
-			std::pair<key::KeyBoardKey, key::Action> left = std::get<std::pair<key::KeyBoardKey, key::Action>>(leftSide);
-			std::pair<key::KeyBoardKey, key::Action> right = std::get<std::pair<key::KeyBoardKey, key::Action>>(rightSide);
+			std::pair<keys, actions> left = std::get<std::pair<keys, actions>>(leftSide);
+			std::pair<keys, actions> right = std::get<std::pair<keys, actions>>(rightSide);
 			if (left.first == right.first)
 			{
 				return left.second < right.second;
@@ -19,10 +19,16 @@ bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair
 		}
 		else
 		{
-			std::pair<std::vector<key::KeyBoardKey>, key::Action> left = std::get<std::pair<std::vector<key::KeyBoardKey>, key::Action>>(leftSide);
-			std::pair<std::vector<key::KeyBoardKey>, key::Action> right = std::get<std::pair<std::vector<key::KeyBoardKey>, key::Action>>(rightSide);
-			int leftSum = std::accumulate(left.first.begin(), left.first.end(), 0);
-			int rightSum = std::accumulate(right.first.begin(), right.first.end(), 0);
+			std::pair<std::vector<keys>, actions> left = std::get<std::pair<std::vector<keys>, actions>>(leftSide);
+			std::pair<std::vector<keys>, actions> right = std::get<std::pair<std::vector<keys>, actions>>(rightSide);
+			int leftSum = std::accumulate(left.first.begin(), left.first.end(), 0, [](const int& sum, const keys& value) 
+				{
+					return sum + static_cast<int>(value); 
+				});
+			int rightSum = std::accumulate(right.first.begin(), right.first.end(), 0, [](const int& sum, const keys& value) 
+				{
+					return sum + static_cast<int>(value);
+				});
 			if (leftSum == rightSum)
 			{
 				return left.second < right.second;
@@ -39,9 +45,10 @@ bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair
 	}
 }
 
-std::map<std::variant<std::pair<hgui::key::KeyBoardKey, hgui::key::Action>, std::pair<std::vector<hgui::key::KeyBoardKey>, hgui::key::Action>>, std::pair<hgui::Timer, std::function<void()>>, hgui::kernel::VariantKeyComparator> hgui::KeyBoardManager::m_keys;
+std::map<std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>, std::pair<hgui::Timer, std::function<void()>>, hgui::kernel::VariantKeyComparator> hgui::KeyBoardManager::m_keys;
+std::variant<std::function<void()>, std::function<void(hgui::keys, hgui::actions)>> hgui::KeyBoardManager::m_keyCallback([]() {});
 
-void hgui::KeyBoardManager::bind(std::variant<std::pair<hgui::key::KeyBoardKey, hgui::key::Action>, std::pair<std::vector<hgui::key::KeyBoardKey>, hgui::key::Action>> action, std::function<void()> function)
+void hgui::KeyBoardManager::bind(const std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>& action, const std::function<void()>& function)
 {
 	if (m_keys.find(action) == m_keys.end())
 	{
@@ -53,7 +60,7 @@ void hgui::KeyBoardManager::bind(std::variant<std::pair<hgui::key::KeyBoardKey, 
 	}
 }
 
-void hgui::KeyBoardManager::unbind(std::variant<std::pair<hgui::key::KeyBoardKey, hgui::key::Action>, std::pair<std::vector<hgui::key::KeyBoardKey>, hgui::key::Action>> action)
+void hgui::KeyBoardManager::unbind(const std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>& action)
 {
 	if (m_keys.find(action) != m_keys.end())
 	{
@@ -65,30 +72,36 @@ void hgui::KeyBoardManager::unbind(std::variant<std::pair<hgui::key::KeyBoardKey
 	}
 }
 
+void hgui::KeyBoardManager::bind_keycallback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function)
+{
+	m_keyCallback = function;
+}
+
 void hgui::KeyBoardManager::process()
 {
 	for (auto& key : m_keys)
 	{
 		if (!key.first.index())
 		{
-			key::Action action = static_cast<key::Action>(glfwGetKey(WindowManager::get_current_windowPTR(), std::get<std::pair<key::KeyBoardKey, key::Action>>(key.first).first));
+			actions action = static_cast<actions>(glfwGetKey(WindowManager::get_current_windowPTR(), 
+				static_cast<int>(std::get<std::pair<keys, actions>>(key.first).first)));
 			switch (action)
 			{
-			case input::PRESS:
-				if (!key.second.first.counting())
+			case actions::PRESS:
+				if (!key.second.first.is_counting())
 				{
 					key.second.first.start();
-					if (action == std::get<std::pair<key::KeyBoardKey, key::Action>>(key.first).second && key.second.second)
+					if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
 					{
 						key.second.second();
 					}
 				}
 				break;
-			case input::RELEASE:
-				if (key.second.first.counting())
+			case actions::RELEASE:
+				if (key.second.first.is_counting())
 				{
 					key.second.first.reset();
-					if (action == std::get<std::pair<key::KeyBoardKey, key::Action>>(key.first).second && key.second.second)
+					if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
 					{
 						key.second.second();
 					}
@@ -98,7 +111,8 @@ void hgui::KeyBoardManager::process()
 			default:
 				break;
 			}
-			if (std::get<std::pair<key::KeyBoardKey, key::Action>>(key.first).second == key::REPEAT && key.second.first.get_time() >= 0.3 && key.second.second)
+			if (std::get<std::pair<keys, actions>>(key.first).second == actions::REPEAT &&
+				key.second.first.get_time() >= 0.3 && key.second.second)
 			{
 				key.second.second();
 			}
@@ -106,18 +120,19 @@ void hgui::KeyBoardManager::process()
 		else
 		{
 			bool verif = true;
-			for (const auto& keyCombinason : std::get<std::pair<std::vector<key::KeyBoardKey>, key::Action>>(key.first).first)
+			for (const auto& keyCombinason : std::get<std::pair<std::vector<keys>, actions>>(key.first).first)
 			{
-				if (!(glfwGetKey(WindowManager::get_current_windowPTR(), keyCombinason) == std::get<std::pair<std::vector<key::KeyBoardKey>, key::Action>>(key.first).second))
+				if (!(static_cast<actions>(glfwGetKey(WindowManager::get_current_windowPTR(), static_cast<int>(keyCombinason))) 
+					== std::get<std::pair<std::vector<keys>, actions>>(key.first).second))
 				{
 					verif = false;
 				}
 			}
 			if (verif)
 			{
-				switch (std::get<std::pair<std::vector<key::KeyBoardKey>, key::Action>>(key.first).second)
+				switch (std::get<std::pair<std::vector<keys>, actions>>(key.first).second)
 				{
-				case input::PRESS:
+				case actions::PRESS:
 
 					key.second.first.start();
 					if (!key.first.index())
@@ -128,8 +143,8 @@ void hgui::KeyBoardManager::process()
 						}
 					}
 					break;
-				case input::RELEASE:
-					if (key.second.first.counting())
+				case actions::RELEASE:
+					if (key.second.first.is_counting())
 					{
 						key.second.first.reset();
 
@@ -140,7 +155,7 @@ void hgui::KeyBoardManager::process()
 
 					}
 					break;
-				case key::REPEAT:
+				case actions::REPEAT:
 					if (key.second.first.get_time() >= 0.3 && key.second.second)
 					{
 						key.second.second();
@@ -150,5 +165,17 @@ void hgui::KeyBoardManager::process()
 				}
 			}
 		}
+	}
+}
+
+void hgui::KeyBoardManager::input(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (auto function = std::get_if<std::function<void()>>(&m_keyCallback))
+	{
+		(*function)();
+	}
+	else if (auto function = std::get_if<std::function<void(keys, actions)>>(&m_keyCallback))
+	{
+		(*function)(static_cast<keys>(key), static_cast<actions>(action));
 	}
 }

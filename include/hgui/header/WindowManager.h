@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Window.h"
 #include "../HorizonGUI.h"
-#include "Tools.h"
 
 namespace hgui
 {
@@ -12,14 +12,14 @@ namespace hgui
 		void resources_cleaner();
 	}
 
-	typedef std::pair<kernel::WindowOptions, bool> WindowOption;
+	typedef std::pair<options, bool> WindowOption;
 
 	class WindowManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Window>& create(const std::string& windowName, glm::vec2 size, glm::vec2 position, const std::shared_ptr<kernel::Image>& icon = nullptr, std::initializer_list<std::pair<kernel::WindowOptions, bool>> options = {});
+		static const std::shared_ptr<kernel::Window>& create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr, const std::initializer_list<std::pair<options, bool>>& options = {});
 		static const std::shared_ptr<kernel::Window>& get(const std::string& windowName);
-		static void delete_windows(std::initializer_list<std::string> windowsNames = {});
+		static void delete_windows(const std::initializer_list<std::string>& windowsNames = {});
 		static GLFWwindow* get_current_windowPTR();
 
 	private:

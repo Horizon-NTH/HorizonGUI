@@ -5,10 +5,15 @@ hgui::kernel::Cursor::Cursor(int standardCursor) :
 {
 }
 
-hgui::kernel::Cursor::Cursor(const std::shared_ptr<Image>& customCursor, glm::vec2 clickPosition) :
+hgui::kernel::Cursor::Cursor(const std::shared_ptr<Image>& customCursor, const point& clickPosition) :
 	m_cursorPTR(nullptr)
 {
-	GLFWimage cursor; cursor.width = customCursor->get_data().width; cursor.height = customCursor->get_data().height; cursor.pixels = customCursor->get_data().pixels;
+	GLFWimage cursor
+	{
+		.width = customCursor->get_data().width, 
+		.height = customCursor->get_data().height, 
+		.pixels = customCursor->get_data().pixels
+	};
 	if (cursor.pixels)
 	{
 		m_cursorPTR = glfwCreateCursor(&cursor, static_cast<int>(clickPosition.x), static_cast<int>(clickPosition.y));

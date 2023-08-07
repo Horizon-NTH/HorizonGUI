@@ -17,7 +17,7 @@ namespace hgui
 		class Buffer
 		{
 		public:
-			Buffer(const std::shared_ptr<Shader> shader, const std::shared_ptr<kernel::Texture>& texture);
+			Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture);
 
 			void bind() const;
 			void unbind() const;

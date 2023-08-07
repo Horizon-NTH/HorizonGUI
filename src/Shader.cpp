@@ -20,39 +20,63 @@ const GLuint hgui::kernel::Shader::get_id() const
 	return m_id;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_1f(const char* uniformName, float f) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_float(const std::string& uniformName, float f) const
 {
-	glUniform1f(glGetUniformLocation(m_id, uniformName), f);
+	glUniform1f(glGetUniformLocation(m_id, uniformName.c_str()), f);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_1i(const char* uniformName, int i) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_int(const std::string& uniformName, int i) const
 {
-	glUniform1i(glGetUniformLocation(m_id, uniformName), i);
+	glUniform1i(glGetUniformLocation(m_id, uniformName.c_str()), i);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec2f(const char* uniformName, glm::vec2 vec2) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const vec2& vec2) const
 {
-	glUniform2f(glGetUniformLocation(m_id, uniformName), vec2.x, vec2.y);
+	glUniform2f(glGetUniformLocation(m_id, uniformName.c_str()), vec2.x, vec2.y);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec3f(const char* uniformName, glm::vec3 vec3) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_vec3(const std::string& uniformName, const vec3& vec3) const
 {
-	glUniform3f(glGetUniformLocation(m_id, uniformName), vec3.x, vec3.y, vec3.z);
+	glUniform3f(glGetUniformLocation(m_id, uniformName.c_str()), vec3.x, vec3.y, vec3.z);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec4f(const char* uniformName, glm::vec4 vec4) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& uniformName, const vec4& vec4) const
 {
-	glUniform4f(glGetUniformLocation(m_id, uniformName), vec4.x, vec4.y, vec4.z, vec4.w);
+	glUniform4f(glGetUniformLocation(m_id, uniformName.c_str()), vec4.x, vec4.y, vec4.z, vec4.w);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const char* uniformName, glm::mat4 mat4) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_double(const std::string& uniformName, double d) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(m_id, uniformName), 1, false, glm::value_ptr(mat4));
+	glUniform1d(glGetUniformLocation(m_id, uniformName.c_str()), d);
+	return *this;
+}
+
+const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const dvec2& dvec2) const
+{
+	glUniform2d(glGetUniformLocation(m_id, uniformName.c_str()), dvec2.x, dvec2.y);
+	return *this;
+}
+
+const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec3(const std::string& uniformName, const dvec3& dvec3) const
+{
+	glUniform3d(glGetUniformLocation(m_id, uniformName.c_str()), dvec3.x, dvec3.y, dvec3.z);
+	return *this;
+}
+
+const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec4(const std::string& uniformName, const dvec4& dvec4) const
+{
+	glUniform4d(glGetUniformLocation(m_id, uniformName.c_str()), dvec4.x, dvec4.y, dvec4.z, dvec4.w);
+	return *this;
+}
+
+const hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const std::string& uniformName, const glm::mat4& mat4) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(m_id, uniformName.c_str()), 1, false, glm::value_ptr(mat4));
 	return *this;
 }
 

@@ -5,7 +5,7 @@ project(horizongui VERSION 1.0.0)
 add_subdirectory(deps/glfw)
 add_subdirectory(deps/freetype)
 
-file(GLOB_RECURSE HEADER_FILES include/hgui/*.h)
+file(GLOB_RECURSE HEADER_FILES include/hgui/*.h include/hgui/*.hpp)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.c deps/glad/src/glad.c)
 

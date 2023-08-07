@@ -1,11 +1,11 @@
 #include <hgui/header/Window.h>
 
-hgui::kernel::Window::Window(const std::string& name, glm::vec2 size, glm::vec2 position, const std::shared_ptr<Image>& icon, std::initializer_list<std::pair<WindowOptions, bool>> options) :
+hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name), m_size(size), m_position(position)
 {
 	for (const auto& option : options)
 	{
-		glfwWindowHint(option.first, option.second);
+		glfwWindowHint(static_cast<int>(option.first), option.second);
 	}
 #ifndef DEBUG
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -14,7 +14,7 @@ hgui::kernel::Window::Window(const std::string& name, glm::vec2 size, glm::vec2 
 #else
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
-	m_windowPTR = glfwCreateWindow(static_cast<int>(size.x), static_cast<int>(size.y), name.c_str(), NULL, NULL);
+	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(), NULL, NULL);
 	if (!m_windowPTR)
 	{
 		glfwTerminate();
@@ -25,7 +25,7 @@ hgui::kernel::Window::Window(const std::string& name, glm::vec2 size, glm::vec2 
 	if (icon)
 	{
 		ImageData data = icon->get_data();
-		GLFWimage ico; ico.width = data.width; ico.height = data.height; ico.pixels = data.pixels;
+		GLFWimage ico{ .width = data.width, .height = data.height, .pixels = data.pixels };
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}
 	int width, height;
@@ -38,27 +38,29 @@ hgui::kernel::Window::~Window()
 	glfwDestroyWindow(m_windowPTR);
 }
 
-glm::vec2 hgui::kernel::Window::get_size() const
+const hgui::size& hgui::kernel::Window::get_size() const
 {
 	return m_size;
 }
 
-void hgui::kernel::Window::set_size(glm::vec2 newSize)
+void hgui::kernel::Window::set_size(const size& newSize)
 {
-	glfwSetWindowSize(m_windowPTR, static_cast<int>(newSize.x), static_cast<int>(newSize.y));
+	glfwSetWindowSize(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
 }
 
 void hgui::kernel::Window::set_fullscreen(const std::shared_ptr<Monitor>& monitor)
 {
-	glfwSetWindowMonitor(m_windowPTR, monitor->get_monitorPTR(), static_cast<int>(m_position.x), static_cast<int>(m_position.y), static_cast<int>(m_size.x), static_cast<int>(m_size.y), glfwGetVideoMode(monitor->get_monitorPTR())->refreshRate);
+	glfwSetWindowMonitor(m_windowPTR, monitor->get_monitorPTR(), static_cast<int>(m_position.x), 
+		static_cast<int>(m_position.y), static_cast<int>(m_size.width), static_cast<int>(m_size.height), 
+		glfwGetVideoMode(monitor->get_monitorPTR())->refreshRate);
 }
 
-glm::vec2 hgui::kernel::Window::get_position()
+const hgui::point& hgui::kernel::Window::get_position()
 {
 	return m_position;
 }
 
-void hgui::kernel::Window::set_position(glm::vec2 newPosition)
+void hgui::kernel::Window::set_position(const point& newPosition)
 {
 	glfwSetWindowPos(m_windowPTR, static_cast<int>(newPosition.x), static_cast<int>(newPosition.y));
 }

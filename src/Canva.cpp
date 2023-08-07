@@ -1,7 +1,8 @@
 #include <hgui/header/Canva.h>
 
-hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, glm::vec2 size, glm::vec2 position, glm::vec3 color, float angularRotation) :
-	Widget(shader ? shader : ResourceManager::get_shader(HGUI_SHADER_CANVA), size, position, color), m_angularRoation(angularRotation), m_drawer(std::make_shared<kernel::Drawer>(position, size))
+hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, float angularRotation) :
+	Widget(shader ? shader : ResourceManager::get_shader(HGUI_SHADER_CANVA), size, position, color), 
+	m_angularRoation(angularRotation), m_drawer(std::make_shared<kernel::Drawer>(position, size))
 {
 	set_position(position);
 	init_data();
@@ -10,7 +11,9 @@ hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, glm::vec2 size
 void hgui::kernel::Canva::draw() const
 {
 	kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
-	m_shader->use().set_mat4("modelMatrix", m_modelMatrix).set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(window->get_size().x), static_cast<float>(window->get_size().y), 0.f, -1.0f, 1.0f));
+	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
+		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(window->get_size().width),
+			static_cast<float>(window->get_size().height), 0.f, -1.0f, 1.0f));
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_VAO->unbind();
@@ -18,16 +21,17 @@ void hgui::kernel::Canva::draw() const
 	m_drawer->draw();
 }
 
-void hgui::kernel::Canva::set_position(glm::vec2 newPosition)
+void hgui::kernel::Canva::set_position(const point& newPosition)
 {
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(newPosition.x, newPosition.y, 0.0f));
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.5f * m_size.x, 0.5f * m_size.y, 0.0f));
+	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRoation), glm::vec3(0.0f, 0.0f, 1.0f));
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.x, -0.5f * m_size.y, 0.0f));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size, 1.0f));
-	m_shader->use().set_vec2f("canvaPosition", m_position).set_vec2f("canvaSize", m_size);
+	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width / 4, m_size.height / 4, 1.0f));
+	m_shader->use().set_vec2("canvaPosition", m_position)
+		.set_vec2("canvaSize", m_size);
 }
 
 const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canva::get_drawer() const
@@ -38,13 +42,13 @@ const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canva::get_drawer() c
 void hgui::kernel::Canva::init_data()
 {
 	float vertices[] = {
-		-1.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
-		-1.0f, -1.0f,  m_color.r, m_color.g, m_color.b,
-		 1.0f, -1.0f,  m_color.r, m_color.g, m_color.b,
+		0.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
+		0.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
+		1.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
 
-		-1.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
-		 1.0f, -1.0f,  m_color.r, m_color.g, m_color.b,
-		 1.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
+		0.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
+		1.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
+		1.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
 	};
 	m_VAO->bind();
 	m_VBO->bind();

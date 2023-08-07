@@ -1,6 +1,6 @@
 #include <hgui/header/Buffer.h>
 
-hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader> shader, const std::shared_ptr<kernel::Texture>& texture) :
+hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture) :
 	m_shader(shader), m_VAO(std::make_shared<VertexArrayObject>()), m_VBO(std::make_shared<VertexBufferObject>()),
 	m_frameBuffer(std::make_shared<FrameBuffer>()), m_renderBuffer(std::make_shared<RenderBuffer>()), m_texture(texture)
 {
@@ -16,7 +16,8 @@ hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader> shader, const std::sh
 	}
 	else
 	{
-		throw std::runtime_error(("ERROR WITH THE CREATION OF THE BUFFER : HGUI_FRAMEBUFFER_" + std::to_string(m_frameBuffer->get_id())).c_str());
+		throw std::runtime_error(("ERROR WITH THE CREATION OF THE BUFFER : HGUI_FRAMEBUFFER_" 
+			+ std::to_string(m_frameBuffer->get_id())).c_str());
 	}
 	init_data();
 }
@@ -24,6 +25,8 @@ hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader> shader, const std::sh
 void hgui::kernel::Buffer::bind() const
 {
 	m_frameBuffer->bind();
+	auto& image = m_texture->get_image()->get_data();
+	glViewport(0, 0, image.width, image.height);
 }
 
 void hgui::kernel::Buffer::unbind() const
@@ -36,7 +39,7 @@ void hgui::kernel::Buffer::show() const
 	m_shader->use();
 	glActiveTexture(GL_TEXTURE0);
 	m_texture->bind();
-	m_shader->set_1i("screenTexture", 0);
+	m_shader->set_int("screenTexture", 0);
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

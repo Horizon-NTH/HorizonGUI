@@ -1,6 +1,6 @@
 #include <hgui/header/Circle.h>
 
-hgui::kernel::shape::Circle::Circle(glm::vec2 centerPosition, float radius, glm::vec3 color, bool fill, float thickness) :
+hgui::kernel::shape::Circle::Circle(const point& centerPosition, float radius, const color& color, bool fill, float thickness) :
 	Shape(fill, thickness, centerPosition)
 {
 	int segmentNumber = 100;
@@ -28,6 +28,7 @@ void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) co
 {
 	if (m_fill)
 	{
+		shader->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 100);
 		m_VAO->unbind();
@@ -39,7 +40,8 @@ void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) co
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point p = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
@@ -53,7 +55,8 @@ void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) co
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point q = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

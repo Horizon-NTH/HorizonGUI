@@ -27,7 +27,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::get(const std::str
 	}
 }
 
-void hgui::FontManager::delete_font(std::initializer_list<std::string> fonts)
+void hgui::FontManager::delete_font(const std::initializer_list<std::string>& fonts)
 {
 	if (fonts.size())
 	{

@@ -36,7 +36,7 @@ double hgui::Timer::get_time()
 	return m_times.count();
 }
 
-bool hgui::Timer::counting() const
+bool hgui::Timer::is_counting() const
 {
 	return m_counting;
 }

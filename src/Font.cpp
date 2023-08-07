@@ -11,13 +11,15 @@ hgui::kernel::Font::~Font()
 
 hgui::kernel::Character hgui::kernel::Font::get_char(char character, unsigned int size) const
 {
-	if (m_characters.find(size) != m_characters.end() && m_characters.find(size)->second.find(character) != m_characters.find(size)->second.end())
+	if (m_characters.find(size) != m_characters.end() && 
+        m_characters.find(size)->second.find(character) != m_characters.find(size)->second.end())
 	{
 		return m_characters.find(size)->second.find(character)->second;
 	}
 	else
 	{
-		throw std::exception((std::string("FONT DOESN'T HAVE THE CHARACTER : " + character) + std::string(" IN THE SIZE : " + std::to_string(size))).c_str());
+		throw std::exception((std::string("FONT DOESN'T HAVE THE CHARACTER : " + character) 
+            + std::string(" IN THE SIZE : " + std::to_string(size))).c_str());
 	}
 }
 
@@ -57,11 +59,12 @@ void hgui::kernel::Font::load_font(unsigned int size)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            Character character = {
-                texture,
-                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                static_cast<unsigned int>(face->glyph->advance.x)
+            Character character
+            {
+                .textureID = texture,
+                .size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                .bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                .advance = static_cast<unsigned int>(face->glyph->advance.x)
             };
             m_characters[size].insert(std::pair<char, Character>(c, character));
         }

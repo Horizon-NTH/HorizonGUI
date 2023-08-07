@@ -31,7 +31,7 @@ void hgui::kernel::Texture::generate()
 {
     bind();
     ImageData data = m_image->get_data();
-    glTexImage2D(GL_TEXTURE_2D, 0, data.channel, data.width, data.height, 0, data.channel, GL_UNSIGNED_BYTE, data.pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(data.channel), data.width, data.height, 0, static_cast<GLenum>(data.channel), GL_UNSIGNED_BYTE, data.pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

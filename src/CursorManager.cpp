@@ -2,7 +2,7 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Cursor>> hgui::CursorManager::m_cursors;
 
-void hgui::CursorManager::create(const std::string& cursorName, const std::shared_ptr<kernel::Image>& customCursor, glm::vec2 clickPosition)
+void hgui::CursorManager::create(const std::string& cursorName, const std::shared_ptr<kernel::Image>& customCursor, const point& clickPosition)
 {
 	if (m_cursors.find(cursorName) == m_cursors.end())
 	{
@@ -38,7 +38,7 @@ void hgui::CursorManager::set(const std::string& cursorName)
 	}
 }
 
-void hgui::CursorManager::delete_cursor(std::initializer_list<std::string> cursorsNames)
+void hgui::CursorManager::delete_cursor(const std::initializer_list<std::string>& cursorsNames)
 {
 	if (cursorsNames.size())
 	{

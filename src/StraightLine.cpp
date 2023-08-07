@@ -1,6 +1,6 @@
 #include <hgui/header/StraightLine.h>
 
-hgui::kernel::shape::StraightLine::StraightLine(glm::vec2 firstVertex, glm::vec2 secondVertex, glm::vec3 color, float thickness) :
+hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const point& secondVertex, const color& color, float thickness) :
 	Shape(true, thickness)
 {
 	float vertices[] = {

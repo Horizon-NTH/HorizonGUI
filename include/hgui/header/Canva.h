@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Widget.h"
 #include "WindowManager.h"
 #include "Drawer.h"
@@ -13,10 +14,10 @@ namespace hgui
 		class Canva : public Widget
 		{
 		public:
-			Canva(const std::shared_ptr<Shader>& shader, glm::vec2 size, glm::vec2 position, glm::vec3 color, float angularRotation);
+			Canva(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, float angularRotation);
 
 			void draw() const override;
-			void set_position(glm::vec2 newPosition);
+			void set_position(const point& newPosition);
 			const std::shared_ptr<kernel::Drawer>& get_drawer() const;
 
 		private:

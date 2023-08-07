@@ -1,8 +1,10 @@
 #include <hgui/header/MouseManager.h>
 
-std::map<std::variant<hgui::input::MouseInput, std::pair<hgui::input::MouseButton, hgui::input::Action>, std::tuple<hgui::input::MouseInput, hgui::input::MouseButton, hgui::input::Action>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>> hgui::MouseManager::m_inputs;
+std::map<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>> hgui::MouseManager::m_inputs;
+std::variant<std::function<void()>, std::function<void(hgui::buttons, hgui::actions)>> hgui::MouseManager::m_clickCallback{};
+std::variant<std::function<void()>, std::function<void(double, double)>> hgui::MouseManager::m_scrollCallback{};
 
-void hgui::MouseManager::bind(std::variant<hgui::input::MouseInput, std::pair<hgui::input::MouseButton, hgui::input::Action>, std::tuple<input::MouseInput, input::MouseButton, input::Action>> action, std::function<void()> function)
+void hgui::MouseManager::bind(const std::variant<inputs, std::pair<buttons, hgui::actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {
 	if (m_inputs.find(action) == m_inputs.end())
 	{
@@ -14,7 +16,7 @@ void hgui::MouseManager::bind(std::variant<hgui::input::MouseInput, std::pair<hg
 	}
 }
 
-void hgui::MouseManager::unbind(std::variant<hgui::input::MouseInput, std::pair<hgui::input::MouseButton, hgui::input::Action>, std::tuple<input::MouseInput, input::MouseButton, input::Action>> action)
+void hgui::MouseManager::unbind(const std::variant<hgui::inputs, std::pair<buttons, hgui::actions>, std::tuple<hgui::inputs, buttons, actions>>& action)
 {
 	if (m_inputs.find(action) != m_inputs.end())
 	{
@@ -26,11 +28,21 @@ void hgui::MouseManager::unbind(std::variant<hgui::input::MouseInput, std::pair<
 	}
 }
 
-glm::vec2 hgui::MouseManager::get_position()
+void hgui::MouseManager::bind_clickcallback(const std::variant<std::function<void()>, std::function<void(buttons, actions)>>& function)
+{
+	m_clickCallback = function;
+}
+
+void hgui::MouseManager::bind_scrollcallback(const std::variant<std::function<void()>, std::function<void(double, double)>>& function)
+{
+	m_scrollCallback = function;
+}
+
+hgui::point hgui::MouseManager::get_position()
 {
 	std::pair<double, double> mousePosition;
 	glfwGetCursorPos(WindowManager::get_current_windowPTR(), &mousePosition.first, &mousePosition.second);
-	return glm::vec2(static_cast<float>(mousePosition.first), static_cast<float>(mousePosition.second));
+	return point(static_cast<float>(mousePosition.first), static_cast<float>(mousePosition.second));
 }
 
 void hgui::MouseManager::process()
@@ -45,36 +57,30 @@ void hgui::MouseManager::process()
 		}
 		if (input.first.index() == 0)
 		{
-			auto action = std::get<input::MouseInput>(input.first);
+			auto& action = std::get<inputs>(input.first);
 			std::pair<double, double> newMousePosition;
 			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
 			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
 			switch (action)
 			{
-			case hgui::input::OVER:
+			case hgui::inputs::OVER:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
 					input.second.second();
 				}
 				break;
-			case hgui::input::NOVER:
+			case hgui::inputs::NOVER:
 				if (!is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
 					input.second.second();
 				}
 				break;
-			case hgui::input::MOTION:
+			case hgui::inputs::MOTION:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size())
 					&& (lastMousePosition.first != newMousePosition.first || lastMousePosition.second != newMousePosition.second))
 				{
 					input.second.second();
 				}
-				break;
-			case hgui::input::SCROLL:
-				break;
-			case hgui::input::SCROLL_UP:
-				break;
-			case hgui::input::SCROLL_DOWN:
 				break;
 			default:
 				break;
@@ -83,20 +89,20 @@ void hgui::MouseManager::process()
 		}
 		else if (input.first.index() == 1)
 		{
-			if (is_action_verified({ std::get<std::pair<input::MouseButton, input::Action>>(input.first), input.second }))
+			if (is_action_verified({ std::get<std::pair<buttons, actions>>(input.first), input.second }))
 			{
 				input.second.second();
 			}
 		}
 		else if (input.first.index() == 2)
 		{
-			auto action = std::get<std::tuple<input::MouseInput, input::MouseButton, input::Action>>(input.first);
+			auto& action = std::get<std::tuple<inputs, buttons, actions>>(input.first);
 			std::pair<double, double> newMousePosition;
 			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
 			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
 			switch (std::get<0>(action))
 			{
-			case hgui::input::OVER:
+			case hgui::inputs::OVER:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
 					if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
@@ -104,8 +110,12 @@ void hgui::MouseManager::process()
 						input.second.second();
 					}
 				}
+				else
+				{
+					input.second.first->reset();
+				}
 				break;
-			case hgui::input::NOVER:
+			case hgui::inputs::NOVER:
 				if (!is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
 					if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
@@ -113,8 +123,12 @@ void hgui::MouseManager::process()
 						input.second.second();
 					}
 				}
+				else
+				{
+					input.second.first->reset();
+				}
 				break;
-			case hgui::input::MOTION:
+			case hgui::inputs::MOTION:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size())
 					&& (lastMousePosition.first != newMousePosition.first || lastMousePosition.second != newMousePosition.second))
 				{
@@ -123,12 +137,10 @@ void hgui::MouseManager::process()
 						input.second.second();
 					}
 				}
-				break;
-			case hgui::input::SCROLL:
-				break;
-			case hgui::input::SCROLL_UP:
-				break;
-			case hgui::input::SCROLL_DOWN:
+				else
+				{
+					input.second.first->reset();
+				}
 				break;
 			default:
 				break;
@@ -137,13 +149,13 @@ void hgui::MouseManager::process()
 		}
 	}
 	//PROCESSING INPUT FOR WIDGET
-	for (const std::string& tag : WidgetManager::m_bindedTags)
+	for (const std::string& tag : Widget::m_bindedTags)
 	{
-		for (auto& widget : WidgetManager::get_widgets(tag))
+		for (auto& widget : Widget::get_widgets(tag))
 		{
-			if (WidgetManager::m_binds.find(widget) != WidgetManager::m_binds.end())
+			if (Widget::m_binds.find(widget) != Widget::m_binds.end())
 			{
-				for (auto& input : WidgetManager::m_binds[widget])
+				for (auto& input : Widget::m_binds[widget])
 				{
 					static std::pair<double, double> lastMousePosition;
 					if (!input.second.second)
@@ -152,36 +164,32 @@ void hgui::MouseManager::process()
 					}
 					if (input.first.index() == 0)
 					{
-						auto action = std::get<input::MouseInput>(input.first);
+						auto& action = std::get<inputs>(input.first);
 						std::pair<double, double> newMousePosition;
 						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
-						kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+						kernel::Window* window = static_cast<kernel::Window*>(
+							glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
 						switch (action)
 						{
-						case hgui::input::OVER:
+						case hgui::inputs::OVER:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
 								input.second.second();
 							}
 							break;
-						case hgui::input::NOVER:
+						case hgui::inputs::NOVER:
 							if (!is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
 								input.second.second();
 							}
 							break;
-						case hgui::input::MOTION:
+						case hgui::inputs::MOTION:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size())
-								&& (lastMousePosition.first != newMousePosition.first || lastMousePosition.second != newMousePosition.second))
+								&& (lastMousePosition.first != newMousePosition.first || 
+									lastMousePosition.second != newMousePosition.second))
 							{
 								input.second.second();
 							}
-							break;
-						case hgui::input::SCROLL:
-							break;
-						case hgui::input::SCROLL_UP:
-							break;
-						case hgui::input::SCROLL_DOWN:
 							break;
 						default:
 							break;
@@ -190,19 +198,19 @@ void hgui::MouseManager::process()
 					}
 					else if (input.first.index() == 1)
 					{
-						if (is_action_verified({ std::get<std::pair<input::MouseButton, input::Action>>(input.first), input.second }))
+						if (is_action_verified({ std::get<std::pair<buttons, actions>>(input.first), input.second }))
 						{
 							input.second.second();
 						}
 					}
 					else if (input.first.index() == 2)
 					{
-						auto action = std::get<std::tuple<input::MouseInput, input::MouseButton, input::Action>>(input.first);
+						auto& action = std::get<std::tuple<inputs, buttons, actions>>(input.first);
 						std::pair<double, double> newMousePosition;
 						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
 						switch (std::get<0>(action))
 						{
-						case hgui::input::OVER:
+						case hgui::inputs::OVER:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
 								if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
@@ -215,7 +223,7 @@ void hgui::MouseManager::process()
 								input.second.first->reset();
 							}
 							break;
-						case hgui::input::NOVER:
+						case hgui::inputs::NOVER:
 							if (!is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
 								if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
@@ -228,10 +236,11 @@ void hgui::MouseManager::process()
 								input.second.first->reset();
 							}
 							break;
-						case hgui::input::MOTION:
+						case hgui::inputs::MOTION:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
-								if ((lastMousePosition.first != newMousePosition.first || lastMousePosition.second != newMousePosition.second) &&
+								if ((lastMousePosition.first != newMousePosition.first || 
+									lastMousePosition.second != newMousePosition.second) &&
 									is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 								{
 									input.second.second();
@@ -241,12 +250,6 @@ void hgui::MouseManager::process()
 							{
 								input.second.first->reset();
 							}
-							break;
-						case hgui::input::SCROLL:
-							break;
-						case hgui::input::SCROLL_UP:
-							break;
-						case hgui::input::SCROLL_DOWN:
 							break;
 						default:
 							break;
@@ -261,58 +264,225 @@ void hgui::MouseManager::process()
 
 void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffset)
 {
-	/*
-	if (yOffset < 0.0)
+	if (auto function = std::get_if<std::function<void()>>(&m_scrollCallback))
 	{
-		for (const auto& input : m_inputs)
+		if (*function)
 		{
-			if (!input.first.index() && std::get<input::MouseInput>(input.first) == input::SCROLL_DOWN)
+			(*function)();
+		}
+	}
+	else if (auto function = std::get_if<std::function<void(double, double)>>(&m_scrollCallback))
+	{
+		if (*function)
+		{
+			(*function)(xOffset, yOffset);
+		}
+	}
+	//PROCESSING INPUTS
+	for (auto& input : m_inputs)
+	{
+		static std::pair<double, double> lastMousePosition;
+		if (!input.second.second)
+		{
+			continue;
+		}
+		if (auto action = std::get_if<inputs>(&input.first))
+		{
+			std::pair<double, double> newMousePosition;
+			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			switch (*action)
 			{
-				if (input.second.second)
+			case hgui::inputs::SCROLL:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
 					input.second.second();
+				}
+				break;
+			case hgui::inputs::SCROLL_UP:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset > 0.)
+				{
+					input.second.second();
+				}
+				break;
+			case hgui::inputs::SCROLL_DOWN:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset < 0.)
+				{
+					input.second.second();
+				}
+				break;
+			default:
+				break;
+			}
+			lastMousePosition = newMousePosition;
+		}
+		else if (auto action = std::get_if<std::tuple<inputs, buttons, actions>>(&input.first))
+		{
+			std::pair<double, double> newMousePosition;
+			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			switch (std::get<0>(*action))
+			{
+			case hgui::inputs::SCROLL:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
+				{
+					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+					{
+						input.second.second();
+					}
+				}
+				else
+				{
+					input.second.first->reset();
+				}
+				break;
+			case hgui::inputs::SCROLL_UP:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset > 0.)
+				{
+					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+					{
+						input.second.second();
+					}
+				}
+				else
+				{
+					input.second.first->reset();
+				}
+				break;
+			case hgui::inputs::SCROLL_DOWN:
+				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset < 0.)
+				{
+					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+					{
+						input.second.second();
+					}
+				}
+				else
+				{
+					input.second.first->reset();
+				}
+				break;
+			default:
+				break;
+			}
+			lastMousePosition = newMousePosition;
+		}
+	}
+	//PROCESSING INPUT FOR WIDGET
+	for (const std::string& tag : Widget::m_bindedTags)
+	{
+		for (auto& widget : Widget::get_widgets(tag))
+		{
+			if (Widget::m_binds.find(widget) != Widget::m_binds.end())
+			{
+				for (auto& input : Widget::m_binds[widget])
+				{
+					static std::pair<double, double> lastMousePosition;
+					if (!input.second.second)
+					{
+						continue;
+					}
+					if (auto action = std::get_if<inputs>(&input.first))
+					{
+						std::pair<double, double> newMousePosition;
+						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						kernel::Window* window = static_cast<kernel::Window*>(
+							glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+						switch (*action)
+						{
+						case hgui::inputs::SCROLL:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
+							{
+								input.second.second();
+							}
+							break;
+						case hgui::inputs::SCROLL_UP:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset > 0.)
+							{
+								input.second.second();
+							}
+							break;
+						case hgui::inputs::SCROLL_DOWN:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset < 0.)
+							{
+								input.second.second();
+							}
+							break;
+						default:
+							break;
+						}
+						lastMousePosition = newMousePosition;
+					}
+					else if (auto action = std::get_if<std::tuple<inputs, buttons, actions>>(&input.first))
+					{
+						std::pair<double, double> newMousePosition;
+						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						switch (std::get<0>(*action))
+						{
+						case hgui::inputs::SCROLL:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
+							{
+								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+								{
+									input.second.second();
+								}
+							}
+							else
+							{
+								input.second.first->reset();
+							}
+							break;
+						case hgui::inputs::SCROLL_UP:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset > 0.)
+							{
+								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+								{
+									input.second.second();
+								}
+							}
+							else
+							{
+								input.second.first->reset();
+							}
+							break;
+						case hgui::inputs::SCROLL_DOWN:
+							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset < 0.)
+							{
+								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
+								{
+									input.second.second();
+								}
+							}
+							else
+							{
+								input.second.first->reset();
+							}
+							break;
+						default:
+							break;
+						}
+						lastMousePosition = newMousePosition;
+					}
 				}
 			}
 		}
 	}
-	else if (yOffset > 0.0)
-	{
-		for (const auto& input : m_inputs)
-		{
-			if (!input.first.index() && std::get<input::MouseInput>(input.first) == input::SCROLL_UP)
-			{
-				if (input.second.second)
-				{
-					input.second.second();
-				}
-			}
-		}
-	}
-	for (const auto& input : m_inputs)
-	{
-		if (!input.first.index() && std::get<input::MouseInput>(input.first) == input::SCROLL)
-		{
-			if (input.second.second)
-			{
-				input.second.second();
-			}
-		}
-	}
-	*/
 }
 
-bool hgui::MouseManager::is_mouse_in_sector(std::pair<double, double> mousePosition, glm::vec2 sectorPosition, glm::vec2 sectorSize)
+bool hgui::MouseManager::is_mouse_in_sector(const std::pair<double, double>& mousePosition, const point& sectorPosition, const size& sectorSize)
 {
-	return mousePosition.first >= sectorPosition.x && mousePosition.second >= sectorPosition.y && mousePosition.first <= sectorPosition.x + sectorSize.x && mousePosition.second <= sectorPosition.y + sectorSize.y;
+	return mousePosition.first >= sectorPosition.x && mousePosition.second >= sectorPosition.y && 
+		mousePosition.first <= sectorPosition.x + sectorSize.width && mousePosition.second <= sectorPosition.y + sectorSize.height;
 }
 
-bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<input::MouseButton, input::Action>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input)
+bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<buttons, actions>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input)
 {
-	auto action = glfwGetMouseButton(WindowManager::get_current_windowPTR(), input.first.first);
+	auto action = static_cast<hgui::actions>(
+		glfwGetMouseButton(WindowManager::get_current_windowPTR(), static_cast<int>(input.first.first)));
 	switch (action)
 	{
-	case input::PRESS:
-		if (!input.second.first->counting())
+	case actions::PRESS:
+		if (!input.second.first->is_counting())
 		{
 			input.second.first->start();
 			if (action == input.first.second)
@@ -321,8 +491,8 @@ bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<input::Mou
 			}
 		}
 		break;
-	case input::RELEASE:
-		if (input.second.first->counting())
+	case actions::RELEASE:
+		if (input.second.first->is_counting())
 		{
 			input.second.first->reset();
 			if (action == input.first.second)
@@ -334,9 +504,37 @@ bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<input::Mou
 	default:
 		break;
 	}
-	if (input.first.second == input::REPEAT && input.second.first->get_time() >= 0.2)
+	if (input.first.second == actions::REPEAT && input.second.first->is_counting())
 	{
 		return true;
 	}
 	return false;
+}
+
+void hgui::MouseManager::input(GLFWwindow* window, int button, int action, int mods)
+{
+	if (auto function = std::get_if<std::function<void()>>(&m_clickCallback))
+	{
+		if (*function)
+		{
+			(*function)();
+		}
+	}
+	else if (auto function = std::get_if<std::function<void(buttons, actions)>>(&m_clickCallback))
+	{
+		if (*function)
+		{
+			(*function)(static_cast<buttons>(button), static_cast<actions>(action));
+		}
+	}
+}
+
+bool hgui::operator==(const MouseAction& lhs, const MouseAction& rhs)
+{
+	return lhs.first == rhs.first && lhs.second == rhs.second;
+}
+
+bool hgui::operator==(const MouseCombinationAction& lhs, const MouseCombinationAction& rhs)
+{
+	return std::get<0>(lhs) == std::get<0>(rhs) && std::get<1>(lhs) == std::get<1>(rhs) && std::get<2>(lhs) == std::get<2>(rhs);
 }

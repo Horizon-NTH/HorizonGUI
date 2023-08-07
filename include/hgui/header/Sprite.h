@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Widget.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -15,12 +16,12 @@ namespace hgui
 		class Sprite : public Widget
 		{
 		public:
-			Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, glm::vec2 size, glm::vec2 position, glm::vec3 color, float angularRoation);
+			Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, float angularRoation);
 			~Sprite();
 
 			void draw() const override;
 
-			void set_position(glm::vec2 newPosition) override;
+			void set_position(const point& newPosition) override;
 
 		private:
 			std::shared_ptr<Texture> m_texture;

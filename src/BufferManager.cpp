@@ -2,12 +2,19 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Buffer>> hgui::BufferManager::m_buffers;
 
-const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const std::string& bufferName, const std::shared_ptr<kernel::Shader>& shader)
+const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const std::string& bufferName, const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize)
 {
 	if (m_buffers.find(bufferName) == m_buffers.end())
 	{
-		kernel::ImageData bufferData; bufferData.width = static_cast<int>(MonitorManager::get_primary_monitor()->get_size().x); bufferData.height = static_cast<int>(MonitorManager::get_primary_monitor()->get_size().y); bufferData.pixels = NULL; bufferData.channel = kernel::RGBA;
-		auto& texture = ResourceManager::load_texture("HGUI_TEXTURE_FRAMEBUFFER_" + bufferName, std::make_shared<kernel::Image>("", bufferData));
+		kernel::ImageData bufferData
+		{
+			.width = static_cast<int>(bufferSize.width), 
+			.height = static_cast<int>(bufferSize.height), 
+			.channel = channels::RGBA, 
+			.pixels = NULL
+		};
+		auto& texture = ResourceManager::load_texture("HGUI_TEXTURE_FRAMEBUFFER_" + bufferName, 
+			std::make_shared<kernel::Image>("", bufferData));
 		m_buffers[bufferName] = std::make_shared<kernel::Buffer>(shader, texture);
 		return m_buffers[bufferName];
 	}
@@ -29,7 +36,7 @@ const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::get(const std:
 	}
 }
 
-void hgui::BufferManager::delete_buffers(std::initializer_list<std::string> buffersNames)
+void hgui::BufferManager::delete_buffers(const std::initializer_list<std::string>& buffersNames)
 {
 	if (buffersNames.size())
 	{

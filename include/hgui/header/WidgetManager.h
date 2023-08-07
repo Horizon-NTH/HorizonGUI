@@ -35,6 +35,7 @@ namespace hgui
 		static void set_current_tag(const std::string& tag);
 
 		static void bind(std::variant<std::string, std::vector<std::string>, std::shared_ptr<kernel::Widget>> widgets, std::variant<input::MouseInput, std::pair<input::MouseButton, input::Action>, std::tuple<input::MouseInput, input::MouseButton, input::Action>> action, std::function<void()> function);
+		static void unbind(std::variant<std::string, std::vector<std::string>, std::shared_ptr<kernel::Widget>> widgets, std::variant<input::MouseInput, std::pair<input::MouseButton, input::Action>, std::tuple<input::MouseInput, input::MouseButton, input::Action>> action);
 		static void active(std::vector<std::string> tags = {});
 		static const std::vector<std::shared_ptr<kernel::Widget>>& get_widgets(const std::string& tag);
 

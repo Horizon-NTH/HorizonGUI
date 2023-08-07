@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Shape.h"
 
 namespace hgui
@@ -12,7 +13,7 @@ namespace hgui
 			class Triangle : public Shape
 			{
 			public:
-				Triangle(glm::vec2 firstVertex, glm::vec2 secondVertex, glm::vec2 thirdVertex, glm::vec3 color, bool fill, float thickness);
+				Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness);
 
 				void draw(const std::shared_ptr<Shader>& shader) const override;
 

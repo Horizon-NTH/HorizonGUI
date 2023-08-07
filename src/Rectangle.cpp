@@ -1,6 +1,6 @@
 #include <hgui/header/Rectangle.h>
 
-hgui::kernel::shape::Rectangle::Rectangle(glm::vec2 topLeftVertex, glm::vec2 bottomRightVertex, glm::vec3 color, bool fill, float thickness) :
+hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, bool fill, float thickness) :
 	Shape(fill, thickness, (topLeftVertex + bottomRightVertex) / 2.0f)
 {
 	float vertices[] = {
@@ -26,6 +26,7 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 {
 	if (m_fill)
 	{
+		shader->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_VAO->unbind();
@@ -37,7 +38,8 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point p = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
@@ -51,7 +53,8 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point q = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

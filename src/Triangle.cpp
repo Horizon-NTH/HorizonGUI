@@ -1,6 +1,6 @@
 #include <hgui/header/Triangle.h>
 
-hgui::kernel::shape::Triangle::Triangle(glm::vec2 firstVertex, glm::vec2 secondVertex, glm::vec2 thirdVertex, glm::vec3 color, bool fill, float thickness) :
+hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness) :
 	Shape(fill, thickness, (firstVertex + secondVertex + thirdVertex) / 3.0f)
 {
 	float vertices[] = {
@@ -22,6 +22,7 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 {
 	if (m_fill)
 	{
+		shader->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		m_VAO->unbind();
@@ -33,7 +34,8 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point p = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
@@ -47,7 +49,8 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(m_center - scale * m_center, 0.0f));
+		point q = m_center - scale * m_center;
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

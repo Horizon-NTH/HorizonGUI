@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "WindowManager.h"
 #include "Image.h"
 
@@ -16,7 +17,7 @@ namespace hgui
 
 		public:
 			Cursor(int standardCursor);
-			Cursor(const std::shared_ptr<Image>& customCursor, glm::vec2 clickPosition);
+			Cursor(const std::shared_ptr<Image>& customCursor, const point& clickPosition);
 
 			~Cursor();
 

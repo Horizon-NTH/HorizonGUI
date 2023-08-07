@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Define.h"
 #include "Cursor.h"
-#include "Tools.h"
 
 namespace hgui
 {
@@ -16,10 +16,10 @@ namespace hgui
 	class CursorManager
 	{
 	public:
-		static void create(const std::string& cursorName, const std::shared_ptr<kernel::Image>& customCursor, glm::vec2 clickPosition);
+		static void create(const std::string& cursorName, const std::shared_ptr<kernel::Image>& customCursor, const point& clickPosition);
 		static const std::shared_ptr<hgui::kernel::Cursor>& get(const std::string& cursorName);
 		static void set(const std::string& cursorName);
-		static void delete_cursor(std::initializer_list<std::string> cursorsNames = {});
+		static void delete_cursor(const std::initializer_list<std::string>& cursorsNames = {});
 
 	private:
 		CursorManager();

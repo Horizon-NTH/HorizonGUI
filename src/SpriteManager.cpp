@@ -2,13 +2,15 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Sprite>> hgui::SpriteManager::m_sprites;
 
-const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteName, const std::shared_ptr<kernel::Image>& image, glm::vec2 size, glm::vec2 position, glm::vec3 color, float angularRotation)
+const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteName, const std::shared_ptr<kernel::Image>& image, const size& size, const point& position, const color& color, float angularRotation)
 {
 	if (m_sprites.find(spriteName) == m_sprites.end())
 	{
 		ResourceManager::load_texture("SPRITE_" + spriteName, image);
-		m_sprites[spriteName] = std::make_shared<kernel::Sprite>(ResourceManager::get_shader(HGUI_SHADER_SPRITE), ResourceManager::get_texture("SPRITE_" + spriteName), size, position, color, angularRotation);
-		WidgetManager::m_widgets[WidgetManager::m_currentTag].push_back(m_sprites[spriteName]);
+		m_sprites[spriteName] = std::make_shared<kernel::Sprite>(
+			ResourceManager::get_shader(HGUI_SHADER_SPRITE), 
+			ResourceManager::get_texture("SPRITE_" + spriteName), size, position, color, angularRotation);
+		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_sprites[spriteName]);
 		return m_sprites[spriteName];
 	}
 	else
@@ -29,13 +31,13 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::get(const std:
 	}
 }
 
-void hgui::SpriteManager::delete_sprites(std::initializer_list<std::string> spritesNames)
+void hgui::SpriteManager::delete_sprites(const std::initializer_list<std::string>& spritesNames)
 {
 	if (spritesNames.size())
 	{
 		for (const std::string& sprite : spritesNames)
 		{
-			WidgetManager::delete_widget(m_sprites[sprite]);
+			Widget::delete_widget(m_sprites[sprite]);
 			m_sprites.erase(sprite);
 		}
 	}
@@ -43,7 +45,7 @@ void hgui::SpriteManager::delete_sprites(std::initializer_list<std::string> spri
 	{
 		for (auto& sprite : m_sprites)
 		{
-			WidgetManager::delete_widget(sprite.second);
+			Widget::delete_widget(sprite.second);
 		}
 		m_sprites.clear();
 	}

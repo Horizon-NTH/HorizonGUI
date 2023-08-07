@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 
 namespace hgui
 {
@@ -9,8 +10,8 @@ namespace hgui
 		struct Character
 		{
 			GLuint textureID;
-			glm::ivec2 size;
-			glm::ivec2 bearing;
+			size size;
+			ivec2 bearing;
 			unsigned int advance;
 		};
 
@@ -28,7 +29,6 @@ namespace hgui
 		private:
 			std::string m_fontPath;
 			std::map<unsigned int, std::map<char, Character>> m_characters;
-
 		};
 	}
 }

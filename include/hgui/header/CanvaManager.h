@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
+#include "Define.h"
 #include "Canva.h"
-#include "WidgetManager.h"
+#include "TagManager.h"
 
 namespace hgui
 {
@@ -14,9 +16,9 @@ namespace hgui
 	class CanvaManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Canva>& create(const std::string& canvaName, const std::shared_ptr<kernel::Shader>& shader, glm::vec2 size, glm::vec2 position, glm::vec3 color = glm::vec3(0.0), float angularRotation = 0.0f);
+		static const std::shared_ptr<kernel::Canva>& create(const std::string& canvaName, const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, float angularRotation = 0.0f);
 		static const std::shared_ptr<kernel::Canva>& get(const std::string& canvaName);
-		static void delete_canva(std::initializer_list<std::string> canvasName);
+		static void delete_canva(const std::initializer_list<std::string>& canvasName);
 
 	private:
 		CanvaManager();

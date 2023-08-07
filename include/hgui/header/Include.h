@@ -14,12 +14,12 @@
 #include <utility>
 #include <functional>
 #include <tuple>
-#include <thread>
 #include <chrono>
 #include <algorithm>
 #include <initializer_list>
 #include <variant>
 #include <numeric>
+#include <valarray>
 //STBI library
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
