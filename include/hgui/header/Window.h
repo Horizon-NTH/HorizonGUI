@@ -15,12 +15,11 @@ namespace hgui
 		class Window
 		{
 		public:
-			Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon = nullptr, const std::initializer_list<std::pair<options, bool>>& options = {});
+			Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options);
 			~Window();
 
 			const size& get_size() const;
 			void set_size(const size& newSize);
-			void set_fullscreen(const std::shared_ptr<Monitor>& monitor);
 
 			const point& get_position();
 			void set_position(const point& newPosition);

@@ -1,6 +1,6 @@
 #include <hgui/header/Window.h>
 
-hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::initializer_list<std::pair<options, bool>>& options) :
+hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name), m_size(size), m_position(position)
 {
 	for (const auto& option : options)
@@ -14,7 +14,8 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 #else
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
-	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(), NULL, NULL);
+	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(), monitor ? monitor->get_monitorPTR() : NULL, NULL);
+	glfwSetWindowPos(m_windowPTR, static_cast<int>(position.x), static_cast<int>(position.y));
 	if (!m_windowPTR)
 	{
 		glfwTerminate();
@@ -22,6 +23,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	}
 	glfwSetWindowUserPointer(m_windowPTR, this);
 	glfwSetFramebufferSizeCallback(m_windowPTR, size_callback);
+	glfwSetWindowPosCallback(m_windowPTR, position_callback);
 	if (icon)
 	{
 		ImageData data = icon->get_data();
@@ -46,16 +48,6 @@ const hgui::size& hgui::kernel::Window::get_size() const
 void hgui::kernel::Window::set_size(const size& newSize)
 {
 	glfwSetWindowSize(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
-	size_callback(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
-}
-
-void hgui::kernel::Window::set_fullscreen(const std::shared_ptr<Monitor>& monitor)
-{
-	glfwSetWindowMonitor(m_windowPTR, monitor->get_monitorPTR(), static_cast<int>(monitor->get_position().x),
-		static_cast<int>(monitor->get_position().y), static_cast<int>(monitor->get_size().width), 
-		static_cast<int>(monitor->get_size().height),
-		glfwGetVideoMode(monitor->get_monitorPTR())->refreshRate);
-	size_callback(m_windowPTR, static_cast<int>(m_size.width), static_cast<int>(m_size.height));
 }
 
 const hgui::point& hgui::kernel::Window::get_position()
