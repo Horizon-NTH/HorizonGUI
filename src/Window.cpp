@@ -46,13 +46,16 @@ const hgui::size& hgui::kernel::Window::get_size() const
 void hgui::kernel::Window::set_size(const size& newSize)
 {
 	glfwSetWindowSize(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
+	size_callback(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
 }
 
 void hgui::kernel::Window::set_fullscreen(const std::shared_ptr<Monitor>& monitor)
 {
-	glfwSetWindowMonitor(m_windowPTR, monitor->get_monitorPTR(), static_cast<int>(m_position.x), 
-		static_cast<int>(m_position.y), static_cast<int>(m_size.width), static_cast<int>(m_size.height), 
+	glfwSetWindowMonitor(m_windowPTR, monitor->get_monitorPTR(), static_cast<int>(monitor->get_position().x),
+		static_cast<int>(monitor->get_position().y), static_cast<int>(monitor->get_size().width), 
+		static_cast<int>(monitor->get_size().height),
 		glfwGetVideoMode(monitor->get_monitorPTR())->refreshRate);
+	size_callback(m_windowPTR, static_cast<int>(m_size.width), static_cast<int>(m_size.height));
 }
 
 const hgui::point& hgui::kernel::Window::get_position()
