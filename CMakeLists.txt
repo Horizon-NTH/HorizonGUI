@@ -24,9 +24,9 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/deps/freetype/Debug/freetyped.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/freetyped.lib
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/deps/glfw/src/Debug/glfw3.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/glfw3.lib
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Debug/horizongui.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/horizongui.lib
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/deps/freetype/Debug/freetyped.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/freetyped.lib
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/deps/glfw/src/Debug/glfw3.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/glfw3.lib
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/Debug/horizongui.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/horizongui.lib
     COMMENT "Moving .lib files"
 )
 

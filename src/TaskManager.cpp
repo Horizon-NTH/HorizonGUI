@@ -2,7 +2,7 @@
 
 std::vector<std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<hgui::Timer>>> hgui::TaskManager::m_tasks;
 
-void hgui::TaskManager::program(const std::chrono::milliseconds& delay, const std::function<void()>& function)
+void hgui::TaskManager::program(const std::chrono::milliseconds& delay, std::function<void()> function)
 {
 	auto timer = std::make_shared<Timer>();
 	m_tasks.push_back({ function, delay, timer });

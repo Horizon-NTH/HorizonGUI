@@ -10,7 +10,7 @@ namespace hgui
 		friend class RenderManager;
 
 	public:
-		static void program(const std::chrono::milliseconds& delay, const std::function<void()>& function);
+		static void program(const std::chrono::milliseconds& delay, std::function<void()> function);
 
 	private:
 		TaskManager();
