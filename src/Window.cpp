@@ -71,6 +71,7 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, int width, int heig
 	if (glad_glViewport != NULL)
 		glViewport(0, 0, width, height);
 	win->m_size = glm::vec2(width, height);
+	EM<float>::referenceSize = win->m_size;
 }
 
 void hgui::kernel::Window::position_callback(GLFWwindow* window, int xPostion, int yPosition)

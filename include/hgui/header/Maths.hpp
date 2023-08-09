@@ -8,6 +8,28 @@ namespace hgui
 	namespace kernel
 	{
 		template<typename T>
+		class Size;
+
+		template<typename T>
+		class EM
+		{
+		public:
+			EM();
+			EM(T value);
+			EM(const EM<T>& EM);
+
+			template<typename U>
+			friend EM<T> operator*(T value, const EM<U>& EM)
+			{
+				return kernel::EM<U>(value);
+			}
+
+			T value;
+
+			static Size<T> referenceSize;
+		};
+
+		template<typename T>
 		class GLSLvec2 : public Vector<T, 2>
 		{
 		public:
@@ -119,11 +141,23 @@ namespace hgui
 		public:
 			Point() noexcept;
 			explicit Point(T xy) noexcept;
+			explicit Point(EM<T> xy) noexcept;
 			Point(T x, T y) noexcept;
+			Point(EM<T> x, T y) noexcept;
+			Point(T x, EM<T> y) noexcept;
+			Point(EM<T> x, EM<T> y) noexcept;
 			Point(const Point<T>& point) noexcept;
 			Point(const kernel::Vector<T, 2>& point) noexcept;
 			Point(const glm::vec2& point) noexcept;
 
+			template<typename U>
+			explicit Point(EM<U> xy) noexcept;
+			template<typename U, typename V>
+			Point(EM<U> x, V y) noexcept;
+			template<typename U, typename V>
+			Point(U x, EM<V> y) noexcept;
+			template<typename U, typename V>
+			Point(EM<U> x, EM<V> y) noexcept;
 			template<typename U, typename V>
 			Point(U x, V y) noexcept;
 			template<typename U>
@@ -149,11 +183,23 @@ namespace hgui
 		public:
 			Size() noexcept;
 			explicit Size(T widthANDheight) noexcept;
+			explicit Size(EM<T> widthANDheight) noexcept;
 			Size(T width, T height) noexcept;
+			Size(EM<T> width, T height) noexcept;
+			Size(T width, EM<T> height) noexcept;
+			Size(EM<T> width, EM<T> height) noexcept;
 			Size(const Size<T>& size) noexcept;
 			Size(const kernel::Vector<T, 2>& size) noexcept;
 			Size(const glm::vec2& size) noexcept;
 
+			template<typename U>
+			explicit Size(EM<U> widthANDheight) noexcept;
+			template<typename U, typename V>
+			Size(EM<U> width, V height) noexcept;
+			template<typename U, typename V>
+			Size(U width, EM<V> height) noexcept;
+			template<typename U, typename V>
+			Size(EM<U> width, EM<V> height) noexcept;
 			template<typename U, typename V>
 			Size(U width, V height) noexcept;
 			template<typename U>
@@ -220,6 +266,32 @@ namespace hgui
 	typedef kernel::Point<float> point;
 	typedef kernel::Color<float> color;
 	typedef kernel::Size<float> size;
+}
+
+inline hgui::kernel::EM<float> operator""_em(unsigned long long value)
+{
+	return hgui::kernel::EM<float>(static_cast<float>(value));
+}
+
+template<typename T>
+hgui::kernel::Size<T> hgui::kernel::EM<T>::referenceSize;
+
+template<typename T>
+inline hgui::kernel::EM<T>::EM() :
+	value{}
+{
+}
+
+template<typename T>
+inline hgui::kernel::EM<T>::EM(T value) :
+	value(static_cast<T>(value / 100))
+{
+}
+
+template<typename T>
+inline hgui::kernel::EM<T>::EM(const EM<T>& EM) :
+	value(EM.value)
+{
 }
 
 template<typename T>
@@ -511,8 +583,66 @@ inline hgui::kernel::Point<T>::Point(T xy) noexcept :
 }
 
 template<typename T>
+inline hgui::kernel::Point<T>::Point(EM<T> xy) noexcept :
+	Vector<T, 2>({ static_cast<T>(xy.value * xy.referenceSize.width),
+		static_cast<T>(xy.value * xy.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U>
+inline hgui::kernel::Point<T>::Point(EM<U> xy) noexcept :
+	Vector<T, 2>({ static_cast<T>(xy.value * xy.referenceSize.width),
+		static_cast<T>(xy.value * xy.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Point<T>::Point(EM<U> x, V y) noexcept :
+	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
+		static_cast<T>(y) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Point<T>::Point(U x, EM<V> y) noexcept :
+	Vector<T, 2>({ static_cast<T>(x),
+		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
 inline hgui::kernel::Point<T>::Point(T x, T y) noexcept :
 	Vector<T, 2>({ x, y }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Point<T>::Point(EM<T> x, T y) noexcept :
+	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width), y }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Point<T>::Point(T x, EM<T> y) noexcept :
+	Vector<T, 2>({ x, static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Point<T>::Point(EM<T> x, EM<T> y) noexcept :
+	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
+		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Point<T>::Point(EM<U> x, EM<V> y) noexcept :
+	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
+		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -586,8 +716,66 @@ inline hgui::kernel::Size<T>::Size(T widthANDheight) noexcept :
 }
 
 template<typename T>
+inline hgui::kernel::Size<T>::Size(EM<T> widthANDheight) noexcept :
+	Vector<T, 2>({ static_cast<T>(widthANDheight.value * widthANDheight.referenceSize.width),
+		static_cast<T>(widthANDheight.value * widthANDheight.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U>
+inline hgui::kernel::Size<T>::Size(EM<U> widthANDheight) noexcept :
+	Vector<T, 2>({ static_cast<T>(widthANDheight.value * widthANDheight.referenceSize.width),
+		static_cast<T>(widthANDheight.value * widthANDheight.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Size<T>::Size(EM<U> width, V height) noexcept :
+	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width),
+		static_cast<T>(height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Size<T>::Size(U width, EM<V> height) noexcept :
+	Vector<T, 2>({ static_cast<T>(width),
+		static_cast<T>(height.value * height.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
 inline hgui::kernel::Size<T>::Size(T width, T height) noexcept :
 	Vector<T, 2>({ width, height }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Size<T>::Size(EM<T> width, T height) noexcept :
+	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width), height }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Size<T>::Size(T width, EM<T> height) noexcept :
+	Vector<T, 2>({ width, static_cast<T>(height.value * height.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Size<T>::Size(EM<T> width, EM<T> height) noexcept :
+	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width),
+		static_cast<T>(width.value * width.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+{
+}
+
+template<typename T>
+template<typename U, typename V>
+inline hgui::kernel::Size<T>::Size(EM<U> width, EM<V> height) noexcept :
+	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width),
+		static_cast<T>(width.value * width.referenceSize.height) }), width((*this)[0]), height((*this)[1])
 {
 }
 

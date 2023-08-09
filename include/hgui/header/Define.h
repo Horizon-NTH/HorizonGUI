@@ -25,7 +25,7 @@
 #define HGUI_COLOR_WHITE hgui::color(1.f)
 #define HGUI_COLOR_RED hgui::color(1.f, 0.f, 0.f)
 #define HGUI_COLOR_GREEN hgui::color(0.f, 1.f, 0.f)
-#define HGUI_COLOR_BULE hgui::color(0.f, 0.f, 1.f)
+#define HGUI_COLOR_BLUE hgui::color(0.f, 0.f, 1.f)
 //ENUMS
 namespace hgui
 {

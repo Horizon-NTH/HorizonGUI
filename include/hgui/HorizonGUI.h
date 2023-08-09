@@ -5,6 +5,7 @@
 #include "header/Maths.hpp"
 #include "header/MonitorManager.h"
 #include "header/ResourceManager.h"
+#include "header/TagManager.h"
 #include "header/BufferManager.h"
 #include "header/WindowManager.h"
 #include "header/ButtonManager.h"
