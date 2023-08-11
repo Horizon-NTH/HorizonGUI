@@ -321,20 +321,20 @@ inline hgui::kernel::GLSLvec2<T>::GLSLvec2(U x, V y) noexcept :
 
 template<typename T>
 inline hgui::kernel::GLSLvec2<T>::GLSLvec2(const GLSLvec2<T>& vector) noexcept :
-	Vector<T, 2>({ vector.x, vector.y }), y((*this)[0]), x((*this)[1])
+	Vector<T, 2>({ vector.x, vector.y }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 inline hgui::kernel::GLSLvec2<T>::GLSLvec2(const kernel::Vector<T, 2>& vector) noexcept :
-	Vector<T, 2>({ vector[0], vector[1] }), y((*this)[0]), x((*this)[1])
+	Vector<T, 2>({ vector[0], vector[1] }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 template<typename U>
 inline hgui::kernel::GLSLvec2<T>::GLSLvec2(const glm::vec<2, U>& vector) noexcept :
-	Vector<T, 2>({ static_cast<T>(vector.x), static_cast<T>(vector.y) }), y((*this)[0]), x((*this)[1])
+	Vector<T, 2>({ static_cast<T>(vector.x), static_cast<T>(vector.y) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -383,13 +383,13 @@ inline hgui::kernel::GLSLvec3<T>::GLSLvec3(T x, T y, T z) noexcept :
 
 template<typename T>
 inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const GLSLvec3<T>& vector) noexcept :
-	Vector<T, 3>({ vector.x, vector.y, vector.z }), y((*this)[0]), x((*this)[1]), z((*this)[2])
+	Vector<T, 3>({ vector.x, vector.y, vector.z }), x((*this)[0]), y((*this)[1]), z((*this)[2])
 {
 }
 
 template<typename T>
 inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const kernel::Vector<T, 3>& vector) noexcept :
-	Vector<T, 3>({ vector[0], vector[1], vector[2] }), y((*this)[0]), x((*this)[1]), z((*this)[2])
+	Vector<T, 3>({ vector[0], vector[1], vector[2] }), x((*this)[0]), y((*this)[1]), z((*this)[2])
 {
 }
 
@@ -403,21 +403,21 @@ inline hgui::kernel::GLSLvec3<T>::GLSLvec3(U x, V y, W z) noexcept :
 template<typename T>
 template<typename U>
 inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const GLSLvec3<U>& vector) noexcept :
-	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z) }), y((*this)[0]), x((*this)[1]), z((*this)[2])
+	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z) }), x((*this)[0]), y((*this)[1]), z((*this)[2])
 {
 }
 
 template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const glm::vec<2, U>& vector, V z) noexcept :
-	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(z) }), y((*this)[0]), x((*this)[1]), z((*this)[2])
+	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(z) }), x((*this)[0]), y((*this)[1]), z((*this)[2])
 {
 }
 
 template<typename T>
 template<typename U>
 inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const glm::vec<3, U>& vector) noexcept :
-	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z) }), y((*this)[0]), x((*this)[1]), z((*this)[2])
+	Vector<T, 3>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z) }), x((*this)[0]), y((*this)[1]), z((*this)[2])
 {
 }
 
@@ -477,13 +477,13 @@ inline hgui::kernel::GLSLvec4<T>::GLSLvec4(T x, T y, T z, T w) noexcept :
 
 template<typename T>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const GLSLvec4<T>& vector) noexcept :
-	Vector<T, 4>({ vector.x, vector.y, vector.z, vector.w }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ vector.x, vector.y, vector.z, vector.w }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
 template<typename T>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const kernel::Vector<T, 4>& vector) noexcept :
-	Vector<T, 4>({ vector[0], vector[1], vector[2], vector[3] }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ vector[0], vector[1], vector[2], vector[3] }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
@@ -497,28 +497,28 @@ inline hgui::kernel::GLSLvec4<T>::GLSLvec4(U x, V y, W z, X w) noexcept :
 template<typename T>
 template<typename U>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const GLSLvec4<U>& vector) noexcept :
-	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
 template<typename T>
 template<typename U, typename V, typename W>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<2, U>& vector, V z, W w) noexcept :
-	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(z), static_cast<T>(w) }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(z), static_cast<T>(w) }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
 template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<3, U>& vector, V w) noexcept :
-	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(w) }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(w) }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
 template<typename T>
 template<typename U>
 inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<4, U>& vector) noexcept :
-	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }), y((*this)[0]), x((*this)[1]), z((*this)[2]), w((*this)[3])
+	Vector<T, 4>({ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }), x((*this)[0]), y((*this)[1]), z((*this)[2]), w((*this)[3])
 {
 }
 
