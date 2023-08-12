@@ -9,24 +9,131 @@ namespace hgui
 	{
 		template<typename T>
 		class Size;
+		template<typename T>
+		class Point;
+
+		enum class operation
+		{
+			ADDITION,
+			SUBSTRACTION,
+			MULTIPLICATION,
+			DIVISION
+		};
 
 		template<typename T>
 		class EM
 		{
+			friend class Size<T>;
+			friend class Point<T>;
+
 		public:
 			EM();
-			EM(T value);
+			explicit EM(T value);
 			EM(const EM<T>& EM);
 
-			template<typename U>
-			friend EM<T> operator*(T value, const EM<U>& EM)
+			friend EM<T> operator+(EM<T> EM, T element)
 			{
-				return kernel::EM<U>(value);
+				EM.m_operations.push_back(std::make_pair(operation::ADDITION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator+(EM<T> EM, U element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::ADDITION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator+(T element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::ADDITION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator+(U element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::ADDITION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator-(EM<T> EM, T element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::SUBSTRACTION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator-(EM<T> EM, U element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::SUBSTRACTION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator-(T element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::SUBSTRACTION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator-(U element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::SUBSTRACTION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator*(EM<T> EM, T element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::MULTIPLICATION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator*(EM<T> EM, U element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::MULTIPLICATION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator*(T element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::MULTIPLICATION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator*(U element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::MULTIPLICATION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator/(EM<T> EM, T element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::DIVISION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator/(EM<T> EM, U element)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::DIVISION, static_cast<T>(element)));
+				return EM;
+			}
+
+			friend EM<T> operator/(T element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::DIVISION, element));
+				return EM;
+			}
+			template<typename U>
+			friend EM<T> operator/(U element, EM<T> EM)
+			{
+				EM.m_operations.push_back(std::make_pair(operation::DIVISION, static_cast<T>(element)));
+				return EM;
 			}
 
 			T value;
-
 			static Size<T> referenceSize;
+
+		private:
+			std::vector<std::pair<operation, T>> m_operations;
+
+			static T calcul(T sum, std::pair<operation, T> element);
 		};
 
 		template<typename T>
@@ -278,20 +385,42 @@ hgui::kernel::Size<T> hgui::kernel::EM<T>::referenceSize;
 
 template<typename T>
 inline hgui::kernel::EM<T>::EM() :
-	value{}
+	value{}, m_operations()
 {
 }
 
 template<typename T>
 inline hgui::kernel::EM<T>::EM(T value) :
-	value(static_cast<T>(value / 100))
+	value(static_cast<T>(value / 100)), m_operations()
 {
 }
 
 template<typename T>
 inline hgui::kernel::EM<T>::EM(const EM<T>& EM) :
-	value(EM.value)
+	value(EM.value), m_operations(EM.m_operations)
 {
+}
+
+template<typename T>
+inline T hgui::kernel::EM<T>::calcul(T sum, std::pair<operation, T> element)
+{
+	switch (element.first)
+	{
+	case operation::ADDITION:
+		return sum + element.second;
+		break;
+	case operation::SUBSTRACTION:
+		return sum - element.second;
+		break;
+	case operation::MULTIPLICATION:
+		return sum * element.second;
+		break;
+	case operation::DIVISION:
+		return sum / element.second;
+		break;
+	default:
+		break;
+	}
 }
 
 template<typename T>
@@ -584,23 +713,23 @@ inline hgui::kernel::Point<T>::Point(T xy) noexcept :
 
 template<typename T>
 inline hgui::kernel::Point<T>::Point(EM<T> xy) noexcept :
-	Vector<T, 2>({ static_cast<T>(xy.value * xy.referenceSize.width),
-		static_cast<T>(xy.value * xy.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.width, EM<T>::calcul)),
+		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value* xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 template<typename U>
 inline hgui::kernel::Point<T>::Point(EM<U> xy) noexcept :
-	Vector<T, 2>({ static_cast<T>(xy.value * xy.referenceSize.width),
-		static_cast<T>(xy.value * xy.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.width, EM<T>::calcul)),
+		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value* xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Point<T>::Point(EM<U> x, V y) noexcept :
-	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
+	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)),
 		static_cast<T>(y) }), x((*this)[0]), y((*this)[1])
 {
 }
@@ -609,7 +738,7 @@ template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Point<T>::Point(U x, EM<V> y) noexcept :
 	Vector<T, 2>({ static_cast<T>(x),
-		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -621,28 +750,28 @@ inline hgui::kernel::Point<T>::Point(T x, T y) noexcept :
 
 template<typename T>
 inline hgui::kernel::Point<T>::Point(EM<T> x, T y) noexcept :
-	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width), y }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)), y }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 inline hgui::kernel::Point<T>::Point(T x, EM<T> y) noexcept :
-	Vector<T, 2>({ x, static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ x, static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value * y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 inline hgui::kernel::Point<T>::Point(EM<T> x, EM<T> y) noexcept :
-	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
-		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)),
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
 template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Point<T>::Point(EM<U> x, EM<V> y) noexcept :
-	Vector<T, 2>({ static_cast<T>(x.value * x.referenceSize.width),
-		static_cast<T>(y.value * y.referenceSize.height) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)),
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 

@@ -15,7 +15,6 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(), monitor ? monitor->get_monitorPTR() : NULL, NULL);
-	glfwSetWindowPos(m_windowPTR, static_cast<int>(position.x), static_cast<int>(position.y));
 	if (!m_windowPTR)
 	{
 		glfwTerminate();
