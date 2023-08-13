@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+#include "Define.h"
 #include "Vector.hpp"
 
 namespace hgui
@@ -370,14 +371,14 @@ namespace hgui
 	typedef kernel::GLSLvec2<unsigned int> uvec2;
 	typedef kernel::GLSLvec3<unsigned int> uvec3;
 	typedef kernel::GLSLvec4<unsigned int> uvec4;
-	typedef kernel::Point<float> point;
-	typedef kernel::Color<float> color;
-	typedef kernel::Size<float> size;
+	typedef kernel::Point<HGUI_PRECISION> point;
+	typedef kernel::Color<HGUI_PRECISION> color;
+	typedef kernel::Size<HGUI_PRECISION> size;
 }
 
-inline hgui::kernel::EM<float> operator""_em(unsigned long long value)
+inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(unsigned long long value)
 {
-	return hgui::kernel::EM<float>(static_cast<float>(value));
+	return hgui::kernel::EM<HGUI_PRECISION>(static_cast<HGUI_PRECISION>(value));
 }
 
 template<typename T>
@@ -419,6 +420,7 @@ inline T hgui::kernel::EM<T>::calcul(T sum, std::pair<operation, T> element)
 		return sum / element.second;
 		break;
 	default:
+		return {};
 		break;
 	}
 }
@@ -714,7 +716,7 @@ inline hgui::kernel::Point<T>::Point(T xy) noexcept :
 template<typename T>
 inline hgui::kernel::Point<T>::Point(EM<T> xy) noexcept :
 	Vector<T, 2>({ static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.width, EM<T>::calcul)),
-		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value* xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -722,7 +724,7 @@ template<typename T>
 template<typename U>
 inline hgui::kernel::Point<T>::Point(EM<U> xy) noexcept :
 	Vector<T, 2>({ static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.width, EM<T>::calcul)),
-		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value* xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(xy.m_operations.begin(), xy.m_operations.end(), xy.value * xy.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -738,7 +740,7 @@ template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Point<T>::Point(U x, EM<V> y) noexcept :
 	Vector<T, 2>({ static_cast<T>(x),
-		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value * y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -763,7 +765,7 @@ inline hgui::kernel::Point<T>::Point(T x, EM<T> y) noexcept :
 template<typename T>
 inline hgui::kernel::Point<T>::Point(EM<T> x, EM<T> y) noexcept :
 	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)),
-		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value * y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -771,7 +773,7 @@ template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Point<T>::Point(EM<U> x, EM<V> y) noexcept :
 	Vector<T, 2>({ static_cast<T>(std::accumulate(x.m_operations.begin(), x.m_operations.end(), x.value * x.referenceSize.width, EM<T>::calcul)),
-		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value* y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
+		static_cast<T>(std::accumulate(y.m_operations.begin(), y.m_operations.end(), y.value * y.referenceSize.height, EM<T>::calcul)) }), x((*this)[0]), y((*this)[1])
 {
 }
 
