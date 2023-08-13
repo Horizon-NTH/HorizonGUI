@@ -56,7 +56,7 @@ namespace hgui
 
 			friend inline Vector<T, dimension> operator/(const Vector<T, dimension>& u, const T& element) noexcept
 			{
-				return Vector<T, dimension>(u.m_data * element);
+				return Vector<T, dimension>(u.m_data / element);
 			}
 
 			inline Vector<T, dimension>& operator/=(const T& element) noexcept;
