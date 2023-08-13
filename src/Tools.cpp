@@ -1,5 +1,4 @@
 #include <hgui/header/Tools.h>
-#include "Tools.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
