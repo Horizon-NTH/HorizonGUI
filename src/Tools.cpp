@@ -1,4 +1,5 @@
 #include <hgui/header/Tools.h>
+#include "Tools.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
@@ -19,4 +20,15 @@ std::string hgui::file_reader(const std::string& filePath)
 	{
 		throw std::runtime_error(("ERROR WHILE LOADING FILE :: " + filePath).c_str());
 	}
+}
+
+bool hgui::random(double chances)
+{
+	static bool firstTime = true;
+	if (firstTime)
+	{
+		std::srand(static_cast<unsigned int>(std::time(NULL)));
+		firstTime = false;
+	}
+	return std::rand() / RAND_MAX <= chances;
 }
