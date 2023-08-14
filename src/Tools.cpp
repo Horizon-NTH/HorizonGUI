@@ -31,3 +31,11 @@ bool hgui::random(double chances)
 	}
 	return std::rand() / RAND_MAX <= chances;
 }
+
+std::string hgui::get_unique_id()
+{
+	static unsigned long long id = 0;
+	std::stringstream newID;
+	newID << "HGUI_UNIQUE_ID_" << id;
+	return newID.str();
+}

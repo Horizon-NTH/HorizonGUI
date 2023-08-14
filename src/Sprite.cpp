@@ -40,6 +40,11 @@ void hgui::kernel::Sprite::set_position(const point& newPosition)
     m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 }
 
+void hgui::kernel::Sprite::set_texture(const std::shared_ptr<Texture>& newTexture)
+{
+    m_texture = newTexture;
+}
+
 void hgui::kernel::Sprite::init_data()
 {
     float vertices[] = {

@@ -22,6 +22,7 @@ namespace hgui
 			void draw() const override;
 
 			void set_position(const point& newPosition) override;
+			void set_texture(const std::shared_ptr<Texture>& newTexture);
 
 		private:
 			std::shared_ptr<Texture> m_texture;
