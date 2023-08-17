@@ -15,10 +15,6 @@ hgui::kernel::Button::Button(const std::function<void()>& function, const std::s
 	}
 }
 
-hgui::kernel::Button::~Button()
-{
-}
-
 void hgui::kernel::Button::press() const
 {
 	if (m_function)
@@ -29,13 +25,11 @@ void hgui::kernel::Button::press() const
 
 void hgui::kernel::Button::draw() const
 {
-	kernel::Window* window = 
-		static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+	int width, height;
+	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(window->get_size().width), 
-			static_cast<float>(window->get_size().height), 0.f, -1.0f, 1.0f))
+		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
 		.set_vec3("buttonColor", m_color).set_int("focused", static_cast<int>(m_state))
-		.set_vec3("backgroundColor", RenderManager::get_background_color())
 		.set_int("custom", m_texture ? true : false);
 	m_VAO->bind();
 	if (m_texture)

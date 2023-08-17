@@ -70,8 +70,10 @@ void hgui::kernel::resources_cleaner()
 	BufferManager::m_buffers.clear();
 	ButtonManager::m_buttons.clear();
 	SpriteManager::m_sprites.clear();
-	LabelManager::m_textAreas.clear();
+	LabelManager::m_labels.clear();
+	CanvaManager::m_canvas.clear();
 	Widget::m_binds.clear();
+	Widget::m_widgets.clear();
 	TagManager::m_tags.clear();
 	MonitorManager::m_monitors.clear();
 	WindowManager::m_windows.clear();

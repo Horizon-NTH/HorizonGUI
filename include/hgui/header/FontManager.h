@@ -13,12 +13,12 @@ namespace hgui
 	class FontManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Font>& add(const std::string& fontName, const std::string& fontPath);
-		static const std::shared_ptr<kernel::Font>& get(const std::string& fontName);
-		static void delete_font(const std::initializer_list<std::string>& fonts);
+		static const std::shared_ptr<kernel::Font>& add(const std::string& fontID, const std::string& fontPath);
+		static const std::shared_ptr<kernel::Font>& get(const std::string& fontID);
+		static void destroy(const std::initializer_list<std::string>& fontsID);
 
 	private:
-		FontManager();
+		FontManager() = delete;
 
 		static std::map<std::string, std::shared_ptr<kernel::Font>> m_fonts;
 

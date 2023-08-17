@@ -13,7 +13,7 @@ namespace hgui
 		static void program(const std::chrono::milliseconds& delay, std::function<void()> function);
 
 	private:
-		TaskManager();
+		TaskManager() = delete;
 
 		static void process();
 

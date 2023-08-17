@@ -10,8 +10,6 @@ namespace hgui
 {
 	namespace kernel
 	{
-		class Image;
-
 		class Window
 		{
 		public:

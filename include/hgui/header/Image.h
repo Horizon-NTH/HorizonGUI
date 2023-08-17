@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Include.h"
+#include "Maths.hpp"
 #include "Define.h"
-#include "MonitorManager.h"
 
 namespace hgui
 {
@@ -34,6 +34,5 @@ namespace hgui
 			ImageData m_data;
 		};
 	}
-	const std::shared_ptr<kernel::Image> image_loader(const std::string& imagePath);
 }
 

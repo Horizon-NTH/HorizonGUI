@@ -74,7 +74,7 @@ void hgui::RenderManager::render()
 	{
 		for (const auto& widget : Widget::get_widgets(tag))
 		{
-			widget->draw();
+			widget.lock()->draw();
 		}
 	}
 	BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->unbind();
@@ -83,7 +83,7 @@ void hgui::RenderManager::render()
 	{
 		for (const auto& widget : Widget::get_widgets(tag))
 		{
-			widget->draw();
+			widget.lock()->draw();
 		}
 	}
 }

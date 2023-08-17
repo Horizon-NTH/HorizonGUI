@@ -5,9 +5,6 @@
 #include "Widget.h"
 #include "Font.h"
 #include "Shader.h"
-#include "MonitorManager.h"
-#include "FontManager.h"
-#include "WindowManager.h"
 
 namespace hgui
 {

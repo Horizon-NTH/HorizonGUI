@@ -2,51 +2,55 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Sprite>> hgui::SpriteManager::m_sprites;
 
-const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteName, const std::shared_ptr<kernel::Image>& image, const size& size, const point& position, const color& color, float angularRotation)
+const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteID, const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color, float angularRotation)
 {
-	if (m_sprites.find(spriteName) == m_sprites.end())
+	if (m_sprites.find(spriteID) == m_sprites.end())
 	{
-		ResourceManager::load_texture("SPRITE_" + spriteName, image);
-		m_sprites[spriteName] = std::make_shared<kernel::Sprite>(
-			ResourceManager::get_shader(HGUI_SHADER_SPRITE), 
-			ResourceManager::get_texture("SPRITE_" + spriteName), size, position, color, angularRotation);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_sprites[spriteName]);
-		return m_sprites[spriteName];
-	}
-	else
-	{
-		throw std::exception(("THERE IS ALREADY A SPRITE WITH THE NAME : " + spriteName).c_str());
-	}
-}
-
-const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::get(const std::string& spriteName)
-{
-	if (m_sprites.find(spriteName) != m_sprites.end())
-	{
-		return m_sprites[spriteName];
-	}
-	else
-	{
-		throw std::exception(("THERE IS NO SPRITE WITH THE NAME : " + spriteName).c_str());
-	}
-}
-
-void hgui::SpriteManager::delete_sprites(const std::initializer_list<std::string>& spritesNames)
-{
-	if (spritesNames.size())
-	{
-		for (const std::string& sprite : spritesNames)
+		if (auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
 		{
-			Widget::delete_widget(m_sprites[sprite]);
-			m_sprites.erase(sprite);
+			ResourceManager::load_texture("HGUI_SPRITE_" + spriteID, *data);
+			m_sprites[spriteID] = std::make_shared<kernel::Sprite>(
+				ResourceManager::get_shader(HGUI_SHADER_SPRITE),
+				ResourceManager::get_texture("HGUI_SPRITE_" + spriteID), size, position, color, angularRotation);
+		}
+		else if (auto data = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
+		{
+			m_sprites[spriteID] = std::make_shared<kernel::Sprite>(
+				ResourceManager::get_shader(HGUI_SHADER_SPRITE),
+				*data, size, position, color, angularRotation);
+		}
+		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_sprites[spriteID]->weak_from_this());
+		return m_sprites[spriteID];
+	}
+	else
+	{
+		throw std::exception(("THERE IS ALREADY A SPRITE WITH THE ID : " + spriteID).c_str());
+	}
+}
+
+const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::get(const std::string& spriteID)
+{
+	if (m_sprites.find(spriteID) != m_sprites.end())
+	{
+		return m_sprites[spriteID];
+	}
+	else
+	{
+		throw std::exception(("THERE IS NO SPRITE WITH THE ID : " + spriteID).c_str());
+	}
+}
+
+void hgui::SpriteManager::destroy(const std::initializer_list<std::string>& spritesID)
+{
+	if (spritesID.size())
+	{
+		for (const std::string& spriteID : spritesID)
+		{
+			m_sprites.erase(spriteID);
 		}
 	}
 	else
 	{
-		for (auto& sprite : m_sprites)
-		{
-			Widget::delete_widget(sprite.second);
-		}
 		m_sprites.clear();
 	}
 }

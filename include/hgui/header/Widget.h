@@ -14,12 +14,12 @@ namespace hgui
 	namespace kernel
 	{
 		void resources_cleaner();
-		struct SharedPtrKeyComparator
+		template<typename T>
+		struct WeakPTRComparator
 		{
-			template <typename T>
-			bool operator()(const std::shared_ptr<T>& lhs, const std::shared_ptr<T>& rhs) const
+			bool operator()(const std::weak_ptr<T>& lhs, const std::weak_ptr<T>& rhs) const
 			{
-				return *lhs < *rhs;
+				return lhs.lock() < rhs.lock();
 			}
 		};
 	}
@@ -52,7 +52,6 @@ namespace hgui
 		static void unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		static void active(const std::vector<std::string>& tags = {});
-		static const std::vector<std::shared_ptr<Widget>>& get_widgets(const std::string& tag);
 
 	protected:
 		std::shared_ptr<kernel::Shader> m_shader;
@@ -64,12 +63,12 @@ namespace hgui
 
 	private:
 		static std::vector<std::string> m_bindedTags;
-		static std::map<std::shared_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>> m_binds;
-		static std::map<std::string, std::vector<std::shared_ptr<Widget>>> m_widgets;
+		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
+		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
 
-		static void delete_widget(const std::shared_ptr<Widget>& widget);
+		static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
+
 		friend void kernel::resources_cleaner();
-
 	};
 }
 

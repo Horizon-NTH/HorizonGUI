@@ -24,7 +24,7 @@ namespace hgui
 		static void delete_textures(const std::initializer_list<std::string>& texturesnames);
 
 	private:
-		ResourceManager();
+		ResourceManager() = delete;
 
 		static std::map<std::string, std::shared_ptr<kernel::Shader>> m_shaders;
 		static std::map<std::string, std::shared_ptr<kernel::Texture>> m_textures;

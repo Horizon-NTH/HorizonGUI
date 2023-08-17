@@ -18,7 +18,7 @@ namespace hgui
 		static const std::shared_ptr<kernel::Monitor>& get_primary_monitor();
 
 	private:
-		MonitorManager();
+		MonitorManager() = delete;
 
 		static std::map<std::string, std::shared_ptr<kernel::Monitor>> m_monitors;
 

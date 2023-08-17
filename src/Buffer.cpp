@@ -4,7 +4,6 @@ hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::s
 	m_shader(shader), m_VAO(std::make_shared<VertexArrayObject>()), m_VBO(std::make_shared<VertexBufferObject>()),
 	m_frameBuffer(std::make_shared<FrameBuffer>()), m_renderBuffer(std::make_shared<RenderBuffer>()), m_texture(texture)
 {
-	
 	m_frameBuffer->bind();
 	m_frameBuffer->attach_texture(m_texture);
 	m_renderBuffer->bind();

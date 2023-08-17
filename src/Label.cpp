@@ -97,10 +97,11 @@ void hgui::kernel::Label::set_size(const size& newSize)
 void hgui::kernel::Label::draw() const
 {
 	point position(m_position);
-	kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+	int width, height;
+	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_vec3("textColor", m_color)
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(window->get_size().width), 
-			static_cast<float>(window->get_size().height), 0.f))
+		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), 
+			static_cast<float>(height), 0.f))
 		.set_int("text", 0);
 	glActiveTexture(GL_TEXTURE0);
 	m_VAO->bind();

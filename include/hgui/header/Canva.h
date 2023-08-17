@@ -1,11 +1,10 @@
 #pragma once
 
 #include "Include.h"
+#include "Define.h"
 #include "Maths.hpp"
 #include "Widget.h"
-#include "WindowManager.h"
 #include "Drawer.h"
-#include "ResourceManager.h"
 
 namespace hgui
 {

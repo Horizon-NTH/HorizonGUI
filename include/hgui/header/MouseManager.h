@@ -3,9 +3,8 @@
 #include "Include.h"
 #include "Define.h"
 #include "Widget.h"
-#include "WindowManager.h"
-#include "Window.h"
 #include "Timer.h"
+#include "Window.h"
 
 namespace hgui
 {
@@ -24,7 +23,6 @@ namespace hgui
 	{
 		friend class RenderManager;
 		friend class WindowManager;
-		friend class Widget;
 
 	public:
 		static void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
@@ -33,8 +31,9 @@ namespace hgui
 		static void bind_scrollcallback(const std::variant<std::function<void()>, std::function<void(double, double)>>& function);
 
 		static point get_position();
+
 	private:
-		MouseManager();
+		MouseManager() = delete;
 
 		static void process();
 		static void scroll(GLFWwindow* window, double xOffset, double yOffset);

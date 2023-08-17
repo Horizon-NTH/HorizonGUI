@@ -3,12 +3,10 @@
 #include "Include.h"
 #include "FrameBuffer.h"
 #include "RenderBuffer.h"
-#include "ResourceManager.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
-#include "MonitorManager.h"
 
 namespace hgui
 {

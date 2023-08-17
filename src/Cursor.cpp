@@ -31,5 +31,5 @@ hgui::kernel::Cursor::~Cursor()
 
 void hgui::kernel::Cursor::use() const
 {
-	glfwSetCursor(WindowManager::get_current_windowPTR(), m_cursorPTR);
+	glfwSetCursor(glfwGetCurrentContext(), m_cursorPTR);
 }

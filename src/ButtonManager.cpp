@@ -2,70 +2,65 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonName, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
 {
-	if (m_buttons.find(buttonName) == m_buttons.end())
+	if (m_buttons.find(buttonID) == m_buttons.end())
 	{
 		float cornerAngularRadius = std::min(size.width, size.height) * 0.5f;
-		m_buttons[buttonName] = std::make_shared<kernel::Button>(function, 
+		m_buttons[buttonID] = std::make_shared<kernel::Button>(function, 
 			ResourceManager::get_shader(HGUI_SHADER_BUTTON), size, position, 
-			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonName, text, position, font, textOptions) : nullptr, 
+			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonID, text, position, font, textOptions) : nullptr, 
 			color, angularRotation, cornerAngularRadius, texture);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_buttons[buttonName]);
-		Widget::bind(m_buttons[buttonName], inputs::OVER, [buttonName]() 
+		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_buttons[buttonID]->weak_from_this());
+		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]() 
 			{ 
-				ButtonManager::get(buttonName)->set_state(state::HOVER); 
+				ButtonManager::get(buttonID)->set_state(state::HOVER); 
 				CursorManager::set(HGUI_CURSOR_HAND); 
 			});
-		Widget::bind(m_buttons[buttonName], inputs::NOVER, [buttonName]() 
+		Widget::bind(m_buttons[buttonID], inputs::NOVER, [buttonID]() 
 			{
-				ButtonManager::get(buttonName)->set_state(state::NORMAL); 
+				ButtonManager::get(buttonID)->set_state(state::NORMAL); 
 				CursorManager::set(HGUI_CURSOR_ARROW); 
 			});
-		Widget::bind(m_buttons[buttonName], MouseCombinationAction(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonName]() 
+		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonID]()
 			{
-				ButtonManager::get(buttonName)->set_state(state::PRESS); 
+				ButtonManager::get(buttonID)->set_state(state::PRESS); 
 			});
-		Widget::bind(m_buttons[buttonName], MouseCombinationAction(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonName]() 
+		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]() 
 			{
-				ButtonManager::get(buttonName)->press(); 
+				ButtonManager::get(buttonID)->press(); 
 			});
-		return m_buttons[buttonName];
+		return m_buttons[buttonID];
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A BUTTON WITH THE NAME : " + buttonName).c_str());
+		throw std::exception(("THERE IS ALREADY A BUTTON WITH THE ID : " + buttonID).c_str());
 	}
 }
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std::string& buttonName)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std::string& buttonID)
 {
-	if (m_buttons.find(buttonName) != m_buttons.end())
+	if (m_buttons.find(buttonID) != m_buttons.end())
 	{
-		return m_buttons[buttonName];
+		return m_buttons[buttonID];
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO BUTTON WITH THE NAME : " + buttonName).c_str());
+		throw std::exception(("THERE IS NO BUTTON WITH THE ID : " + buttonID).c_str());
 	}
 }
 
-void hgui::ButtonManager::delete_button(const std::initializer_list<std::string>& buttonsNames)
+void hgui::ButtonManager::destroy(const std::initializer_list<std::string>& buttonsID)
 {
-	if (buttonsNames.size())
+	if (buttonsID.size())
 	{
-		for (const std::string& button : buttonsNames)
+		for (const std::string& buttonID : buttonsID)
 		{
-			Widget::delete_widget(m_buttons[button]);
-			m_buttons.erase(button);
+			m_buttons.erase(buttonID);
 		}
 	}
 	else
 	{
-		for (auto& button : m_buttons)
-		{
-			Widget::delete_widget(button.second);
-		}
 		m_buttons.clear();
 	}
 }

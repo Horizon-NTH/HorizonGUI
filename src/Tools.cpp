@@ -5,6 +5,11 @@ void hgui::after(const std::chrono::milliseconds& delay, const std::function<voi
 	hgui::TaskManager::program(delay, function);
 }
 
+const std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
+{
+	return std::make_shared<hgui::kernel::Image>(imagePath);
+}
+
 std::string hgui::file_reader(const std::string& filePath)
 {
 	std::ifstream istream(filePath);

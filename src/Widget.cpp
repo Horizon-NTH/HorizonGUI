@@ -1,8 +1,8 @@
 #include <hgui/header/Widget.h>
 
 std::vector<std::string> hgui::Widget::m_bindedTags;
-std::map<std::shared_ptr<hgui::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>> hgui::Widget::m_binds;
-std::map<std::string, std::vector<std::shared_ptr<hgui::Widget>>> hgui::Widget::m_widgets;
+std::map<std::weak_ptr<hgui::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::Widget>> hgui::Widget::m_binds;
+std::map<std::string, std::vector<std::weak_ptr<hgui::Widget>>> hgui::Widget::m_widgets;
 
 hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color) :
     m_shader(shader), m_size(size), m_position(position), m_color(color),
@@ -16,6 +16,18 @@ hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& 
 
 hgui::Widget::~Widget()
 {
+	for (auto& widgets : Widget::m_widgets)
+	{
+		widgets.second.erase(
+			std::remove_if(widgets.second.begin(), widgets.second.end(), [](const std::weak_ptr<Widget>& widget) -> bool
+				{
+					return widget.expired();
+				}),
+			widgets.second.end()
+		);
+	}
+	for (auto it = Widget::m_binds.begin(); it != Widget::m_binds.end();
+		it->first.expired() ? it = Widget::m_binds.erase(it) : it++);
 }
 
 const hgui::point& hgui::Widget::get_position() const
@@ -128,28 +140,16 @@ void hgui::Widget::active(const std::vector<std::string>& tags)
 	}
 }
 
-const std::vector<std::shared_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
+const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
 {
 	const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
 	if (std::find(tagsList.begin(), tagsList.end(), tag) != tagsList.end())
 	{
-		return m_widgets[tag];
+		return Widget::m_widgets[tag];
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
-	}
-}
-
-void hgui::Widget::delete_widget(const std::shared_ptr<Widget>& widget)
-{
-	for (auto& vec : m_widgets)
-	{
-		auto it = std::find_if(vec.second.begin(), vec.second.end(), [widget](const auto& p) { return widget == p; });
-		if (it != vec.second.end())
-		{
-			vec.second.erase(it);
-		}
+		throw std::runtime_error(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
 	}
 }
 

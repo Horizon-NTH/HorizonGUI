@@ -2,7 +2,6 @@
 
 #include "Include.h"
 #include "Maths.hpp"
-#include "WindowManager.h"
 #include "Image.h"
 
 namespace hgui
@@ -24,6 +23,7 @@ namespace hgui
 			void use() const;
 
 		private:
+
 			GLFWcursor* m_cursorPTR;
 		};
 	}

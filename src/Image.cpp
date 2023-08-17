@@ -53,10 +53,7 @@ void hgui::kernel::Image::save_image()
         glReadPixels(0, 0, 1920, 1080, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
         stbi_write_png(this->m_path.c_str(), 1920, 1080, 4, pixels.data(), 1920 * 4);
     };
-    function(MonitorManager::get_primary_monitor()->get_size());
-}
-
-const std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
-{
-    return std::make_shared<hgui::kernel::Image>(imagePath);
+    int width, height;
+    glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
+    function(hgui::size(width, height));
 }

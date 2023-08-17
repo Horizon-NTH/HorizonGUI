@@ -7,7 +7,6 @@
 #include "Texture.h"
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
-#include "WindowManager.h"
 
 namespace hgui
 {

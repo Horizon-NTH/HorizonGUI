@@ -83,7 +83,7 @@ void hgui::KeyBoardManager::process()
 	{
 		if (!key.first.index())
 		{
-			actions action = static_cast<actions>(glfwGetKey(WindowManager::get_current_windowPTR(), 
+			actions action = static_cast<actions>(glfwGetKey(glfwGetCurrentContext(), 
 				static_cast<int>(std::get<std::pair<keys, actions>>(key.first).first)));
 			switch (action)
 			{
@@ -122,7 +122,7 @@ void hgui::KeyBoardManager::process()
 			bool verif = true;
 			for (const auto& keyCombinason : std::get<std::pair<std::vector<keys>, actions>>(key.first).first)
 			{
-				if (!(static_cast<actions>(glfwGetKey(WindowManager::get_current_windowPTR(), static_cast<int>(keyCombinason))) 
+				if (!(static_cast<actions>(glfwGetKey(glfwGetCurrentContext(), static_cast<int>(keyCombinason))) 
 					== std::get<std::pair<std::vector<keys>, actions>>(key.first).second))
 				{
 					verif = false;

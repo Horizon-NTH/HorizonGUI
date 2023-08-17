@@ -2,6 +2,7 @@
 
 #include "Include.h"
 #include "Maths.hpp"
+#include "Define.h"
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
 #include "Shape.h"
@@ -11,7 +12,6 @@
 #include "StraightLine.h"
 #include "Shader.h"
 #include "ResourceManager.h"
-#include "Define.h"
 
 namespace hgui
 {

@@ -23,7 +23,7 @@ namespace hgui
 		static GLFWwindow* get_current_windowPTR();
 
 	private:
-		WindowManager();
+		WindowManager() = delete;
 
 		static std::map<std::string, std::shared_ptr<kernel::Window>> m_windows;
 

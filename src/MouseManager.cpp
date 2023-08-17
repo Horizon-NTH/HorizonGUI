@@ -41,7 +41,7 @@ void hgui::MouseManager::bind_scrollcallback(const std::variant<std::function<vo
 hgui::point hgui::MouseManager::get_position()
 {
 	std::pair<double, double> mousePosition;
-	glfwGetCursorPos(WindowManager::get_current_windowPTR(), &mousePosition.first, &mousePosition.second);
+	glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
 	return point(static_cast<float>(mousePosition.first), static_cast<float>(mousePosition.second));
 }
 
@@ -59,8 +59,8 @@ void hgui::MouseManager::process()
 		{
 			auto& action = std::get<inputs>(input.first);
 			std::pair<double, double> newMousePosition;
-			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
-			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 			switch (action)
 			{
 			case hgui::inputs::OVER:
@@ -98,8 +98,8 @@ void hgui::MouseManager::process()
 		{
 			auto& action = std::get<std::tuple<inputs, buttons, actions>>(input.first);
 			std::pair<double, double> newMousePosition;
-			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
-			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 			switch (std::get<0>(action))
 			{
 			case hgui::inputs::OVER:
@@ -151,12 +151,13 @@ void hgui::MouseManager::process()
 	//PROCESSING INPUT FOR WIDGET
 	for (const std::string& tag : Widget::m_bindedTags)
 	{
-		for (auto& widget : Widget::get_widgets(tag))
+		for (auto& wwidget : Widget::get_widgets(tag))
 		{
-			if (Widget::m_binds.find(widget) != Widget::m_binds.end())
+			if (Widget::m_binds.find(wwidget) != Widget::m_binds.end())
 			{
-				for (auto& input : Widget::m_binds[widget])
+				for (auto& input : Widget::m_binds[wwidget])
 				{
+					auto widget = wwidget.lock();
 					static std::pair<double, double> lastMousePosition;
 					if (!input.second.second)
 					{
@@ -166,9 +167,9 @@ void hgui::MouseManager::process()
 					{
 						auto& action = std::get<inputs>(input.first);
 						std::pair<double, double> newMousePosition;
-						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
 						kernel::Window* window = static_cast<kernel::Window*>(
-							glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+							glfwGetWindowUserPointer(glfwGetCurrentContext()));
 						switch (action)
 						{
 						case hgui::inputs::OVER:
@@ -207,7 +208,7 @@ void hgui::MouseManager::process()
 					{
 						auto& action = std::get<std::tuple<inputs, buttons, actions>>(input.first);
 						std::pair<double, double> newMousePosition;
-						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
 						switch (std::get<0>(action))
 						{
 						case hgui::inputs::OVER:
@@ -289,8 +290,8 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 		if (auto action = std::get_if<inputs>(&input.first))
 		{
 			std::pair<double, double> newMousePosition;
-			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
-			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 			switch (*action)
 			{
 			case hgui::inputs::SCROLL:
@@ -319,8 +320,8 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 		else if (auto action = std::get_if<std::tuple<inputs, buttons, actions>>(&input.first))
 		{
 			std::pair<double, double> newMousePosition;
-			glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
-			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+			glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
+			kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 			switch (std::get<0>(*action))
 			{
 			case hgui::inputs::SCROLL:
@@ -371,12 +372,13 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 	//PROCESSING INPUT FOR WIDGET
 	for (const std::string& tag : Widget::m_bindedTags)
 	{
-		for (auto& widget : Widget::get_widgets(tag))
+		for (auto& wwidget : Widget::get_widgets(tag))
 		{
-			if (Widget::m_binds.find(widget) != Widget::m_binds.end())
+			if (Widget::m_binds.find(wwidget) != Widget::m_binds.end())
 			{
-				for (auto& input : Widget::m_binds[widget])
+				for (auto& input : Widget::m_binds[wwidget])
 				{
+					auto widget = wwidget.lock();
 					static std::pair<double, double> lastMousePosition;
 					if (!input.second.second)
 					{
@@ -385,9 +387,9 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 					if (auto action = std::get_if<inputs>(&input.first))
 					{
 						std::pair<double, double> newMousePosition;
-						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
 						kernel::Window* window = static_cast<kernel::Window*>(
-							glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+							glfwGetWindowUserPointer(glfwGetCurrentContext()));
 						switch (*action)
 						{
 						case hgui::inputs::SCROLL:
@@ -416,7 +418,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 					else if (auto action = std::get_if<std::tuple<inputs, buttons, actions>>(&input.first))
 					{
 						std::pair<double, double> newMousePosition;
-						glfwGetCursorPos(WindowManager::get_current_windowPTR(), &newMousePosition.first, &newMousePosition.second);
+						glfwGetCursorPos(glfwGetCurrentContext(), &newMousePosition.first, &newMousePosition.second);
 						switch (std::get<0>(*action))
 						{
 						case hgui::inputs::SCROLL:
@@ -478,7 +480,7 @@ bool hgui::MouseManager::is_mouse_in_sector(const std::pair<double, double>& mou
 bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<buttons, actions>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input)
 {
 	auto action = static_cast<hgui::actions>(
-		glfwGetMouseButton(WindowManager::get_current_windowPTR(), static_cast<int>(input.first.first)));
+		glfwGetMouseButton(glfwGetCurrentContext(), static_cast<int>(input.first.first)));
 	switch (action)
 	{
 	case actions::PRESS:

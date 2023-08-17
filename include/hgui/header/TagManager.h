@@ -18,7 +18,7 @@ namespace hgui
 		static void set_current_tag(const std::string& tag);
 
 	private:
-		TagManager();
+		TagManager() = delete;
 
 		static std::string m_currentTag;
 		static std::vector<std::string> m_tags;

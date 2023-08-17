@@ -23,9 +23,9 @@ void hgui::kernel::RenderBuffer::unbind()
 void hgui::kernel::RenderBuffer::create_depth_stencil()
 {
 	bind();
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast<GLsizei>(
-		MonitorManager::get_primary_monitor()->get_size().width), static_cast<GLsizei>(
-			MonitorManager::get_primary_monitor()->get_size().height));
+	int width, height;
+	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	unbind();
 }
 

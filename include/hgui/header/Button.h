@@ -4,10 +4,8 @@
 #include "Maths.hpp"
 #include "Define.h"
 #include "Widget.h"
-#include "ResourceManager.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "RenderManager.h"
 #include "Label.h"
 
 
@@ -15,13 +13,10 @@ namespace hgui
 {
 	namespace kernel
 	{
-		class Label;
-
 		class Button : public Widget
 		{
 		public:
 			Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, float angularRotation, float cornerAngularRadius, const std::shared_ptr<Texture>& = nullptr);
-			~Button();
 
 			void press() const;
 			void draw() const override;

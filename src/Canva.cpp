@@ -1,7 +1,7 @@
 #include <hgui/header/Canva.h>
 
 hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, float angularRotation) :
-	Widget(shader ? shader : ResourceManager::get_shader(HGUI_SHADER_CANVA), size, position, color), 
+	Widget(shader, size, position, color), 
 	m_angularRoation(angularRotation), m_drawer(std::make_shared<kernel::Drawer>(position, size))
 {
 	set_position(position);
@@ -10,10 +10,10 @@ hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, const size& si
 
 void hgui::kernel::Canva::draw() const
 {
-	kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(WindowManager::get_current_windowPTR()));
+	int width, height;
+	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(window->get_size().width),
-			static_cast<float>(window->get_size().height), 0.f, -1.0f, 1.0f));
+		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_VAO->unbind();

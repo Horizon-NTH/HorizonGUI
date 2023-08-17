@@ -2,48 +2,44 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Canva>> hgui::CanvaManager::m_canvas;
 
-const std::shared_ptr<hgui::kernel::Canva>& hgui::CanvaManager::create(const std::string& canvaName, const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, float angularRotation)
+const std::shared_ptr<hgui::kernel::Canva>& hgui::CanvaManager::create(const std::string& canvaID, const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, float angularRotation)
 {
-	if (m_canvas.find(canvaName) == m_canvas.end())
+	if (m_canvas.find(canvaID) == m_canvas.end())
 	{
-		m_canvas[canvaName] = std::make_shared<kernel::Canva>(shader, size, position, color, angularRotation);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_canvas[canvaName]);
-		return m_canvas[canvaName];
+		m_canvas[canvaID] = std::make_shared<kernel::Canva>(shader ? shader :
+			ResourceManager::get_shader(HGUI_SHADER_CANVA), size, position, color, angularRotation);
+		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_canvas[canvaID]->weak_from_this());
+		return m_canvas[canvaID];
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A TEXT AREA WITH THE NAME : " + canvaName).c_str());
+		throw std::exception(("THERE IS ALREADY A TEXT AREA WITH THE ID : " + canvaID).c_str());
 	}
 }
 
-const std::shared_ptr<hgui::kernel::Canva>& hgui::CanvaManager::get(const std::string& canvaName)
+const std::shared_ptr<hgui::kernel::Canva>& hgui::CanvaManager::get(const std::string& canvaID)
 {
-	if (m_canvas.find(canvaName) != m_canvas.end())
+	if (m_canvas.find(canvaID) != m_canvas.end())
 	{
-		return m_canvas[canvaName];
+		return m_canvas[canvaID];
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO CANVA WITH THE NAME : " + canvaName).c_str());
+		throw std::exception(("THERE IS NO CANVA WITH THE ID : " + canvaID).c_str());
 	}
 }
 
-void hgui::CanvaManager::delete_canva(const std::initializer_list<std::string>& canvasName)
+void hgui::CanvaManager::destroy(const std::initializer_list<std::string>& canvasID)
 {
-	if (canvasName.size())
+	if (canvasID.size())
 	{
-		for (const std::string& canva : canvasName)
+		for (const std::string& canvaID : canvasID)
 		{
-			Widget::delete_widget(m_canvas[canva]);
-			m_canvas.erase(canva);
+			m_canvas.erase(canvaID);
 		}
 	}
 	else
 	{
-		for (auto& canva : m_canvas)
-		{
-			Widget::delete_widget(canva.second);
-		}
 		m_canvas.clear();
 	}
 }

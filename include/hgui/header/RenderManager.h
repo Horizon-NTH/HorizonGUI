@@ -22,7 +22,7 @@ namespace hgui
 		static const color& get_background_color();
 
 	private:
-		RenderManager();
+		RenderManager() = delete;
 
 		static void render();
 

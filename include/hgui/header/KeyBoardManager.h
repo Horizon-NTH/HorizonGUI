@@ -2,7 +2,6 @@
 
 #include "Include.h"
 #include "Define.h"
-#include "WindowManager.h"
 #include "Timer.h"
 
 namespace hgui
@@ -31,7 +30,7 @@ namespace hgui
 		static void bind_keycallback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function);
 
 	private:
-		KeyBoardManager();
+		KeyBoardManager() = delete;
 
 		static void process();
 		static void input(GLFWwindow* window, int key, int scancode, int action, int mods);

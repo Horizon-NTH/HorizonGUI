@@ -159,7 +159,6 @@ out vec4 fragmentColor;
 
 uniform sampler2D button;
 uniform vec3 buttonColor;
-uniform vec3 backgroundColor;
 
 uniform int focused;
 uniform bool custom;
@@ -175,16 +174,16 @@ void main()
     {
         fragmentColor = vec4(buttonColor, 1.0) * texture(button, texturePosition);
     }
-
-    if (focused == 0)
-    {
-
-    }
-    else if (focused == 1)
+    
+    if (focused == 1)
     {
         if (fragmentColor.w < 1)
         {
-            fragmentColor = vec4(backgroundColor, 0.1);
+            float luminance = 0.2126 * fragmentColor.r + 0.7152 * fragmentColor.g + 0.0722 * fragmentColor.b;
+            if (luminance > 0.5)
+                fragmentColor = vec4(vec3(1.0), 0.05);
+            else  
+                fragmentColor = vec4(vec3(0.0), 0.05);
         }
         else
         {
@@ -199,7 +198,11 @@ void main()
     {
         if (fragmentColor.w < 1)
         {
-            fragmentColor = vec4(backgroundColor, 0.2);
+            float luminance = 0.2126 * fragmentColor.r + 0.7152 * fragmentColor.g + 0.0722 * fragmentColor.b;
+            if (luminance > 0.5)
+                fragmentColor = vec4(vec3(1.0), 0.1);
+            else  
+                fragmentColor = vec4(vec3(0.0), 0.1);
         }
         else
         {
