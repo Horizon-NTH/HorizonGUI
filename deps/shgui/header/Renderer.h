@@ -11,7 +11,7 @@
 
 namespace hgui
 {
-	class RenderManager
+	class Renderer
 	{
 	public:
 		static void draw(const std::vector<std::string>& tags = {}, const effects& postProcessingOption = effects::CLASSIC);
@@ -20,7 +20,7 @@ namespace hgui
 		static const color& get_background_color();
 
 	private:
-		RenderManager() = delete;
+		Renderer() = delete;
 
 		static void render();
 

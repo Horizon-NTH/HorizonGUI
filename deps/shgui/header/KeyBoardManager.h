@@ -19,7 +19,7 @@ namespace hgui
 
 	class KeyBoardManager
 	{
-		friend class RenderManager;
+		friend class Renderer;
 		friend class WindowManager;
 
 	public:

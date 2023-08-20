@@ -1,9 +1,9 @@
 #include <hgui/header/Renderer.h>
 
-std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::RenderManager::m_draws;
-hgui::color hgui::RenderManager::m_backGroundColor;
+std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
+hgui::color hgui::Renderer::m_backGroundColor;
 
-void hgui::RenderManager::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
+void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
 	if (postProcessingOption == effects::CLASSIC)
 	{
@@ -33,7 +33,7 @@ void hgui::RenderManager::draw(const std::vector<std::string>& tags, const effec
 	}
 }
 
-void hgui::RenderManager::loop()
+void hgui::Renderer::loop()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -41,7 +41,7 @@ void hgui::RenderManager::loop()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 		BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->clear();
-		
+
 		KeyBoardManager::process();
 		MouseManager::process();
 		TaskManager::process();
@@ -55,18 +55,18 @@ void hgui::RenderManager::loop()
 	glfwTerminate();
 }
 
-void hgui::RenderManager::set_background_color(const color& newColor)
+void hgui::Renderer::set_background_color(const color& newColor)
 {
 	m_backGroundColor = newColor;
 	glClearColor(newColor.r, newColor.g, newColor.b, 1.0f);
 }
 
-const hgui::color& hgui::RenderManager::get_background_color()
+const hgui::color& hgui::Renderer::get_background_color()
 {
 	return m_backGroundColor;
 }
 
-void hgui::RenderManager::render()
+void hgui::Renderer::render()
 {
 	ShaderManager::get(HGUI_SHADER_FRAMEBUFFER)->use().set_int("type", static_cast<int>(m_draws.second.second));
 	BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->bind();

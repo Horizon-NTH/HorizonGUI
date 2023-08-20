@@ -15,7 +15,7 @@ namespace hgui
 
 	class MouseManager
 	{
-		friend class RenderManager;
+		friend class Renderer;
 		friend class WindowManager;
 
 	public:

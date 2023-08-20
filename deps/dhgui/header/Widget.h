@@ -26,7 +26,7 @@ namespace hgui
 
 	class Widget : public std::enable_shared_from_this<Widget>
 	{
-		friend class RenderManager;
+		friend class Renderer;
 		friend class MouseManager;
 		friend class SpriteManager;
 		friend class LabelManager;
