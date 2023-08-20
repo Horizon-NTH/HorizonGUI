@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**HorizonGUI** is a Graphic User Interface library in c++ with OpenGl
+**HorizonGUI** is a Graphic User Interface library made in c++ with OpenGl
 
 ## Install Instructions
 
@@ -10,7 +10,7 @@
 
     You first need to clone with [git](https://git-scm.com) the [repository](https://github.com/Horizon-NTH/HorizonGUI.git)
 
-    ⚠️ Watch out! The repository contains submodules, don't forget to add `--recurse-submodules` when cloning.  
+⚠️ Watch out! The repository contains submodules, don't forget to add `--recurse-submodules` when cloning.  
 
 
 ```bash
@@ -25,6 +25,11 @@
     cd HorizonGUI
     mkdir build && cd build
     cmake ..
+```
+⚠️ Watch out! You can choose the api type to **STATIC** (**DYNAMIC** by default) by setting the API_TYPE variable to `ON`:
+
+```bash
+    cmake .. -DAPI_TYPE=ON //This will build the API in STATIC mode.
 ```
 
 * Build
@@ -42,6 +47,10 @@
   * **Microsoft Visual Studio**
 
     You can also use [Microsoft Visual Studio](https://visualstudio.microsoft.com/) to launch the project and build it. Simply open the `horizongui.sln` file with Microsoft Visual Studio.
+
+## Documentation
+
+Please refer to the [wiki](https://github.com/Horizon-NTH/HorizonGUI/wiki).
 
 ## Dependencies
 

@@ -1,17 +1,28 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(horizongui VERSION 1.0.0)
+option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
+
+project(horizongui VERSION 2.0.0)
+
+if(API_TYPE)
+    set(file shgui)
+    set(type STATIC)
+else(API_TYPE)
+    set(file dhgui)
+    set(type DYNAMIC)
+endif(API_TYPE)
 
 add_subdirectory(deps/glfw)
 add_subdirectory(deps/freetype)
 
-file(GLOB_RECURSE HEADER_FILES include/hgui/*.h include/hgui/*.hpp)
+file(GLOB_RECURSE HEADER_FILES deps/${file}/*.h deps/${file}/*.hpp)
 
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.c deps/glad/src/glad.c)
+file(GLOB_RECURSE SOURCE_FILES src/${file}/*.cpp src/${file}/*.c deps/glad/src/glad.c)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/${file} ${CMAKE_CURRENT_SOURCE_DIR}/include/hgui
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
@@ -20,7 +31,7 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image_write.h
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/ft2build.h
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype ${CMAKE_CURRENT_SOURCE_DIR}/include/freetype
-    COMMENT "Moving include files"
+    COMMENT "Builing with API type: ${type}"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

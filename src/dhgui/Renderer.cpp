@@ -1,0 +1,162 @@
+#include <hgui/header/Renderer.h>
+
+std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::RenderManager::m_draws;
+hgui::color hgui::RenderManager::m_backGroundColor;
+std::shared_ptr<hgui::kernel::Buffer> hgui::RenderManager::m_frameBuffer(nullptr);
+std::shared_ptr<hgui::kernel::Shader> hgui::RenderManager::m_frameBufferShader(nullptr);
+
+void hgui::RenderManager::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
+{
+	if (postProcessingOption == effects::CLASSIC)
+	{
+		m_draws.first.clear();
+	}
+	else
+	{
+		m_draws.second.first.clear();
+	}
+	for (const auto& tag : tags.size() ? tags : TagManager::get_tags())
+	{
+		if (postProcessingOption == effects::CLASSIC)
+		{
+			if (std::find(m_draws.first.begin(), m_draws.first.end(), tag) == m_draws.first.end())
+			{
+				m_draws.first.push_back(tag);
+			}
+		}
+		else
+		{
+			m_draws.second.second = postProcessingOption;
+			if (std::find(m_draws.second.first.begin(), m_draws.second.first.end(), tag) == m_draws.second.first.end())
+			{
+				m_draws.second.first.push_back(tag);
+			}
+		}
+	}
+}
+
+void hgui::RenderManager::loop()
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	m_frameBufferShader = ShaderManager::create(
+		R"(
+			#version 330 core
+			layout (location = 0) in vec4 vertex;
+
+			out vec2 texturePosition;
+
+			void main()
+			{
+				texturePosition = vertex.zw;
+				gl_Position = vec4(vertex.xy, 0.0, 1.0);
+			}
+		)",
+		R"(
+			#version 330 core
+
+			out vec4 fragmentColor;
+
+			in vec2 texturePosition;
+
+			uniform sampler2D screenTexture;
+			uniform int type;
+
+			void main()
+			{
+				if (type == 1)
+				{
+					const float offset = 1.0 / 300.0;
+						vec2 offsets[9] = vec2[](
+						vec2(-offset,  offset),
+						vec2( 0.0f,    offset),
+						vec2( offset,  offset),
+						vec2(-offset,  0.0f),
+						vec2( 0.0f,    0.0f),
+						vec2( offset,  0.0f),
+						vec2(-offset, -offset),
+						vec2( 0.0f,   -offset),
+						vec2( offset, -offset)
+					);
+
+					float kernel[9] = float[](
+						1.0 / 16, 2.0 / 16, 1.0 / 16,
+						2.0 / 16, 4.0 / 16, 2.0 / 16,
+						1.0 / 16, 2.0 / 16, 1.0 / 16
+					);
+
+					vec3 sampleTex[9];
+					for(int i = 0; i < 9; i++)
+					{
+						sampleTex[i] = vec3(texture(screenTexture, texturePosition.st + offsets[i]));
+					}
+					vec3 col = vec3(0.0);
+					for(int i = 0; i < 9; i++)
+						col += sampleTex[i] * kernel[i];
+					fragmentColor = vec4(col, 1.0);
+				}
+				else if (type == 2)
+				{
+					fragmentColor = vec4(vec3(1.0) - vec3(texture(screenTexture, texturePosition)), 1.0);
+				}
+				else
+				{
+					fragmentColor = vec4(vec3(texture(screenTexture, texturePosition)), 1.0);
+				}
+			}
+		)"
+	);
+	{
+		kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
+		m_frameBuffer = BufferManager::create(m_frameBufferShader, window->get_size());
+	}
+	while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		m_frameBuffer->clear();
+		
+		KeyBoardManager::process();
+		MouseManager::process();
+		TaskManager::process();
+
+		render();
+
+		glfwSwapBuffers(glfwGetCurrentContext());
+		glfwPollEvents();
+	}
+	kernel::resources_cleaner();
+	glfwTerminate();
+}
+
+void hgui::RenderManager::set_background_color(const color& newColor)
+{
+	m_backGroundColor = newColor;
+	glClearColor(newColor.r, newColor.g, newColor.b, 1.0f);
+}
+
+const hgui::color& hgui::RenderManager::get_background_color()
+{
+	return m_backGroundColor;
+}
+
+void hgui::RenderManager::render()
+{
+	m_frameBufferShader->use().set_int("type", static_cast<int>(m_draws.second.second));
+	m_frameBuffer->bind();
+	for (const std::string& tag : m_draws.second.first)
+	{
+		for (const auto& widget : Widget::get_widgets(tag))
+		{
+			widget.lock()->draw();
+		}
+	}
+	m_frameBuffer->unbind();
+	m_frameBuffer->show();
+	for (const std::string& tag : m_draws.first)
+	{
+		for (const auto& widget : Widget::get_widgets(tag))
+		{
+			widget.lock()->draw();
+		}
+	}
+}
