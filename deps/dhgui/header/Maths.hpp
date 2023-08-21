@@ -903,7 +903,7 @@ inline hgui::kernel::Size<T>::Size(T width, EM<T> height) noexcept :
 template<typename T>
 inline hgui::kernel::Size<T>::Size(EM<T> width, EM<T> height) noexcept :
 	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width),
-		static_cast<T>(width.value * width.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+		static_cast<T>(height.value * height.referenceSize.height) }), width((*this)[0]), height((*this)[1])
 {
 }
 
@@ -911,7 +911,7 @@ template<typename T>
 template<typename U, typename V>
 inline hgui::kernel::Size<T>::Size(EM<U> width, EM<V> height) noexcept :
 	Vector<T, 2>({ static_cast<T>(width.value * width.referenceSize.width),
-		static_cast<T>(width.value * width.referenceSize.height) }), width((*this)[0]), height((*this)[1])
+		static_cast<T>(height.value * height.referenceSize.height) }), width((*this)[0]), height((*this)[1])
 {
 }
 
