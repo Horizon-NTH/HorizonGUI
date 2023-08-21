@@ -26,6 +26,11 @@ void hgui::kernel::Image::set_data(const ImageData& newData)
     m_data = newData;
 }
 
+hgui::size hgui::kernel::Image::get_size() const
+{
+	return size(m_data.width, m_data.height);
+}
+
 void hgui::kernel::Image::load_image()
 {
     int channel;

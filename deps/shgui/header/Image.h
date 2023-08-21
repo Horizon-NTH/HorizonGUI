@@ -25,6 +25,7 @@ namespace hgui
 
 			const ImageData& get_data() const;
 			void set_data(const ImageData& newData);
+			size get_size() const;
 
 			void load_image();
 			void save_image();
