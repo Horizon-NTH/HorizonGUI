@@ -14,6 +14,9 @@ namespace hgui
 		static const std::shared_ptr<kernel::Cursor>& get(const std::string& cursorID);
 		static void destroy(const std::initializer_list<std::string>& cursorsID = {});
 
+		static void hide();
+		static void reveal();
+
 	private:
 		CursorManager() = delete;
 

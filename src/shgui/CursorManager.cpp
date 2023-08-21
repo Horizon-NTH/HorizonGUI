@@ -42,6 +42,16 @@ void hgui::CursorManager::destroy(const std::initializer_list<std::string>& curs
 	}
 }
 
+void hgui::CursorManager::hide()
+{
+	glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
+void hgui::CursorManager::reveal()
+{
+	glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
 void hgui::CursorManager::init()
 {
 	m_cursors[HGUI_CURSOR_ARROW] = std::make_shared<kernel::Cursor>(cursors::ARROW);
