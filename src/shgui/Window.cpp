@@ -36,8 +36,11 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 
 hgui::kernel::Window::~Window()
 {
-	glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
-	glfwDestroyWindow(m_windowPTR);
+	if (glfwGetCurrentContext())
+	{
+		glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
+		glfwDestroyWindow(m_windowPTR);
+	}
 }
 
 const hgui::size& hgui::kernel::Window::get_size() const

@@ -24,13 +24,9 @@
 ```bash
     cd HorizonGUI
     mkdir build && cd build
-    cmake ..
+    cmake .. [-DAPI_TYPE=ON]
 ```
 ⚠️ Watch out! You can choose the api type to **STATIC** (**DYNAMIC** by default) by setting the API_TYPE variable to `ON`:
-
-```bash
-    cmake .. -DAPI_TYPE=ON //This will build the API in STATIC mode.
-```
 
 * Build
 

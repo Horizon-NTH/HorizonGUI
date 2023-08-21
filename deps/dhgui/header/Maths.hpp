@@ -381,6 +381,11 @@ inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(unsigned long long value)
 	return hgui::kernel::EM<HGUI_PRECISION>(static_cast<HGUI_PRECISION>(value));
 }
 
+inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(long double value)
+{
+        return hgui::kernel::EM<HGUI_PRECISION>(static_cast<HGUI_PRECISION>(value));
+}
+
 template<typename T>
 hgui::kernel::Size<T> hgui::kernel::EM<T>::referenceSize;
 
