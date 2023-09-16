@@ -56,7 +56,7 @@ void hgui::KeyBoardManager::bind(const std::variant<std::pair<hgui::keys, hgui::
 	}
 	else
 	{
-		throw std::exception("THERE IS ALREADY A FUNCTION WITH THIS ASSOCIATION OF KEY AND ACTION");
+		throw std::runtime_error("THERE IS ALREADY A FUNCTION WITH THIS ASSOCIATION OF KEY AND ACTION");
 	}
 }
 
@@ -68,7 +68,7 @@ void hgui::KeyBoardManager::unbind(const std::variant<std::pair<hgui::keys, hgui
 	}
 	else
 	{
-		throw std::exception("THERE IS NO FUNCTION WITH THIS ASSOCIATION OF KEY AND ACTION");
+		throw std::runtime_error("THERE IS NO FUNCTION WITH THIS ASSOCIATION OF KEY AND ACTION");
 	}
 }
 

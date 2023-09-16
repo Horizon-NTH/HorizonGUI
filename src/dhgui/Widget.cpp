@@ -10,7 +10,7 @@ hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& 
 {
     if (!m_shader)
     {
-        throw std::exception("ERROR NEED SHADER TO CREATE A WIDGET");
+        throw std::runtime_error("ERROR NEED SHADER TO CREATE A WIDGET");
     }
 }
 

@@ -12,7 +12,7 @@ std::string hgui::TagManager::create_tag(const std::string& newTag)
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A TAG WITH THE NAME : " + newTag).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A TAG WITH THE NAME : " + newTag).c_str());
 	}
 }
 
@@ -34,6 +34,6 @@ void hgui::TagManager::set_current_tag(const std::string& tag)
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
+		throw std::runtime_error(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
 	}
 }

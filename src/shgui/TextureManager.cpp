@@ -11,7 +11,7 @@ std::shared_ptr<hgui::kernel::Texture>& hgui::TextureManager::create(const std::
     }
     else
     {
-        throw std::exception(("THERE IS ALREADY A TEXTURE WITH THE ID : " + textureID).c_str());
+        throw std::runtime_error(("THERE IS ALREADY A TEXTURE WITH THE ID : " + textureID).c_str());
     }
 }
 
@@ -23,7 +23,7 @@ std::shared_ptr<hgui::kernel::Texture>& hgui::TextureManager::get(const std::str
     }
     else
     {
-        throw std::exception(("THERE IS NO TEXTURE WITH THE ID : " + textureID).c_str());
+        throw std::runtime_error(("THERE IS NO TEXTURE WITH THE ID : " + textureID).c_str());
     }
 }
 

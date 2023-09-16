@@ -10,7 +10,7 @@ hgui::kernel::Label::Label(const std::string& text, const std::shared_ptr<Shader
 	m_VAO->unbind();
 	if (!m_font)
 	{
-		throw std::exception("ERROR CANNOT CREATE TEXT WITHOUT SETTING A FONT");
+		throw std::runtime_error("ERROR CANNOT CREATE TEXT WITHOUT SETTING A FONT");
 	}
 	if (!m_font->is_load(m_fontSize))
 	{

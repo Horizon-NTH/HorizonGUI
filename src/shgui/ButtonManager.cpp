@@ -34,7 +34,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A BUTTON WITH THE ID : " + buttonID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A BUTTON WITH THE ID : " + buttonID).c_str());
 	}
 }
 
@@ -46,7 +46,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std:
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO BUTTON WITH THE ID : " + buttonID).c_str());
+		throw std::runtime_error(("THERE IS NO BUTTON WITH THE ID : " + buttonID).c_str());
 	}
 }
 

@@ -25,7 +25,7 @@ void hgui::kernel::init_glad()
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
 			glfwTerminate();
-			throw std::exception("ERROR WITH GLAD LOADING");
+			throw std::runtime_error("ERROR WITH GLAD LOADING");
 		}
 #ifdef HGUI_VERSION_DEBUG
 		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
@@ -40,7 +40,7 @@ void hgui::kernel::init_glad()
 	}
 	else
 	{
-		throw std::exception("WINDOW NEEDED TO INITIALIZED GLAD");
+		throw std::runtime_error("WINDOW NEEDED TO INITIALIZED GLAD");
 	}
 }
 
@@ -113,6 +113,6 @@ bool hgui::kernel::init_glfw()
 	}
 	else
 	{
-		throw std::exception("GLFW ALREADY INITIALIZED");
+		throw std::runtime_error("GLFW ALREADY INITIALIZED");
 	}
 }

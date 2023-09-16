@@ -16,8 +16,8 @@ namespace hgui
 			using reference = const T&;
 
 		public:
-			ConstIterator<T>() noexcept;
-			ConstIterator<T>(const T* ptr) noexcept;
+			ConstIterator() noexcept;
+			ConstIterator(const T* ptr) noexcept;
 
 			const reference operator*() const noexcept;
 			const pointer operator->() const noexcept;

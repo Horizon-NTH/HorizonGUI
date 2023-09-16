@@ -11,7 +11,7 @@ const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const s
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A CUSOR WITH THE ID : " + cursorID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A CUSOR WITH THE ID : " + cursorID).c_str());
 	}
 }
 
@@ -23,7 +23,7 @@ const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::get(const std:
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO CUSOR WITH THE ID : " + cursorID).c_str());
+		throw std::runtime_error(("THERE IS NO CUSOR WITH THE ID : " + cursorID).c_str());
 	}
 }
 

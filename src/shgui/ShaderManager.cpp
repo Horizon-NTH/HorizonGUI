@@ -11,7 +11,7 @@ std::shared_ptr<hgui::kernel::Shader>& hgui::ShaderManager::create(const std::st
     }
     else
     {
-        throw std::exception(("THERE IS ALREADY A SHADER WITH THE ID : " + shaderID).c_str());
+        throw std::runtime_error(("THERE IS ALREADY A SHADER WITH THE ID : " + shaderID).c_str());
     }
 }
 
@@ -23,7 +23,7 @@ std::shared_ptr<hgui::kernel::Shader>& hgui::ShaderManager::get(const std::strin
     }
     else
     {
-        throw std::exception(("THERE IS NO SHADER WITH THE ID : " + shaderID).c_str());
+        throw std::runtime_error(("THERE IS NO SHADER WITH THE ID : " + shaderID).c_str());
     }
 }
 

@@ -10,7 +10,7 @@ namespace hgui
 		struct Character
 		{
 			GLuint textureID;
-			size size;
+			hgui::size size;
 			ivec2 bearing;
 			unsigned int advance;
 		};

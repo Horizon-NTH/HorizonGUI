@@ -18,7 +18,7 @@ hgui::kernel::Character hgui::kernel::Font::get_char(char character, unsigned in
 	}
 	else
 	{
-		throw std::exception((std::string("FONT DOESN'T HAVE THE CHARACTER : " + character) 
+		throw std::runtime_error((std::string("FONT DOESN'T HAVE THE CHARACTER : " + character) 
             + std::string(" IN THE SIZE : " + std::to_string(size))).c_str());
 	}
 }
@@ -74,7 +74,7 @@ void hgui::kernel::Font::load_font(unsigned int size)
 	}
     else
     {
-        throw std::exception(("THE FONT ALREADY EXIST IN THE SIZE : " + std::to_string(size)).c_str());
+        throw std::runtime_error(("THE FONT ALREADY EXIST IN THE SIZE : " + std::to_string(size)).c_str());
     }
 }
 

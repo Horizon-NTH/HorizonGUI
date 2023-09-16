@@ -20,7 +20,7 @@ hgui::kernel::Cursor::Cursor(const std::shared_ptr<Image>& customCursor, const p
 	}
 	else
 	{
-		throw std::exception("IMAGE EXCPECTED TO CREATE A CURSOR");
+		throw std::runtime_error("IMAGE EXCPECTED TO CREATE A CURSOR");
 	}
 }
 

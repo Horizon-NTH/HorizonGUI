@@ -12,7 +12,7 @@ void hgui::MouseManager::bind(const std::variant<inputs, std::pair<buttons, hgui
 	}
 	else
 	{
-		throw std::exception("THERE IS ALREADY A FUNCTION ASSOCIATED TO THIS INPUT");
+		throw std::runtime_error("THERE IS ALREADY A FUNCTION ASSOCIATED TO THIS INPUT");
 	}
 }
 
@@ -24,7 +24,7 @@ void hgui::MouseManager::unbind(const std::variant<hgui::inputs, std::pair<butto
 	}
 	else
 	{
-		throw std::exception("THERE IS NO FUNCTION ASSOCIATED TO THIS INPUT");
+		throw std::runtime_error("THERE IS NO FUNCTION ASSOCIATED TO THIS INPUT");
 	}
 }
 

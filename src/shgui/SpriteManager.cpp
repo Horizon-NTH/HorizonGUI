@@ -23,7 +23,7 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const s
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A SPRITE WITH THE ID : " + spriteID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A SPRITE WITH THE ID : " + spriteID).c_str());
 	}
 }
 
@@ -35,7 +35,7 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::get(const std:
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO SPRITE WITH THE ID : " + spriteID).c_str());
+		throw std::runtime_error(("THERE IS NO SPRITE WITH THE ID : " + spriteID).c_str());
 	}
 }
 

@@ -20,7 +20,7 @@ const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const s
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A BUFFER WITH THE ID : " + bufferID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A BUFFER WITH THE ID : " + bufferID).c_str());
 	}
 }
 
@@ -32,7 +32,7 @@ const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::get(const std:
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO BUFFER WITH THE ID : " + bufferID).c_str());
+		throw std::runtime_error(("THERE IS NO BUFFER WITH THE ID : " + bufferID).c_str());
 	}
 }
 

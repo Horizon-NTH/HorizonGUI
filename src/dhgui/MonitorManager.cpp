@@ -10,7 +10,7 @@ const std::shared_ptr<hgui::kernel::Monitor>& hgui::MonitorManager::get(const st
     }
     else
     {
-        throw std::exception(("THERE IS NO MONITOR WITH THE NAME : " + monitorName).c_str());
+        throw std::runtime_error(("THERE IS NO MONITOR WITH THE NAME : " + monitorName).c_str());
     }
 }
 

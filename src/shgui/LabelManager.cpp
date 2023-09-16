@@ -14,7 +14,7 @@ const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::create(const std
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());
 	}
 }
 
@@ -26,7 +26,7 @@ const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::get(const std::s
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO LABEL WITH THE ID : " + labelID).c_str());
+		throw std::runtime_error(("THERE IS NO LABEL WITH THE ID : " + labelID).c_str());
 	}
 }
 

@@ -11,7 +11,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::create(const std::
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A FONT WITH THE ID : " + fontID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A FONT WITH THE ID : " + fontID).c_str());
 	}
 }
 
@@ -23,7 +23,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::get(const std::str
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO FONT WITH THE ID : " + fontID).c_str());
+		throw std::runtime_error(("THERE IS NO FONT WITH THE ID : " + fontID).c_str());
 	}
 }
 

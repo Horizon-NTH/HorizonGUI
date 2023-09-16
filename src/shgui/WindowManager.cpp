@@ -17,7 +17,7 @@ const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const s
 	}
 	else
 	{
-		throw std::exception(("THERE IS ALREADY A WINDOW WITH THE ID : " + windowID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A WINDOW WITH THE ID : " + windowID).c_str());
 	}
 }
 
@@ -29,7 +29,7 @@ const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::get(const std:
 	}
 	else
 	{
-		throw std::exception(("THERE IS NO WINDOW WITH THE ID : " + windowID).c_str());
+		throw std::runtime_error(("THERE IS NO WINDOW WITH THE ID : " + windowID).c_str());
 	}
 }
 

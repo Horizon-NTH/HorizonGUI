@@ -126,7 +126,7 @@ const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCo
 			glDeleteShader(geometryShader);
 		}
 	}
-	catch (const std::exception& e)
+	catch (const std::runtime_error& e)
 	{
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);

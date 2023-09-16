@@ -91,7 +91,7 @@ namespace hgui
 					size = std::max(size, static_cast<int>(sstream.str().length()));
 					sstream.str("");
 				}
-				long basef = stream.setf(std::ios::left, std::ios::adjustfield);
+				std::ios_base::fmtflags basef = stream.setf(std::ios::left, std::ios::adjustfield);
 				for (auto it = std::begin(vector.m_data); it < std::end(vector.m_data); it++)
 				{
 					stream << '|' << std::setw(size) << *it << '|' << std::endl;
@@ -100,9 +100,12 @@ namespace hgui
 				return stream;
 			}
 
-			friend T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
-			friend  Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v);
-			friend  T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
+			template<typename U>
+			friend T dot(const Vector<U, dimension>& u, const Vector<U, dimension>& v);
+			template<typename U>
+			friend  Vector<T, 3> cross(const Vector<U, 3>& u, const Vector<U, 3>& v);
+			template<typename U>
+			friend  T distance(const Vector<U, dimension>& u, const Vector<U, dimension>& v);
 
 			iterator begin() noexcept;
 			const_iterator begin() const noexcept;

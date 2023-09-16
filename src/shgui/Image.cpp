@@ -34,7 +34,7 @@ hgui::size hgui::kernel::Image::get_size() const
 void hgui::kernel::Image::load_image()
 {
     int channel;
-    m_data.pixels = stbi_load(m_path.c_str(), &m_data.width, &m_data.height, &channel, NULL);
+    m_data.pixels = stbi_load(m_path.c_str(), &m_data.width, &m_data.height, &channel, 0);
     switch (channel)
     {
     case 1: m_data.channel = channels::GRAYSCALE; break;
@@ -45,7 +45,7 @@ void hgui::kernel::Image::load_image()
     }
     if (!m_data.pixels)
     {
-        throw std::exception(("ERROR WHILE LOADING IMAGE : " + m_path).c_str());
+        throw std::runtime_error(("ERROR WHILE LOADING IMAGE : " + m_path).c_str());
     }
 }
 
