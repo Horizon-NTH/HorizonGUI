@@ -1,7 +1,7 @@
 #include <hgui/header/Canva.h>
 
 hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, float angularRotation) :
-	Widget(shader, size, position, color), m_angularRoation(angularRotation), 
+	Widget(shader, size, position, color), m_angularRotation(angularRotation), 
 	m_drawer(std::make_shared<kernel::Drawer>(shader, position, size))
 {
 	set_position(position);
@@ -27,7 +27,7 @@ void hgui::kernel::Canva::set_position(const point& newPosition)
 	m_modelMatrix = glm::mat4(1.0);
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(newPosition.x, newPosition.y, 0.0f));
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRoation), glm::vec3(0.0f, 0.0f, 1.0f));
+	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width / 4, m_size.height / 4, 1.0f));
 	m_shader->use().set_vec2("canvaPosition", m_position)

@@ -21,7 +21,7 @@ namespace hgui
 
 		private:
 			glm::mat4 m_modelMatrix;
-			float m_angularRoation;
+			float m_angularRotation;
 			std::shared_ptr<kernel::Drawer> m_drawer;
 
 			void init_data();
