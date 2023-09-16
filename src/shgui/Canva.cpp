@@ -29,7 +29,7 @@ void hgui::kernel::Canva::set_position(const point& newPosition)
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width / 4, m_size.height / 4, 1.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	m_shader->use().set_vec2("canvaPosition", m_position)
 		.set_vec2("canvaSize", m_size);
 }
