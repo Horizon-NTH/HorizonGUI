@@ -28,6 +28,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			});
 		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]()
 			{
+				CursorManager::get(HGUI_CURSOR_ARROW)->use();
 				ButtonManager::get(buttonID)->press();
 			});
 		return m_buttons[buttonID];

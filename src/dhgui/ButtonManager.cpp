@@ -113,6 +113,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [wwidget]()
 		{
+			m_cursor = nullptr;
 			wwidget.lock()->press();
 		});
 	return widget;
