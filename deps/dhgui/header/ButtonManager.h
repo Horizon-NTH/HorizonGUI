@@ -21,6 +21,7 @@ namespace hgui
 		ButtonManager() = delete;
 
 		static std::shared_ptr<kernel::Shader> m_shader;
+		static std::shared_ptr<kernel::Cursor> m_cursor;
 
 		friend void kernel::resources_cleaner();
 	};

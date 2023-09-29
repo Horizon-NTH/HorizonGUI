@@ -1,6 +1,7 @@
 #include <hgui/header/ButtonManager.h>
 
 std::shared_ptr<hgui::kernel::Shader> hgui::ButtonManager::m_shader(nullptr);
+std::shared_ptr<hgui::kernel::Cursor> hgui::ButtonManager::m_cursor(nullptr);
 
 std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
 {
@@ -95,12 +96,16 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	widget->bind(inputs::OVER, [wwidget]()
 		{
 			wwidget.lock()->set_state(state::HOVER);
-			CursorManager::create(cursors::HAND)->use();
+			if (!m_cursor)
+			{
+				m_cursor = CursorManager::create(cursors::HAND);
+			}
+			m_cursor->use();
 		});
 	widget->bind(inputs::NOVER, [wwidget]()
 		{
 			wwidget.lock()->set_state(state::NORMAL);
-			CursorManager::create(cursors::ARROW)->use();
+			m_cursor = nullptr;
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()
 		{
