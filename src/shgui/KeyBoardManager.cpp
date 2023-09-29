@@ -50,7 +50,7 @@ std::variant<std::function<void()>, std::function<void(hgui::keys, hgui::actions
 
 void hgui::KeyBoardManager::bind(const std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>& action, const std::function<void()>& function)
 {
-	if (m_keys.find(action) == m_keys.end())
+	if (!is_bind(action))
 	{
 		m_keys[action].second = function;
 	}
@@ -60,9 +60,14 @@ void hgui::KeyBoardManager::bind(const std::variant<std::pair<hgui::keys, hgui::
 	}
 }
 
+bool hgui::KeyBoardManager::is_bind(const std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>& action)
+{
+	return m_keys.find(action) != m_keys.end();
+}
+
 void hgui::KeyBoardManager::unbind(const std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>& action)
 {
-	if (m_keys.find(action) != m_keys.end())
+	if (is_bind(action))
 	{
 		m_keys.erase(action);
 	}

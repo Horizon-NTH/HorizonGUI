@@ -24,6 +24,7 @@ namespace hgui
 
 	public:
 		static void bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action, const std::function<void()>& function);
+		static bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void unbind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void bind_keycallback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function);
 
