@@ -47,13 +47,14 @@ void hgui::kernel::init_glad()
 void hgui::kernel::resources_cleaner()
 {
 	ButtonManager::m_shader = nullptr;
+	ButtonManager::m_cursor = nullptr;
 	SpriteManager::m_shader = nullptr;
 	LabelManager::m_shader = nullptr;
 	CanvaManager::m_shader = nullptr;
 	Widget::m_binds.clear();
+	Widget::m_bindedTags.clear();
 	Widget::m_widgets.clear();
 	TagManager::m_tags.clear();
-	MonitorManager::m_monitors.clear();
 	KeyBoardManager::m_keys.clear();
 	MouseManager::m_inputs.clear();
 }
