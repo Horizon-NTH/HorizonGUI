@@ -5,32 +5,36 @@ hgui::color hgui::Renderer::m_backGroundColor;
 
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
-	if (postProcessingOption == effects::CLASSIC)
-	{
-		m_draws.first.clear();
-	}
-	else
-	{
-		m_draws.second.first.clear();
-	}
-	for (const auto& tag : tags.size() ? tags : TagManager::get_tags())
+	auto toDo = [&]()
 	{
 		if (postProcessingOption == effects::CLASSIC)
 		{
-			if (std::find(m_draws.first.begin(), m_draws.first.end(), tag) == m_draws.first.end())
-			{
-				m_draws.first.push_back(tag);
-			}
+			m_draws.first.clear();
 		}
 		else
 		{
-			m_draws.second.second = postProcessingOption;
-			if (std::find(m_draws.second.first.begin(), m_draws.second.first.end(), tag) == m_draws.second.first.end())
+			m_draws.second.first.clear();
+		}
+		for (const auto& tag : tags.size() ? tags : TagManager::get_tags())
+		{
+			if (postProcessingOption == effects::CLASSIC)
 			{
-				m_draws.second.first.push_back(tag);
+				if (std::find(m_draws.first.begin(), m_draws.first.end(), tag) == m_draws.first.end())
+				{
+					m_draws.first.push_back(tag);
+				}
+			}
+			else
+			{
+				m_draws.second.second = postProcessingOption;
+				if (std::find(m_draws.second.first.begin(), m_draws.second.first.end(), tag) == m_draws.second.first.end())
+				{
+					m_draws.second.first.push_back(tag);
+				}
 			}
 		}
-	}
+	};
+	TaskManager::program(std::chrono::milliseconds(0), toDo);
 }
 
 void hgui::Renderer::loop()
