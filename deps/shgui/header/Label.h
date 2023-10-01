@@ -19,7 +19,12 @@ namespace hgui
 
 			std::string get_text() const;
 			void set_text(const std::string& newText);
-			void set_size(const size& newSize);
+
+			unsigned int get_font_size() const;
+			void set_font_size(unsigned int fontSize);
+
+			void set_width(unsigned int newWidth);
+			void set_height(unsigned int newHeight);
 
 			void draw() const override;
 

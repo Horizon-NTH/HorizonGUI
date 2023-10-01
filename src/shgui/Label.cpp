@@ -29,6 +29,16 @@ std::string hgui::kernel::Label::get_text() const
 	return m_text;
 }
 
+unsigned int hgui::kernel::Label::get_font_size() const
+{
+	return m_fontSize;
+}
+
+void hgui::kernel::Label::set_font_size(unsigned int fontSize)
+{
+	m_fontSize = fontSize;
+}
+
 void hgui::kernel::Label::set_text(const std::string& newText)
 {
 	m_text = newText;
@@ -41,57 +51,62 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 	}
 }
 
-void hgui::kernel::Label::set_size(const size& newSize)
+void hgui::kernel::Label::set_width(unsigned int newWidth)
 {
-	m_fontSize = static_cast<unsigned int>(newSize.width / 4);
-	if (!m_font->is_load(m_fontSize))
+	int max = 1000, min = 10;
+	while (std::abs(hgui::size(m_size).width - newWidth) > hgui::size(1_em).width && max != min)
 	{
-		m_font->load_font(m_fontSize);
-	}
-	m_size = size(0);
-	for (char c : m_text)
-	{
-		Character ch = m_font->get_char(c, m_fontSize);
-		m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-		m_size.width += (ch.advance >> 6) * m_scale;
-	}
-	if (m_size.width < newSize.width)
-	{
-		while (m_size.width < newSize.width)
+		m_fontSize = (max + min) / 2;
+		m_fontSize++;
+		if (!m_font->is_load(m_fontSize))
 		{
-			m_fontSize++;
-			if (!m_font->is_load(m_fontSize))
-			{
-				m_font->load_font(m_fontSize);
-			}
-			m_size = size();
-			for (char c : m_text)
-			{
-				Character ch = m_font->get_char(c, m_fontSize);
-				m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-				m_size.width += (ch.advance >> 6) * m_scale;
-			}
+			m_font->load_font(m_fontSize);
+		}
+		m_size = size();
+		for (char c : m_text)
+		{
+			Character ch = m_font->get_char(c, m_fontSize);
+			m_size.height = std::max(ch.size.height * m_scale, m_size.height);
+			m_size.width += (ch.advance >> 6) * m_scale;
+		}
+		if (m_size.width > newWidth)
+		{
+			max = m_fontSize;
+		}
+		else
+		{
+			min = m_fontSize;
 		}
 	}
-	else if (m_size.width > newSize.width)
+}
+
+void hgui::kernel::Label::set_height(unsigned int newHeight)
+{
+	int max = 1000, min = 10;
+	while (std::abs(hgui::size(m_size).height - newHeight) > hgui::size(1_em).height && max != min)
 	{
-		while (m_size.width > newSize.width && m_fontSize > 0)
+		m_fontSize = (max + min) / 2;
+		m_fontSize++;
+		if (!m_font->is_load(m_fontSize))
 		{
-			m_fontSize--;
-			if (!m_font->is_load(m_fontSize))
-			{
-				m_font->load_font(m_fontSize);
-			}
-			m_size = size();
-			for (char c : m_text)
-			{
-				Character ch = m_font->get_char(c, m_fontSize);
-				m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-				m_size.width += (ch.advance >> 6) * m_scale;
-			}
+			m_font->load_font(m_fontSize);
+		}
+		m_size = size();
+		for (char c : m_text)
+		{
+			Character ch = m_font->get_char(c, m_fontSize);
+			m_size.height = std::max(ch.size.height * m_scale, m_size.height);
+			m_size.width += (ch.advance >> 6) * m_scale;
+		}
+		if (m_size.height > newHeight)
+		{
+			max = m_fontSize;
+		}
+		else
+		{
+			min = m_fontSize;
 		}
 	}
-	std::cout << m_fontSize << std::endl;
 }
 
 void hgui::kernel::Label::draw() const

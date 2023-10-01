@@ -3,7 +3,7 @@
 std::shared_ptr<hgui::kernel::Shader> hgui::ButtonManager::m_shader(nullptr);
 std::shared_ptr<hgui::kernel::Cursor> hgui::ButtonManager::m_cursor(nullptr);
 
-std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
+std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, float borderRadius,const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor, float angularRotation)
 {
 	if (!m_shader)
 	{
@@ -86,10 +86,10 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 			)"
 		);
 	}
-	float cornerAngularRadius = std::min(size.width, size.height) * 0.5f;
+	float cornerAngularRadius = std::min(std::min(size.width, size.height) * 0.5f, borderRadius);
 	auto widget = std::make_shared<kernel::Button>(function,
 		m_shader, size, position,
-		font ? LabelManager::create(text, position, font, textOptions) : nullptr,
+		font ? LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f)) : nullptr,
 		color, angularRotation, cornerAngularRadius, texture);
 	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(widget->shared_from_this());

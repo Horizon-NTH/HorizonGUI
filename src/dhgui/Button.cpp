@@ -10,8 +10,12 @@ hgui::kernel::Button::Button(const std::function<void()>& function, const std::s
 	init_data();
 	if (m_text)
 	{
-		m_text->set_size(m_size - hgui::size(2 * cornerAngularRadius));
-		m_text->set_position(m_position + point(cornerAngularRadius, (m_size.height - m_text->get_size().height) / 2.0));
+		m_text->set_width(static_cast<unsigned int>(std::max(m_size.width / 2, m_size.width - 2 * m_cornerAngularRadius)));
+		if (m_text->get_size().height > m_size.height - m_cornerAngularRadius)
+		{
+			m_text->set_height(static_cast<unsigned int>(std::max(m_size.height / 2, m_size.height - 2 * m_cornerAngularRadius)));
+		}
+		m_text->set_position(m_position + (m_size - m_text->get_size()) / 2);
 	}
 }
 

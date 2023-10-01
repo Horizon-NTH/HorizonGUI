@@ -2,11 +2,11 @@
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const std::string& text, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, float angularRotation)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, float borderRadius,const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor, float angularRotation)
 {
 	if (m_buttons.find(buttonID) == m_buttons.end())
 	{
-		float cornerAngularRadius = std::min(size.width, size.height) * 0.5f;
+		float cornerAngularRadius = std::min(std::min(size.width, size.height) * 0.5f, borderRadius);
 		m_buttons[buttonID] = std::make_shared<kernel::Button>(function,
 			ShaderManager::get(HGUI_SHADER_BUTTON), size, position,
 			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonID, text, position, font, textOptions) : nullptr,
