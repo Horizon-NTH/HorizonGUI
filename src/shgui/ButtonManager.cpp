@@ -11,7 +11,8 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			ShaderManager::get(HGUI_SHADER_BUTTON), size, position,
 			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonID, text, position, font, textOptions) : nullptr,
 			color, angularRotation, cornerAngularRadius, texture);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_buttons[buttonID]->weak_from_this());
+		auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
+		widgets.insert(--widgets.end(), m_buttons[buttonID]->weak_from_this());
 		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
 				ButtonManager::get(buttonID)->set_state(state::HOVER);
