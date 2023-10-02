@@ -8,6 +8,7 @@
 #include "VertexBufferObject.h"
 #include "TagManager.h"
 #include "Timer.h"
+#include "TaskManager.h"
 
 namespace hgui
 {

@@ -129,15 +129,19 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 
 void hgui::Widget::active(const std::vector<std::string>& tags)
 {
-	m_bindedTags.clear();
-	const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
-	for (const std::string& tag : tags.size() ? tags : tagsList)
+	auto toDo = [&]()
 	{
-		if (std::find(tagsList.begin(), tagsList.end(), tag) != tagsList.end())
+		m_bindedTags.clear();
+		const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
+		for (const std::string& tag : tags.size() ? tags : tagsList)
 		{
-			m_bindedTags.push_back(tag);
+			if (std::find(tagsList.begin(), tagsList.end(), tag) != tagsList.end())
+			{
+				m_bindedTags.push_back(tag);
+			}
 		}
-	}
+	};
+	TaskManager::program(std::chrono::milliseconds(0), toDo);
 }
 
 const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
