@@ -5,13 +5,13 @@ std::map<std::weak_ptr<hgui::Widget>, std::vector<std::pair<std::variant<hgui::i
 std::map<std::string, std::vector<std::weak_ptr<hgui::Widget>>> hgui::Widget::m_widgets;
 
 hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color) :
-    m_shader(shader), m_size(size), m_position(position), m_color(color),
-    m_VAO(std::make_shared<kernel::VertexArrayObject>()), m_VBO(std::make_shared<kernel::VertexBufferObject>())
+	m_shader(shader), m_size(size), m_position(position), m_color(color),
+	m_VAO(std::make_shared<kernel::VertexArrayObject>()), m_VBO(std::make_shared<kernel::VertexBufferObject>())
 {
-    if (!m_shader)
-    {
-        throw std::runtime_error("ERROR NEED SHADER TO CREATE A WIDGET");
-    }
+	if (!m_shader)
+	{
+		throw std::runtime_error("ERROR NEED SHADER TO CREATE A WIDGET");
+	}
 }
 
 hgui::Widget::~Widget()
@@ -32,17 +32,17 @@ hgui::Widget::~Widget()
 
 const hgui::point& hgui::Widget::get_position() const
 {
-    return m_position;
+	return m_position;
 }
 
 void hgui::Widget::set_position(const point& newPosition)
 {
-    m_position = newPosition;
+	m_position = newPosition;
 }
 
 const hgui::size& hgui::Widget::get_size() const
 {
-    return m_size;
+	return m_size;
 }
 
 void hgui::Widget::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
@@ -82,19 +82,19 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 
 void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
-	auto toRemove = [&](const std::pair<std::variant<inputs, std::pair<buttons, actions>, 
+	auto toRemove = [&](const std::pair<std::variant<inputs, std::pair<buttons, actions>,
 		std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& bind)
 	{
 		if (std::holds_alternative<inputs>(action) && std::holds_alternative<inputs>(bind.first))
 		{
 			return std::get<0>(action) == std::get<0>(bind.first);
 		}
-		else if (std::holds_alternative<std::pair<buttons, actions>>(action) && 
+		else if (std::holds_alternative<std::pair<buttons, actions>>(action) &&
 			std::holds_alternative<std::pair<buttons, actions>>(bind.first))
 		{
 			return std::get<1>(action) == std::get<1>(bind.first);
 		}
-		else if (std::holds_alternative<std::tuple<inputs, buttons, actions>>(action) && 
+		else if (std::holds_alternative<std::tuple<inputs, buttons, actions>>(action) &&
 			std::holds_alternative<std::tuple<inputs, buttons, actions>>(bind.first))
 		{
 			return std::get<2>(action) == std::get<2>(bind.first);
@@ -105,7 +105,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 	{
 		m_binds[std::get<std::shared_ptr<Widget>>(widgets)].erase(
 			std::remove_if(m_binds[std::get<std::shared_ptr<Widget>>(widgets)].begin(),
-				m_binds[std::get<std::shared_ptr<Widget>>(widgets)].end(), toRemove), 
+				m_binds[std::get<std::shared_ptr<Widget>>(widgets)].end(), toRemove),
 			m_binds[std::get<std::shared_ptr<Widget>>(widgets)].end());
 	}
 	else if (widgets.index() == 1)
@@ -129,19 +129,15 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 
 void hgui::Widget::active(const std::vector<std::string>& tags)
 {
-	auto toDo = [&]()
+	m_bindedTags.clear();
+	const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
+	for (const std::string& tag : tags.size() ? tags : tagsList)
 	{
-		m_bindedTags.clear();
-		const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
-		for (const std::string& tag : tags.size() ? tags : tagsList)
+		if (std::find(tagsList.begin(), tagsList.end(), tag) != tagsList.end())
 		{
-			if (std::find(tagsList.begin(), tagsList.end(), tag) != tagsList.end())
-			{
-				m_bindedTags.push_back(tag);
-			}
+			m_bindedTags.push_back(tag);
 		}
-	};
-	TaskManager::program(std::chrono::milliseconds(0), toDo);
+	}
 }
 
 const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)

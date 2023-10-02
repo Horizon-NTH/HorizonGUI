@@ -84,6 +84,7 @@ void hgui::KeyBoardManager::bind_keycallback(const std::variant<std::function<vo
 
 void hgui::KeyBoardManager::process()
 {
+	std::vector<std::function<void()>> toDo;
 	for (auto& key : m_keys)
 	{
 		if (!key.first.index())
@@ -98,7 +99,7 @@ void hgui::KeyBoardManager::process()
 					key.second.first.start();
 					if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
 					{
-						key.second.second();
+						toDo.push_back(key.second.second);
 					}
 				}
 				break;
@@ -108,7 +109,7 @@ void hgui::KeyBoardManager::process()
 					key.second.first.reset();
 					if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
 					{
-						key.second.second();
+						toDo.push_back(key.second.second);
 					}
 
 				}
@@ -119,7 +120,7 @@ void hgui::KeyBoardManager::process()
 			if (std::get<std::pair<keys, actions>>(key.first).second == actions::REPEAT &&
 				key.second.first.get_time() >= 0.3 && key.second.second)
 			{
-				key.second.second();
+				toDo.push_back(key.second.second);
 			}
 		}
 		else
@@ -144,7 +145,7 @@ void hgui::KeyBoardManager::process()
 					{
 						if (key.second.second)
 						{
-							key.second.second();
+							toDo.push_back(key.second.second);
 						}
 					}
 					break;
@@ -155,7 +156,7 @@ void hgui::KeyBoardManager::process()
 
 						if (key.second.second)
 						{
-							key.second.second();
+							toDo.push_back(key.second.second);
 						}
 
 					}
@@ -163,13 +164,17 @@ void hgui::KeyBoardManager::process()
 				case actions::REPEAT:
 					if (key.second.first.get_time() >= 0.3 && key.second.second)
 					{
-						key.second.second();
+						toDo.push_back(key.second.second);
 					}
 				default:
 					break;
 				}
 			}
 		}
+	}
+	for (auto function : toDo)
+	{
+		function();
 	}
 }
 

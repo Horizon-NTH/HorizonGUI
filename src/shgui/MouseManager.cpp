@@ -47,6 +47,7 @@ hgui::point hgui::MouseManager::get_position()
 
 void hgui::MouseManager::process()
 {
+	std::vector<std::function<void()>> toDo;
 	//PROCESSING INPUTS
 	for (auto& input : m_inputs)
 	{
@@ -66,20 +67,20 @@ void hgui::MouseManager::process()
 			case hgui::inputs::OVER:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			case hgui::inputs::NOVER:
 				if (!is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			case hgui::inputs::MOTION:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size())
 					&& (lastMousePosition.first != newMousePosition.first || lastMousePosition.second != newMousePosition.second))
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			default:
@@ -91,7 +92,7 @@ void hgui::MouseManager::process()
 		{
 			if (is_action_verified({ std::get<std::pair<buttons, actions>>(input.first), input.second }))
 			{
-				input.second.second();
+				toDo.push_back(input.second.second);
 			}
 		}
 		else if (input.first.index() == 2)
@@ -107,7 +108,7 @@ void hgui::MouseManager::process()
 				{
 					if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -120,7 +121,7 @@ void hgui::MouseManager::process()
 				{
 					if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -134,7 +135,7 @@ void hgui::MouseManager::process()
 				{
 					if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -175,13 +176,13 @@ void hgui::MouseManager::process()
 						case hgui::inputs::OVER:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						case hgui::inputs::NOVER:
 							if (!is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						case hgui::inputs::MOTION:
@@ -189,7 +190,7 @@ void hgui::MouseManager::process()
 								&& (lastMousePosition.first != newMousePosition.first || 
 									lastMousePosition.second != newMousePosition.second))
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						default:
@@ -201,7 +202,7 @@ void hgui::MouseManager::process()
 					{
 						if (is_action_verified({ std::get<std::pair<buttons, actions>>(input.first), input.second }))
 						{
-							input.second.second();
+							toDo.push_back(input.second.second);
 						}
 					}
 					else if (input.first.index() == 2)
@@ -216,7 +217,7 @@ void hgui::MouseManager::process()
 							{
 								if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -229,7 +230,7 @@ void hgui::MouseManager::process()
 							{
 								if (is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -244,7 +245,7 @@ void hgui::MouseManager::process()
 									lastMousePosition.second != newMousePosition.second) &&
 									is_action_verified({ {std::get<1>(action), std::get<2>(action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -260,6 +261,10 @@ void hgui::MouseManager::process()
 				}
 			}
 		}
+	}
+	for (auto function : toDo)
+	{
+		function();
 	}
 }
 
@@ -279,6 +284,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 			(*function)(xOffset, yOffset);
 		}
 	}
+	std::vector<std::function<void()>> toDo;
 	//PROCESSING INPUTS
 	for (auto& input : m_inputs)
 	{
@@ -297,19 +303,19 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 			case hgui::inputs::SCROLL:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()))
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			case hgui::inputs::SCROLL_UP:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset > 0.)
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			case hgui::inputs::SCROLL_DOWN:
 				if (is_mouse_in_sector(newMousePosition, window->get_position(), window->get_size()) && yOffset < 0.)
 				{
-					input.second.second();
+					toDo.push_back(input.second.second);
 				}
 				break;
 			default:
@@ -329,7 +335,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 				{
 					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -342,7 +348,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 				{
 					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -355,7 +361,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 				{
 					if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 					{
-						input.second.second();
+						toDo.push_back(input.second.second);
 					}
 				}
 				else
@@ -395,19 +401,19 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 						case hgui::inputs::SCROLL:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()))
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						case hgui::inputs::SCROLL_UP:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset > 0.)
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						case hgui::inputs::SCROLL_DOWN:
 							if (is_mouse_in_sector(newMousePosition, widget->get_position(), widget->get_size()) && yOffset < 0.)
 							{
-								input.second.second();
+								toDo.push_back(input.second.second);
 							}
 							break;
 						default:
@@ -426,7 +432,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 							{
 								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -439,7 +445,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 							{
 								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -452,7 +458,7 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 							{
 								if (is_action_verified({ {std::get<1>(*action), std::get<2>(*action)}, input.second }))
 								{
-									input.second.second();
+									toDo.push_back(input.second.second);
 								}
 							}
 							else
@@ -468,6 +474,10 @@ void hgui::MouseManager::scroll(GLFWwindow* window, double xOffset, double yOffs
 				}
 			}
 		}
+	}
+	for (auto function : toDo)
+	{
+		function();
 	}
 }
 
