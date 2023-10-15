@@ -328,18 +328,20 @@ namespace hgui
 		};
 
 		template<typename T>
-		class Color : public Vector<T, 3>
+		class Color : public Vector<T, 4>
 		{
 		public:
 			Color() noexcept;
-			explicit Color(T rgb) noexcept;
-			Color(T r, T g, T b) noexcept;
+			explicit Color(T rgb, T a = static_cast<T>(1)) noexcept;
+			Color(T r, T g, T b, T a = static_cast<T>(1)) noexcept;
 			Color(const Color<T>& color) noexcept;
 			Color(const kernel::Vector<T, 3>& color) noexcept;
+			Color(const kernel::Vector<T, 4>& color) noexcept;
 			Color(const glm::vec3& color) noexcept;
+			Color(const glm::vec4& color) noexcept;
 
-			template<typename U, typename V, typename W>
-			Color(U r, V g, W b) noexcept;
+			template<typename U, typename V, typename W, typename X>
+			Color(U r, V g, W b, X a = static_cast<X>(a)) noexcept;
 			template<typename U>
 			Color(const Color<U>& color) noexcept;
 
@@ -348,15 +350,17 @@ namespace hgui
 			template<typename U>
 			Color<T>& operator=(const Color<U>& color) noexcept;
 			Color<T>& operator=(const glm::vec3& color) noexcept;
+			Color<T>& operator=(const glm::vec4& color) noexcept;
 
 			friend std::ostream& operator<<(std::ostream& stream, const hgui::kernel::Color<T>& color)
 			{
-				return stream << '(' << color.r << ", " << color.g << ", " << color.b << ')';
+				return stream << '(' << color.r << ", " << color.g << ", " << color.b << ", " << color.a << ')';
 			}
 
 			T& r;
 			T& g;
 			T& b;
+			T& a;
 		};
 	}
 	typedef kernel::GLSLvec2<float> vec2;
@@ -974,51 +978,64 @@ inline hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const glm::vec2& 
 
 template<typename T>
 inline hgui::kernel::Color<T>::Color() noexcept :
-	Vector<T, 3>(), r((*this)[0]), g((*this)[1]), b((*this)[2])
+	Vector<T, 4>(), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
-inline hgui::kernel::Color<T>::Color(T rgb) noexcept :
-	Vector<T, 3>(rgb), r((*this)[0]), g((*this)[1]), b((*this)[2])
+inline hgui::kernel::Color<T>::Color(T rgb, T a) noexcept :
+	Vector<T, 4>(rgb), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
+	this->a = a;
 }
 
 template<typename T>
-inline hgui::kernel::Color<T>::Color(T r, T g, T b) noexcept :
-	Vector<T, 3>({ r, g, b }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+inline hgui::kernel::Color<T>::Color(T r, T g, T b, T a) noexcept :
+	Vector<T, 4>({ r, g, b, a }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
 inline hgui::kernel::Color<T>::Color(const Color<T>& color) noexcept :
-	Vector<T, 3>({ color.r, color.g, color.b }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+	Vector<T, 4>({ color.r, color.g, color.b, color.a }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
 inline hgui::kernel::Color<T>::Color(const kernel::Vector<T, 3>& color) noexcept :
-	Vector<T, 3>({ color[0], color[1], color[2] }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+	Vector<T, 4>({ color[0], color[1], color[2], static_cast<T>(1) }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
-template<typename U, typename V, typename W>
-inline hgui::kernel::Color<T>::Color(U r, V g, W b) noexcept :
-	Vector<T, 3>({ static_cast<T>(r), static_cast<T>(g), static_cast<T>(b) }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+inline hgui::kernel::Color<T>::Color(const kernel::Vector<T, 4>& color) noexcept :
+	Vector<T, 4>({ color[0], color[1], color[2], color[3] }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
+{
+}
+
+template<typename T>
+template<typename U, typename V, typename W, typename X>
+inline hgui::kernel::Color<T>::Color(U r, V g, W b, X a) noexcept :
+	Vector<T, 4>({ static_cast<T>(r), static_cast<T>(g), static_cast<T>(b), static_cast<T>(a) }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
 template<typename U>
 inline hgui::kernel::Color<T>::Color(const Color<U>& color) noexcept :
-	Vector<T, 3>({ static_cast<T>(color.r), static_cast<T>(color.g), static_cast<T>(color.b) }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+	Vector<T, 4>({ static_cast<T>(color.r), static_cast<T>(color.g), static_cast<T>(color.b), static_cast<T>(color.a) }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
 template<typename T>
 inline hgui::kernel::Color<T>::Color(const glm::vec3& color) noexcept :
-	Vector<T, 3>({ static_cast<T>(color.r), static_cast<T>(color.g), static_cast<T>(color.b) }), r((*this)[0]), g((*this)[1]), b((*this)[2])
+	Vector<T, 4>({ static_cast<T>(color.r), static_cast<T>(color.g), static_cast<T>(color.b), static_cast<T>(1) }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
+{
+}
+
+template<typename T>
+inline hgui::kernel::Color<T>::Color(const glm::vec4& color) noexcept :
+	Vector<T, 4>({ static_cast<T>(color.r), static_cast<T>(color.g), static_cast<T>(color.b), static_cast<T>(color.a) }), r((*this)[0]), g((*this)[1]), b((*this)[2]), a((*this)[3])
 {
 }
 
@@ -1028,6 +1045,7 @@ inline hgui::kernel::Color<T>& hgui::kernel::Color<T>::operator=(const Color<T>&
 	r = color.r;
 	g = color.g;
 	b = color.b;
+	a = color.a;
 	return *this;
 }
 
@@ -1038,6 +1056,7 @@ inline hgui::kernel::Color<T>& hgui::kernel::Color<T>::operator=(const Color<U>&
 	r = static_cast<T>(color.r);
 	g = static_cast<T>(color.g);
 	b = static_cast<T>(color.b);
+	a = static_cast<T>(color.a);
 	return *this;
 }
 
@@ -1047,5 +1066,16 @@ inline hgui::kernel::Color<T>& hgui::kernel::Color<T>::operator=(const glm::vec3
 	r = static_cast<T>(color.r);
 	g = static_cast<T>(color.g);
 	b = static_cast<T>(color.b);
+	a = static_cast<T>(1);
+	return *this;
+}
+
+template<typename T>
+inline hgui::kernel::Color<T>& hgui::kernel::Color<T>::operator=(const glm::vec4& color) noexcept
+{
+	r = static_cast<T>(color.r);
+	g = static_cast<T>(color.g);
+	b = static_cast<T>(color.b);
+	a = static_cast<T>(color.a);
 	return *this;
 }
