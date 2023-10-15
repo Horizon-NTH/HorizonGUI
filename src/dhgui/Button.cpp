@@ -59,7 +59,10 @@ void hgui::kernel::Button::set_position(const point& newPosition)
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRoation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
-	m_text->set_position(m_position + (m_size - m_text->get_size()) / 2);
+	if (m_text)
+	{
+		m_text->set_position(m_position + (m_size - m_text->get_size()) / 2);
+	}
 }
 
 void hgui::kernel::Button::set_state(const state& state)
