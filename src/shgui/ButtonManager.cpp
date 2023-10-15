@@ -12,7 +12,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			font ? LabelManager::create("HGUI_BUTTON_TEXT_" + buttonID, text, position, font, textOptions) : nullptr,
 			color, angularRotation, cornerAngularRadius, texture);
 		auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
-		widgets.insert(--widgets.end(), m_buttons[buttonID]->weak_from_this());
+		widgets.insert(widgets.size() ? widgets.end() - 1 : widgets.end(), m_buttons[buttonID]->weak_from_this());
 		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
 				ButtonManager::get(buttonID)->set_state(state::HOVER);

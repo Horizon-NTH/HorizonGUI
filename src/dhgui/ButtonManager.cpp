@@ -92,7 +92,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 		font ? LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f)) : nullptr,
 		color, angularRotation, cornerAngularRadius, texture);
 	auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
-	widgets.insert(--widgets.end(), widget->weak_from_this());
+	widgets.insert(widgets.size() ? widgets.end() - 1 : widgets.end(), widget->weak_from_this());
 	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(widget->shared_from_this());
 	widget->bind(inputs::OVER, [wwidget]()
 		{
