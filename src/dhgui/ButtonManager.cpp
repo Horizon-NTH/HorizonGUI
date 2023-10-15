@@ -29,7 +29,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 				out vec4 fragmentColor;
 
 				uniform sampler2D button;
-				uniform vec3 buttonColor;
+				uniform vec4 buttonColor;
 
 				uniform int focused;
 				uniform bool custom;
@@ -39,11 +39,11 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 				{
 					if (!custom)
 					{
-						fragmentColor = vec4(buttonColor, 1.0);
+						fragmentColor = vec4(buttonColor);
 					}
 					else
 					{
-						fragmentColor = vec4(buttonColor, 1.0) * texture(button, texturePosition);
+						fragmentColor = vec4(buttonColor) * texture(button, texturePosition);
 					}
 					if (focused == 1)
 					{

@@ -8,7 +8,7 @@
 
 namespace hgui
 {
-	typedef std::tuple<unsigned int, vec3, float> TextOption;
+	typedef std::tuple<unsigned int, color, float> TextOption;
 
 	namespace kernel
 	{

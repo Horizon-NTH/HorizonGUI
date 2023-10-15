@@ -139,7 +139,7 @@ void hgui::kernel::init_resources()
 				out vec4 fragmentColor;
 
 				uniform sampler2D button;
-				uniform vec3 buttonColor;
+				uniform vec4 buttonColor;
 
 				uniform int focused;
 				uniform bool custom;
@@ -149,11 +149,11 @@ void hgui::kernel::init_resources()
 				{
 					if (!custom)
 					{
-						fragmentColor = vec4(buttonColor, 1.0);
+						fragmentColor = vec4(buttonColor);
 					}
 					else
 					{
-						fragmentColor = vec4(buttonColor, 1.0) * texture(button, texturePosition);
+						fragmentColor = vec4(buttonColor) * texture(button, texturePosition);
 					}
 					if (focused == 1)
 					{
@@ -217,12 +217,12 @@ void hgui::kernel::init_resources()
 				out vec4 fragmentColor;
 
 				uniform sampler2D text;
-				uniform vec3 textColor;
+				uniform vec4 textColor;
 
 				void main()
 				{
 					vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, texturePosition).r);
-					fragmentColor = vec4(textColor, 1.0) * sampled;
+					fragmentColor = vec4(textColor) * sampled;
 				}
 			)"
 	);
@@ -249,11 +249,11 @@ void hgui::kernel::init_resources()
 				out vec4 fragmentColor;
 
 				uniform sampler2D sprite;
-				uniform vec3 spriteColor;
+				uniform vec4 spriteColor;
 
 				void main()
 				{
-					fragmentColor = vec4(spriteColor, 1.0) * texture(sprite, texturePosition);
+					fragmentColor = vec4(spriteColor) * texture(sprite, texturePosition);
 					if (fragmentColor.w < 1)
 						discard;
 				}

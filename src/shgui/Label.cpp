@@ -114,7 +114,7 @@ void hgui::kernel::Label::draw() const
 	point position(m_position);
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	m_shader->use().set_vec3("textColor", m_color)
+	m_shader->use().set_vec4("textColor", m_color)
 		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), 
 			static_cast<float>(height), 0.f))
 		.set_int("text", 0);

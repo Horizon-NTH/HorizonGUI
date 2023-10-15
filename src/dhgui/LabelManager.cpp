@@ -28,12 +28,12 @@ std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::strin
 				out vec4 fragmentColor;
 
 				uniform sampler2D text;
-				uniform vec3 textColor;
+				uniform vec4 textColor;
 
 				void main()
 				{
 					vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, texturePosition).r);
-					fragmentColor = vec4(textColor, 1.0) * sampled;
+					fragmentColor = vec4(textColor) * sampled;
 				}
 			)"
 		);
