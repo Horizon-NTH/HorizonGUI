@@ -38,11 +38,11 @@ void hgui::MouseManager::bind_scrollcallback(const std::variant<std::function<vo
 	m_scrollCallback = function;
 }
 
-hgui::point hgui::MouseManager::get_position()
+hgui::dvec2 hgui::MouseManager::get_position()
 {
 	std::pair<double, double> mousePosition;
 	glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
-	return point(static_cast<float>(mousePosition.first), static_cast<float>(mousePosition.second));
+	return { mousePosition.first, mousePosition.second };
 }
 
 void hgui::MouseManager::process()

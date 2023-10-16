@@ -24,7 +24,7 @@ namespace hgui
 		static void bind_clickcallback(const std::variant<std::function<void()>, std::function<void(buttons, actions)>>& function);
 		static void bind_scrollcallback(const std::variant<std::function<void()>, std::function<void(double, double)>>& function);
 
-		static point get_position();
+		static dvec2 get_position();
 
 	private:
 		MouseManager() = delete;
