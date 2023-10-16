@@ -9,6 +9,7 @@
 #include "ShaderManager.h"
 #include "LabelManager.h"
 #include "CursorManager.h"
+#include "TaskManager.h"
 
 namespace hgui
 {

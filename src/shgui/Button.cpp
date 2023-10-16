@@ -70,6 +70,11 @@ void hgui::kernel::Button::set_state(const state& state)
 	m_state = state;
 }
 
+const hgui::state& hgui::kernel::Button::set_state() const
+{
+	return m_state;
+}
+
 void hgui::kernel::Button::set_textures(const std::shared_ptr<Texture>& texture)
 {
 	m_texture = texture;

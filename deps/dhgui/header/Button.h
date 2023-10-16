@@ -23,6 +23,7 @@ namespace hgui
 
 			void set_position(const point& newPosition) override;
 			void set_state(const state& state);
+			const state& get_state() const;
 			void set_textures(const std::shared_ptr<Texture>& texture);
 
 		protected:

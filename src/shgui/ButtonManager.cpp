@@ -21,7 +21,31 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 		Widget::bind(m_buttons[buttonID], inputs::NOVER, [buttonID]()
 			{
 				ButtonManager::get(buttonID)->set_state(state::NORMAL);
-				CursorManager::get(HGUI_CURSOR_ARROW)->use();
+				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+					{
+						auto isHover = []() -> bool
+						{
+							for (auto& widgets : Widget::m_widgets)
+							{
+								for (auto& widget : widgets.second)
+								{
+									if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
+									{
+										if (button->get_state() == state::HOVER ||
+											button->get_state() == state::PRESS)
+										{
+											return true;
+										}
+									}
+								}
+							}
+							return false;
+						};
+						if (!isHover())
+						{
+							CursorManager::get(HGUI_CURSOR_ARROW)->use();
+						}
+					});
 			});
 		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonID]()
 			{
@@ -29,8 +53,32 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			});
 		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]()
 			{
-				CursorManager::get(HGUI_CURSOR_ARROW)->use();
 				ButtonManager::get(buttonID)->press();
+				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+					{
+						auto isHover = []() -> bool
+						{
+							for (auto& widgets : Widget::m_widgets)
+							{
+								for (auto& widget : widgets.second)
+								{
+									if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
+									{
+										if (button->get_state() == state::HOVER ||
+											button->get_state() == state::PRESS)
+										{
+											return true;
+										}
+									}
+								}
+							}
+							return false;
+						};
+						if (!isHover())
+						{
+							CursorManager::get(HGUI_CURSOR_ARROW)->use();
+						}
+					});
 			});
 		return m_buttons[buttonID];
 	}

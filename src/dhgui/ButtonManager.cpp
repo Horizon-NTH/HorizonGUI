@@ -106,7 +106,31 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	widget->bind(inputs::NOVER, [wwidget]()
 		{
 			wwidget.lock()->set_state(state::NORMAL);
-			m_cursor = nullptr;
+			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]() 
+				{
+					auto isHover = []() -> bool
+					{
+						for (auto& widgets : Widget::m_widgets)
+						{
+							for (auto& widget : widgets.second)
+							{
+								if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
+								{
+									if (button->get_state() == state::HOVER ||
+										button->get_state() == state::PRESS)
+									{
+										return true;
+									}
+								}
+							}
+						}
+						return false;
+					};
+					if (!isHover())
+					{
+						m_cursor = nullptr;
+					}
+				});
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()
 		{
@@ -114,8 +138,32 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [wwidget]()
 		{
-			m_cursor = nullptr;
 			wwidget.lock()->press();
+			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				{
+					auto isHover = []() -> bool
+					{
+						for (auto& widgets : Widget::m_widgets)
+						{
+							for (auto& widget : widgets.second)
+							{
+								if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
+								{
+									if (button->get_state() == state::HOVER ||
+										button->get_state() == state::PRESS)
+									{
+										return true;
+									}
+								}
+							}
+						}
+						return false;
+					};
+					if (!isHover())
+					{
+						m_cursor = nullptr;
+					}
+				});
 		});
 	return widget;
 }
