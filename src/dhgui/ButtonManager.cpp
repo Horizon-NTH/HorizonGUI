@@ -110,9 +110,9 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 				{
 					auto isHover = []() -> bool
 					{
-						for (auto& widgets : Widget::m_widgets)
+						for (auto& tag : Widget::m_bindedTags)
 						{
-							for (auto& widget : widgets.second)
+							for (auto& widget : Widget::m_widgets[tag])
 							{
 								if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
 								{
@@ -143,9 +143,9 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 				{
 					auto isHover = []() -> bool
 					{
-						for (auto& widgets : Widget::m_widgets)
+						for (auto& tag : Widget::m_bindedTags)
 						{
-							for (auto& widget : widgets.second)
+							for (auto& widget : Widget::m_widgets[tag])
 							{
 								if (auto button = std::dynamic_pointer_cast<kernel::Button>(widget.lock()))
 								{
