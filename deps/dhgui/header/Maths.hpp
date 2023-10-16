@@ -274,6 +274,7 @@ namespace hgui
 			Point(const kernel::Vector<U, 2>& point) noexcept;
 
 			Point<T>& operator=(const Point<T>& point) noexcept;
+			Point<T>& operator=(const kernel::Vector<T, 2>& point) noexcept;
 			template<typename U>
 			Point<T>& operator=(const Point<U>& point) noexcept;
 			template<typename U>
@@ -320,6 +321,7 @@ namespace hgui
 			Size(const Vector<U, 2>& size) noexcept;
 
 			Size<T>& operator=(const Size<T>& size) noexcept;
+			Size<T>& operator=(const Vector<T, 2>& size) noexcept;
 			template<typename U>
 			Size<T>& operator=(const Size<U>& size) noexcept;
 			template<typename U>
@@ -823,7 +825,7 @@ inline hgui::kernel::Point<T>::Point(const Point<U>& point) noexcept :
 template<typename T>
 template<typename U>
 inline hgui::kernel::Point<T>::Point(const Vector<U, 2>& point) noexcept :
-	Vector<T, 2>({ static_cast<T>(point.x), static_cast<T>(point.y) }), x((*this)[0]), y((*this)[1])
+	Vector<T, 2>({ static_cast<T>(point[0]), static_cast<T>(point[1]) }), x((*this)[0]), y((*this)[1])
 {
 }
 
@@ -842,6 +844,14 @@ inline hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Point<T>&
 }
 
 template<typename T>
+inline hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Vector<T, 2>& point) noexcept
+{
+	x = point[0];
+	y = point[1];
+	return *this;
+}
+
+template<typename T>
 template<typename U>
 inline hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Point<U>& point) noexcept
 {
@@ -854,8 +864,8 @@ template<typename T>
 template<typename U>
 inline hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Vector<U, 2>& point) noexcept
 {
-	x = static_cast<T>(point.x);
-	y = static_cast<T>(point.y);
+	x = static_cast<T>(point[0]);
+	y = static_cast<T>(point[1]);
 	return *this;
 }
 
@@ -972,7 +982,7 @@ inline hgui::kernel::Size<T>::Size(const Size<U>& size) noexcept :
 template<typename T>
 template<typename U>
 inline hgui::kernel::Size<T>::Size(const Vector<U, 2>& size) noexcept :
-	Vector<T, 2>({ static_cast<T>(size.width), static_cast<T>(size.height) }), width((*this)[0]), height((*this)[1])
+	Vector<T, 2>({ static_cast<T>(size[0]), static_cast<T>(size[1]) }), width((*this)[0]), height((*this)[1])
 {
 }
 
@@ -991,6 +1001,14 @@ inline hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Size<T>& si
 }
 
 template<typename T>
+inline hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Vector<T, 2>& size) noexcept
+{
+	width = size[0];
+	height = size[1];
+	return *this;
+}
+
+template<typename T>
 template<typename U>
 inline hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Size<U>& size) noexcept
 {
@@ -1003,8 +1021,8 @@ template<typename T>
 template<typename U>
 inline hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Vector<U, 2>& size) noexcept
 {
-	width = static_cast<T>(size.width);
-	height = static_cast<T>(size.height);
+	width = static_cast<T>(size[0]);
+	height = static_cast<T>(size[1]);
 	return *this;
 }
 
