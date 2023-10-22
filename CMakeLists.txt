@@ -5,25 +5,28 @@ option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
 project(horizongui VERSION 2.0.0)
 
 if(API_TYPE)
-    set(file shgui)
     set(type STATIC)
+	file(READ ${CMAKE_CURRENT_SOURCE_DIR}/deps/dhgui/header/Include.h FILE_CONTENTS)
+	string(REPLACE "HGUI_DYNAMIC" "HGUI_STATIC" FILE_CONTENTS "${FILE_CONTENTS}")
+	file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/deps/dhgui/header/Include.h "${FILE_CONTENTS}")
 else(API_TYPE)
-    set(file dhgui)
     set(type DYNAMIC)
+	file(READ ${CMAKE_CURRENT_SOURCE_DIR}/deps/dhgui/header/Include.h FILE_CONTENTS)
+	string(REPLACE "HGUI_STATIC" "HGUI_DYNAMIC" FILE_CONTENTS "${FILE_CONTENTS}")
+	file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/deps/dhgui/header/Include.h "${FILE_CONTENTS}")
 endif(API_TYPE)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
 
-file(GLOB_RECURSE HEADER_FILES deps/${file}/*.h deps/${file}/*.hpp)
+file(GLOB_RECURSE HEADER_FILES include/hgui/*.h include/hgui/*.hpp)
 
-file(GLOB_RECURSE SOURCE_FILES src/${file}/*.cpp src/${file}/*.c deps/glad/src/glad.c)
+file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.c deps/glad/src/glad.c)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 if(UNIX)
 	add_custom_target(UNIX_PRE_BUILD 
-    		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/${file} ${CMAKE_CURRENT_SOURCE_DIR}/include/hgui
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
@@ -37,7 +40,6 @@ if(UNIX)
 	add_dependencies(${PROJECT_NAME} UNIX_PRE_BUILD)
 else()
 	add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/${file} ${CMAKE_CURRENT_SOURCE_DIR}/include/hgui
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad

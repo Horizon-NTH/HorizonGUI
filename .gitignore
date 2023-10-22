@@ -1,3 +1,12 @@
-"bin"  
-"build"  
-"include"  
+bin 
+build 
+include   
+include/ft2build.h  
+include/freetype  
+include/glad  
+include/GLFW  
+include/glm  
+include/KHR  
+include/stb  
+.vs  
+.gitignore  
