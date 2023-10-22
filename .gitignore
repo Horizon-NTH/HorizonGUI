@@ -1,6 +1,5 @@
 bin 
-build 
-include   
+build   
 include/ft2build.h  
 include/freetype  
 include/glad  
