@@ -341,7 +341,7 @@ namespace hgui
 			Color(const glm::vec4& color) noexcept;
 
 			template<typename U, typename V, typename W, typename X>
-			Color(U r, V g, W b, X a = static_cast<X>(a)) noexcept;
+			Color(U r, V g, W b, X a = static_cast<X>(1)) noexcept;
 			template<typename U>
 			Color(const Color<U>& color) noexcept;
 
