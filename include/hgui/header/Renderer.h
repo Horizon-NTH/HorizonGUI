@@ -18,7 +18,7 @@ namespace hgui
 		static void draw(const std::vector<std::string>& tags = {}, const effects& postProcessingOption = effects::CLASSIC);
 		static void loop();
 		static void set_background_color(const color& newColor);
-		static const color& get_background_color();
+		[[nodiscard]] static const color& get_background_color();
 
 	private:
 		Renderer() = delete;
@@ -37,7 +37,7 @@ namespace hgui
 		static void draw(const std::vector<std::string>& tags = {}, const effects& postProcessingOption = effects::CLASSIC);
 		static void loop();
 		static void set_background_color(const color& newColor);
-		static const color& get_background_color();
+		[[nodiscard]] static const color& get_background_color();
 
 	private:
 		Renderer() = delete;

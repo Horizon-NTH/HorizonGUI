@@ -31,7 +31,7 @@ namespace hgui
 
 		static void bind_scroll_callback(const std::variant<std::function<void()>, std::function<void(double, double)>>& function);
 
-		static dvec2 get_position();
+		[[nodiscard]] static dvec2 get_position();
 
 	private:
 		MouseManager() = delete;
@@ -40,9 +40,9 @@ namespace hgui
 
 		static void scroll(GLFWwindow* window, double xOffset, double yOffset);
 
-		static bool is_mouse_in_sector(const std::pair<double, double>& mousePosition, const point& sectorPosition, const size& sectorSize);
+		[[nodiscard]] static bool is_mouse_in_sector(const std::pair<double, double>& mousePosition, const point& sectorPosition, const size& sectorSize);
 
-		static bool is_action_verified(
+		[[nodiscard]] static bool is_action_verified(
 			const std::pair<std::pair<buttons, actions>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input);
 
 		static void input(GLFWwindow* window, int button, int action, int mods);

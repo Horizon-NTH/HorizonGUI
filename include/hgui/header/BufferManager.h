@@ -14,7 +14,7 @@ namespace hgui
 	class BufferManager
 	{
 	public:
-		static std::shared_ptr<kernel::Buffer> create(const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize);
+		[[nodiscard]] static std::shared_ptr<kernel::Buffer> create(const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize);
 
 	private:
 		BufferManager() = delete;
@@ -25,7 +25,7 @@ namespace hgui
 	public:
 		static const std::shared_ptr<kernel::Buffer>& create(const std::string& bufferID, const std::shared_ptr<kernel::Shader>& shader,
 		                                                     const size& bufferSize);
-		static const std::shared_ptr<kernel::Buffer>& get(const std::string& bufferID);
+		[[nodiscard]] static const std::shared_ptr<kernel::Buffer>& get(const std::string& bufferID);
 		static void destroy(const std::initializer_list<std::string>& buffersID = {});
 
 	private:

@@ -15,7 +15,7 @@ void hgui::kernel::VertexArrayObject::bind() const
 	glBindVertexArray(m_id);
 }
 
-void hgui::kernel::VertexArrayObject::unbind()
+void hgui::kernel::VertexArrayObject::unbind() const
 {
 	glBindVertexArray(0);
 }

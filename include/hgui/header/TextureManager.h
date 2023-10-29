@@ -10,7 +10,7 @@ namespace hgui
 	class TextureManager
 	{
 	public:
-		static std::shared_ptr<kernel::Texture> create(const std::shared_ptr<kernel::Image>& image);
+		[[nodiscard]] static std::shared_ptr<kernel::Texture> create(const std::shared_ptr<kernel::Image>& image);
 
 	private:
 		TextureManager() = delete;
@@ -20,7 +20,7 @@ namespace hgui
 	{
 	public:
 		static std::shared_ptr<kernel::Texture>& create(const std::string& textureID, const std::shared_ptr<kernel::Image>& image);
-		static std::shared_ptr<kernel::Texture>& get(const std::string& textureID);
+		[[nodiscard]] static std::shared_ptr<kernel::Texture>& get(const std::string& textureID);
 		static void destroy(const std::initializer_list<std::string>& texturesID);
 
 	private:

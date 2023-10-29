@@ -149,7 +149,7 @@ namespace hgui
 		BUTTON_5 = 5,
 		BUTTON_6 = 6,
 		BUTTON_7 = 7,
-		BUTTON_8 = 8,
+		BUTTON_8 = 8
 	};
 
 	enum class inputs
@@ -159,7 +159,7 @@ namespace hgui
 		MOTION,
 		SCROLL,
 		SCROLL_UP,
-		SCROLL_DOWN,
+		SCROLL_DOWN
 	};
 
 	enum class actions

@@ -10,7 +10,7 @@ namespace hgui
 	class ShaderManager
 	{
 	public:
-		static std::shared_ptr<kernel::Shader> create(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode = "");
+		[[nodiscard]] static std::shared_ptr<kernel::Shader> create(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode = "");
 	
 	private:
 		ShaderManager() = delete;
@@ -21,7 +21,7 @@ namespace hgui
 	public:
 		static std::shared_ptr<kernel::Shader>& create(const std::string& shaderID, const std::string& vertexShaderCode,
 		                                               const std::string& fragmentShaderCode, const std::string& geometryShaderCode = "");
-		static std::shared_ptr<kernel::Shader>& get(const std::string& shaderID);
+		[[nodiscard]] static std::shared_ptr<kernel::Shader>& get(const std::string& shaderID);
 		static void destroy(const std::initializer_list<std::string>& shadersID);
 
 	private:

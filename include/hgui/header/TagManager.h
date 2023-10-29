@@ -9,8 +9,8 @@ namespace hgui
 	{
 	public:
 		static std::string create_tag(const std::string& newTag);
-		static const std::vector<std::string>& get_tags();
-		static const std::string& get_current_tag();
+		[[nodiscard]] static const std::vector<std::string>& get_tags();
+		[[nodiscard]] static const std::string& get_current_tag();
 		static void set_current_tag(const std::string& tag);
 
 	private:

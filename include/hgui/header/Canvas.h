@@ -17,7 +17,7 @@ namespace hgui::kernel
 
 		void set_position(const point& newPosition) override;
 
-		const std::shared_ptr<kernel::Drawer>& get_drawer() const;
+		[[nodiscard]] const std::shared_ptr<kernel::Drawer>& get_drawer() const;
 
 	private:
 		glm::mat4 m_modelMatrix;

@@ -13,7 +13,7 @@ namespace hgui
 	class CanvasManager
 	{
 	public:
-		static std::shared_ptr<kernel::Canvas> create(const std::shared_ptr<kernel::Shader>& shader, const size& size,
+		[[nodiscard]] static std::shared_ptr<kernel::Canvas> create(const std::shared_ptr<kernel::Shader>& shader, const size& size,
 		                                              const point& position, const color& color = HGUI_COLOR_WHITE,
 		                                              float angularRotation = 0.0f);
 
@@ -31,7 +31,7 @@ namespace hgui
 		static const std::shared_ptr<kernel::Canvas>& create(const std::string& canvasID, const std::shared_ptr<kernel::Shader>& shader,
 		                                                     const size& size, const point& position, const color& color = HGUI_COLOR_WHITE,
 		                                                     float angularRotation = 0.0f);
-		static const std::shared_ptr<kernel::Canvas>& get(const std::string& canvasID);
+		[[nodiscard]] static const std::shared_ptr<kernel::Canvas>& get(const std::string& canvasID);
 		static void destroy(const std::initializer_list<std::string>& canvasID);
 
 	private:

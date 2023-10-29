@@ -57,7 +57,7 @@ void hgui::kernel::Window::set_size(const size& newSize) const
 	glfwSetWindowSize(m_windowPTR, static_cast<int>(newSize.width), static_cast<int>(newSize.height));
 }
 
-const hgui::point& hgui::kernel::Window::get_position()
+const hgui::point& hgui::kernel::Window::get_position() const
 {
 	return m_position;
 }

@@ -12,7 +12,7 @@ namespace hgui::kernel
 
 		void bind() const;
 
-		static void unbind();
+		void unbind() const;
 		void set_data(const void* data, int size, bool dynamic = false) const;
 		void set_sub_data(const void* data, int size, int offset) const;
 

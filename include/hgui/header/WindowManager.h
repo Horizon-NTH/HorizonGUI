@@ -15,7 +15,7 @@ namespace hgui
 	class WindowManager
 	{
 	public:
-		static std::shared_ptr<kernel::Window> create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr, const std::shared_ptr<kernel::Monitor>& monitor = nullptr, const std::initializer_list<std::pair<options, bool>>& options = {});
+		[[nodiscard]] static std::shared_ptr<kernel::Window> create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr, const std::shared_ptr<kernel::Monitor>& monitor = nullptr, const std::initializer_list<std::pair<options, bool>>& options = {});
 
 	private:
 		WindowManager() = delete;
@@ -28,7 +28,7 @@ namespace hgui
 		                                                     const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr,
 		                                                     const std::shared_ptr<kernel::Monitor>& monitor = nullptr,
 		                                                     const std::initializer_list<std::pair<options, bool>>& options = {});
-		static const std::shared_ptr<kernel::Window>& get(const std::string& windowID);
+		[[nodiscard]] static const std::shared_ptr<kernel::Window>& get(const std::string& windowID);
 		static void destroy(const std::initializer_list<std::string>& windowsID = {});
 
 	private:

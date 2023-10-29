@@ -12,7 +12,7 @@ namespace hgui::kernel
 
 		void bind() const;
 
-		static void unbind();
+		void unbind() const;
 
 	private:
 		GLuint m_id;

@@ -18,7 +18,7 @@ namespace hgui::kernel
 		[[nodiscard]] const size& get_size() const;
 		void set_size(const size& newSize) const;
 
-		const point& get_position();
+		[[nodiscard]] const point& get_position() const;
 		void set_position(const point& newPosition);
 
 		[[nodiscard]] GLFWwindow* get_window_ptr() const;

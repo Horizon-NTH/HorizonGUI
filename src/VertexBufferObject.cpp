@@ -15,7 +15,7 @@ void hgui::kernel::VertexBufferObject::bind() const
 	glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }
 
-void hgui::kernel::VertexBufferObject::unbind()
+void hgui::kernel::VertexBufferObject::unbind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

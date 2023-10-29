@@ -9,9 +9,9 @@ namespace hgui
 	class MonitorManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Monitor>& get(const std::string& monitorName);
-		static std::vector<std::string> get_monitors_names();
-		static const std::shared_ptr<kernel::Monitor>& get_primary_monitor();
+		[[nodiscard]] static const std::shared_ptr<kernel::Monitor>& get(const std::string& monitorName);
+		[[nodiscard]] static std::vector<std::string> get_monitors_names();
+		[[nodiscard]] static const std::shared_ptr<kernel::Monitor>& get_primary_monitor();
 
 	private:
 		MonitorManager() = delete;

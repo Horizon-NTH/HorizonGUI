@@ -39,9 +39,9 @@ namespace hgui
 
 		virtual ~Widget();
 
-		const point& get_position() const;
+		[[nodiscard]] const point& get_position() const;
 		virtual void set_position(const point& newPosition);
-		const size& get_size() const;
+		[[nodiscard]] const size& get_size() const;
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action,
 		          const std::function<void()>& function);

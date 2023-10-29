@@ -144,7 +144,7 @@ void hgui::kernel::Label::draw() const
 					{xpos + w, ypos + h, 1.0f, 1.0f},
 					{xpos + w, ypos, 1.0f, 0.0f}
 				};
-		glBindTexture(GL_TEXTURE_2D, ch.texture_id);
+		glBindTexture(GL_TEXTURE_2D, ch.textureIC);
 		m_VBO->bind();
 		m_VBO->set_sub_data(vertices, sizeof(vertices), 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);

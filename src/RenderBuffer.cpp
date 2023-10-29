@@ -15,7 +15,7 @@ void hgui::kernel::RenderBuffer::bind() const
 	glBindRenderbuffer(GL_RENDERBUFFER, m_id);
 }
 
-void hgui::kernel::RenderBuffer::unbind()
+void hgui::kernel::RenderBuffer::unbind() const
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }

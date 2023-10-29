@@ -11,8 +11,8 @@ namespace hgui
 	class CursorManager
 	{
 	public:
-		static std::shared_ptr<kernel::Cursor> create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition);
-		static std::shared_ptr<kernel::Cursor> create(cursors cursor);
+		[[nodiscard]] static std::shared_ptr<kernel::Cursor> create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition);
+		[[nodiscard]] static std::shared_ptr<kernel::Cursor> create(cursors cursor);
 
 		static void hide();
 		static void reveal();
@@ -27,7 +27,7 @@ namespace hgui
 		static const std::shared_ptr<kernel::Cursor>& create(const std::string& cursorID,
 		                                                     const std::shared_ptr<kernel::Image>& customCursor,
 		                                                     const point& clickPosition);
-		static const std::shared_ptr<kernel::Cursor>& get(const std::string& cursorID);
+		[[nodiscard]] static const std::shared_ptr<kernel::Cursor>& get(const std::string& cursorID);
 		static void destroy(const std::initializer_list<std::string>& cursorsID = {});
 
 		static void hide();

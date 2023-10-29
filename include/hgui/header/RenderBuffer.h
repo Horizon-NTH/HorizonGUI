@@ -12,7 +12,7 @@ namespace hgui::kernel
 
 		void bind() const;
 
-		static void unbind();
+		void unbind() const;
 		void create_depth_stencil() const;
 
 		[[nodiscard]] GLuint get_id() const;

@@ -18,10 +18,10 @@ namespace hgui
 			Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font,
 			      unsigned fontSize,
 			      const color& color, float scale);
-			std::string get_text() const;
+			[[nodiscard]] std::string get_text() const;
 			void set_text(const std::string& newText);
 
-			unsigned int get_font_size() const;
+			[[nodiscard]] unsigned int get_font_size() const;
 			void set_font_size(unsigned int fontSize);
 
 			void set_width(unsigned int newWidth);

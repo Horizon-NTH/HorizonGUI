@@ -55,7 +55,7 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			Character character
 					{
-						.texture_id = texture,
+						.textureID = texture,
 						.size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 						.bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 						.advance = static_cast<unsigned int>(face->glyph->advance.x)
