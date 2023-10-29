@@ -14,6 +14,7 @@ namespace hgui
 	namespace kernel
 	{
 		void resources_cleaner();
+
 		template<typename T>
 		struct WeakPTRComparator
 		{
@@ -31,25 +32,28 @@ namespace hgui
 		friend class SpriteManager;
 		friend class LabelManager;
 		friend class ButtonManager;
-		friend class CanvaManager;
+		friend class CanvasManager;
 
 	public:
 		Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color);
-		~Widget();
+
+		virtual ~Widget();
 
 		const point& get_position() const;
 		virtual void set_position(const point& newPosition);
 		const size& get_size() const;
 
-		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
+		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action,
+		          const std::function<void()>& function);
 		void unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		virtual void draw() const = 0;
 
-		//Static functions\\
-
-		static void bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
-		static void unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
+		static void bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets,
+		                 const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action,
+		                 const std::function<void()>& function);
+		static void unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets,
+		                   const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		static void active(const std::vector<std::string>& tags = {});
 
@@ -63,7 +67,9 @@ namespace hgui
 
 	private:
 		static std::vector<std::string> m_bindedTags;
-		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
+		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<
+			                std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<
+				                std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
 		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
 
 		static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
@@ -71,4 +77,3 @@ namespace hgui
 		friend void kernel::resources_cleaner();
 	};
 }
-

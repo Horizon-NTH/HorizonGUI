@@ -2,22 +2,19 @@
 
 #include "Include.h"
 
-namespace hgui
+namespace hgui::kernel
 {
-    namespace kernel
-    {
-        class VertexArrayObject
-        {
-        public:
-            VertexArrayObject();
-            ~VertexArrayObject();
+	class VertexArrayObject
+	{
+	public:
+		VertexArrayObject();
+		~VertexArrayObject();
 
-            void bind();
-            void unbind();
+		void bind() const;
 
-        private:
-            GLuint m_id;
-        };
-    }
+		static void unbind();
+
+	private:
+		GLuint m_id;
+	};
 }
-

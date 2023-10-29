@@ -1,9 +1,8 @@
 #include <hgui/header/Shader.h>
 
-hgui::kernel::Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader, const std::string& geometryShader) :
-	m_id(load_shader(vertexShader, fragmentShader, geometryShader))
-{
-}
+hgui::kernel::Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader, const std::string& geometryShader) : m_id(
+	load_shader(vertexShader, fragmentShader, geometryShader))
+{}
 
 hgui::kernel::Shader::~Shader()
 {
@@ -16,18 +15,18 @@ const hgui::kernel::Shader& hgui::kernel::Shader::use() const
 	return *this;
 }
 
-const GLuint hgui::kernel::Shader::get_id() const
+GLuint hgui::kernel::Shader::get_id() const
 {
 	return m_id;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_float(const std::string& uniformName, float f) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_float(const std::string& uniformName, const float f) const
 {
 	glUniform1f(glGetUniformLocation(m_id, uniformName.c_str()), f);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_int(const std::string& uniformName, int i) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_int(const std::string& uniformName, const int i) const
 {
 	glUniform1i(glGetUniformLocation(m_id, uniformName.c_str()), i);
 	return *this;
@@ -51,7 +50,7 @@ const hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& un
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_double(const std::string& uniformName, double d) const
+const hgui::kernel::Shader& hgui::kernel::Shader::set_double(const std::string& uniformName, const double d) const
 {
 	glUniform1d(glGetUniformLocation(m_id, uniformName.c_str()), d);
 	return *this;
@@ -81,17 +80,18 @@ const hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const std::string& un
 	return *this;
 }
 
-const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)
+GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCode, const std::string& fragmentShaderCode,
+                                         const std::string& geometryShaderCode)
 {
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	const GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	GLuint geometryShader = 0;
 
 	const char* srcVertexShader = vertexShaderCode.c_str();
 	const char* srcFragmentShader = fragmentShaderCode.c_str();
 
-	glShaderSource(vertexShader, 1, &srcVertexShader, NULL);
-	glShaderSource(fragmentShader, 1, &srcFragmentShader, NULL);
+	glShaderSource(vertexShader, 1, &srcVertexShader, nullptr);
+	glShaderSource(fragmentShader, 1, &srcFragmentShader, nullptr);
 	glCompileShader(vertexShader);
 	glCompileShader(fragmentShader);
 
@@ -99,11 +99,11 @@ const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCo
 	{
 		geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
 		const char* srcGeometryShader = geometryShaderCode.c_str();
-		glShaderSource(geometryShader, 1, &srcGeometryShader, NULL);
+		glShaderSource(geometryShader, 1, &srcGeometryShader, nullptr);
 		glCompileShader(geometryShader);
 	}
 
-	GLuint shaderProgram = glCreateProgram();
+	const GLuint shaderProgram = glCreateProgram();
 
 	try
 	{
@@ -141,30 +141,30 @@ const GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCo
 	return shaderProgram;
 }
 
-void hgui::kernel::Shader::check_compile_error(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader) const
+void hgui::kernel::Shader::check_compile_error(const GLuint vertexShader, const GLuint fragmentShader, const GLuint geometryShader)
 {
-	int  vertex_success, fragment_success, geometry_success;
+	int vertexSuccess, fragmentSuccess, geometrySuccess;
 	char infoLog[512];
 	std::stringstream errorMessage;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertex_success);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragment_success);
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertexSuccess);
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentSuccess);
 	if (geometryShader)
 	{
-		glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &geometry_success);
+		glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &geometrySuccess);
 	}
-	if (!vertex_success)
+	if (!vertexSuccess)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
 		errorMessage << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
-	if (!fragment_success)
+	if (!fragmentSuccess)
 	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
 		errorMessage << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
-	if (geometryShader && !geometry_success)
+	if (geometryShader && !geometrySuccess)
 	{
-		glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+		glGetShaderInfoLog(geometryShader, 512, nullptr, infoLog);
 		errorMessage << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 	if (!errorMessage.str().empty())
@@ -173,15 +173,15 @@ void hgui::kernel::Shader::check_compile_error(GLuint vertexShader, GLuint fragm
 	}
 }
 
-void hgui::kernel::Shader::check_linking_error(GLuint shaderProgram) const
+void hgui::kernel::Shader::check_linking_error(const GLuint shaderProgram)
 {
 	int programSuccess;
-	char infoLog[512];
 	std::stringstream errorMessage;
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &programSuccess);
 	if (!programSuccess)
 	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		char infoLog[512];
+		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
 		errorMessage << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 	if (!errorMessage.str().empty())

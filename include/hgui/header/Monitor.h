@@ -3,26 +3,22 @@
 #include "Include.h"
 #include "Maths.hpp"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	class Monitor
 	{
-		class Monitor
-		{
-		public:
-			Monitor(GLFWmonitor* monitorPTR);
+	public:
+		explicit Monitor(GLFWmonitor* monitorPTR);
 
-			GLFWmonitor* get_monitorPTR() const;
-			const size& get_size() const;
-			std::string get_name() const;
-			const point& get_position() const;
+		[[nodiscard]] GLFWmonitor* get_monitor_ptr() const;
+		[[nodiscard]] const size& get_size() const;
+		[[nodiscard]] std::string get_name() const;
+		[[nodiscard]] const point& get_position() const;
 
-		private:
-			GLFWmonitor* m_monitorPTR;
-			size m_size;
-			point m_position;
-			std::string m_name;
-		};
-	}
+	private:
+		GLFWmonitor* m_monitorPTR;
+		size m_size;
+		point m_position;
+		std::string m_name;
+	};
 }
-

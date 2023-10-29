@@ -28,7 +28,11 @@ namespace hgui
 	class SpriteManager
 	{
 	public:
-		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteID, const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, float angularRotation = 0.0f);
+		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteID,
+		                                                     const std::variant<
+			                                                     std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture,
+		                                                     const size& size, const point& position, const color& color = HGUI_COLOR_WHITE,
+		                                                     float angularRotation = 0.0f);
 		static const std::shared_ptr<kernel::Sprite>& get(const std::string& spriteID);
 		static void destroy(const std::initializer_list<std::string>& spritesID = {});
 

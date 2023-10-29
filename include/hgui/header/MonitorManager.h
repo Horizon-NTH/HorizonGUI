@@ -10,7 +10,7 @@ namespace hgui
 	{
 	public:
 		static const std::shared_ptr<kernel::Monitor>& get(const std::string& monitorName);
-		static const std::vector<std::string> get_monitors_names();
+		static std::vector<std::string> get_monitors_names();
 		static const std::shared_ptr<kernel::Monitor>& get_primary_monitor();
 
 	private:
@@ -24,4 +24,3 @@ namespace hgui
 		friend void kernel::resources_cleaner();
 	};
 }
-

@@ -4,21 +4,16 @@
 #include "Maths.hpp"
 #include "Shape.h"
 
-namespace hgui
+namespace hgui::kernel::shape
 {
-	namespace kernel
+	class Triangle : public Shape
 	{
-		namespace shape
-		{
-			class Triangle : public Shape
-			{
-			public:
-				Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness);
+	public:
+		Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill,
+		         float thickness);
 
-				void draw(const std::shared_ptr<Shader>& shader) const override;
+		void draw(const std::shared_ptr<Shader>& shader) const override;
 
-			private:
-			};
-		}
-	}
+	private:
+	};
 }

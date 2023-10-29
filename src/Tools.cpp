@@ -5,7 +5,7 @@ void hgui::after(const std::chrono::milliseconds& delay, const std::function<voi
 	hgui::TaskManager::program(delay, function);
 }
 
-const std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
+std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
 {
 	return std::make_shared<hgui::kernel::Image>(imagePath);
 }
@@ -26,12 +26,12 @@ std::string hgui::file_reader(const std::string& filePath)
 	}
 }
 
-bool hgui::random(double chances)
+bool hgui::random(const double chances)
 {
 	static bool firstTime = true;
 	if (firstTime)
 	{
-		std::srand(static_cast<unsigned int>(std::time(NULL)));
+		std::srand(static_cast<unsigned int>(std::time(nullptr)));
 		firstTime = false;
 	}
 	return std::rand() / RAND_MAX <= chances;

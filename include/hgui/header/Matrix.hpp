@@ -92,7 +92,7 @@ namespace htools
 					size = std::max(size, static_cast<int>(sstream.str().length()));
 					sstream.str("");
 				}
-				long basef = stream.setf(std::ios::left, std::ios::adjustfield);
+				const long basef = stream.setf(std::ios::left, std::ios::adjustfield);
 				int cpt = 0;
 				for (auto it = std::begin(matrix.m_data); it < std::end(matrix.m_data); it++)
 				{

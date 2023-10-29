@@ -3,26 +3,25 @@
 #include "Include.h"
 #include "Image.h"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	class Texture
 	{
-		class Texture
-		{
-		public:
-			Texture(const std::shared_ptr<Image>& image);
-			~Texture();
+	public:
+		explicit Texture(const std::shared_ptr<Image>& image);
 
-			void bind() const;
-			GLuint get_id() const;
-			const std::shared_ptr<Image>& get_image() const;
+		~Texture();
 
-		private:
-			GLuint m_id;
-			std::shared_ptr<Image> m_image;
+		void bind() const;
 
-			void generate();
-		};
-	}
+		[[nodiscard]] GLuint get_id() const;
+
+		[[nodiscard]] const std::shared_ptr<Image>& get_image() const;
+
+	private:
+		GLuint m_id;
+		std::shared_ptr<Image> m_image;
+
+		void generate() const;
+	};
 }
-

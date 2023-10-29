@@ -3,21 +3,15 @@
 #include "Include.h"
 #include "Shape.h"
 
-namespace hgui
+namespace hgui::kernel::shape
 {
-	namespace kernel
+	class Rectangle : public Shape
 	{
-		namespace shape
-		{
-			class Rectangle : public Shape
-			{
-			public:
-				Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, bool fill, float thickness);
+	public:
+		Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, bool fill, float thickness);
 
-				void draw(const std::shared_ptr<Shader>& shader) const override;
+		void draw(const std::shared_ptr<Shader>& shader) const override;
 
-			private:
-			};
-		}
-	}
+	private:
+	};
 }

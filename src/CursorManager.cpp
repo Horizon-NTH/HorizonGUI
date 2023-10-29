@@ -1,7 +1,8 @@
 #include <hgui/header/CursorManager.h>
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition)
+std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor,
+                                                                  const point& clickPosition)
 {
 	return std::make_shared<kernel::Cursor>(cursor, clickPosition);
 }
@@ -23,28 +24,30 @@ void hgui::CursorManager::reveal()
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Cursor>> hgui::CursorManager::m_cursors;
 
-const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const std::string& cursorID, const std::shared_ptr<kernel::Image>& customCursor, const point& clickPosition)
+const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const std::string& cursorID,
+                                                                         const std::shared_ptr<kernel::Image>& customCursor,
+                                                                         const point& clickPosition)
 {
-	if (m_cursors.find(cursorID) == m_cursors.end())
+	if (!m_cursors.contains(cursorID))
 	{
 		m_cursors[cursorID] = std::make_shared<kernel::Cursor>(customCursor, clickPosition);
 		return m_cursors[cursorID];
 	}
 	else
 	{
-		throw std::runtime_error(("THERE IS ALREADY A CUSOR WITH THE ID : " + cursorID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A CURSOR WITH THE ID : " + cursorID).c_str());
 	}
 }
 
 const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::get(const std::string& cursorID)
 {
-	if (m_cursors.find(cursorID) != m_cursors.end())
+	if (m_cursors.contains(cursorID))
 	{
 		return m_cursors[cursorID];
 	}
 	else
 	{
-		throw std::runtime_error(("THERE IS NO CUSOR WITH THE ID : " + cursorID).c_str());
+		throw std::runtime_error(("THERE IS NO CURSOR WITH THE ID : " + cursorID).c_str());
 	}
 }
 
@@ -52,9 +55,9 @@ void hgui::CursorManager::destroy(const std::initializer_list<std::string>& curs
 {
 	if (cursorsID.size())
 	{
-		for (const std::string& cursorID : cursorsID)
+		for (const std::string& id : cursorsID)
 		{
-			m_cursors.erase(cursorID);
+			m_cursors.erase(id);
 		}
 	}
 	else

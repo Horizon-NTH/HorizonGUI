@@ -16,7 +16,7 @@ namespace hgui
 			friend class CursorManager;
 
 		public:
-			Cursor(cursors standardCursor);
+			explicit Cursor(cursors standardCursor);
 			Cursor(const std::shared_ptr<Image>& customCursor, const point& clickPosition);
 
 			~Cursor();
@@ -24,9 +24,7 @@ namespace hgui
 			void use() const;
 
 		private:
-
 			GLFWcursor* m_cursorPTR;
 		};
 	}
 }
-

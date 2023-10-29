@@ -6,31 +6,24 @@
 #include "VertexBufferObject.h"
 #include "Shader.h"
 
-namespace hgui
+namespace hgui::kernel::shape
 {
-	namespace kernel
+	class Shape
 	{
-		namespace shape
-		{
-			class Shape
-			{
-			public:
-				Shape(bool fill, float thickness, const point& center = {});
+	public:
+		Shape(bool fill, float thickness, const point& center = {});
 
-				virtual void draw(const std::shared_ptr<Shader>& shader) const = 0;
+		virtual void draw(const std::shared_ptr<Shader>& shader) const = 0;
 
-				float get_thickness() const;
-				bool is_fill() const;
-				const point& get_center() const;
+		[[nodiscard]] float get_thickness() const;
+		[[nodiscard]] bool is_fill() const;
+		[[nodiscard]] const point& get_center() const;
 
-			protected:
-				std::shared_ptr<VertexArrayObject> m_VAO;
-				std::shared_ptr<VertexBufferObject> m_VBO;
-				bool m_fill;
-				float m_thickness;
-				point m_center;
-			};
-		}
-	}
+	protected:
+		std::shared_ptr<VertexArrayObject> m_VAO;
+		std::shared_ptr<VertexBufferObject> m_VBO;
+		bool m_fill;
+		float m_thickness;
+		point m_center;
+	};
 }
-

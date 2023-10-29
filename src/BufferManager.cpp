@@ -4,31 +4,33 @@
 std::shared_ptr<hgui::kernel::Buffer> hgui::BufferManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize)
 {
 	kernel::ImageData bufferData
-	{
-		.width = static_cast<int>(bufferSize.width),
-		.height = static_cast<int>(bufferSize.height),
-		.channel = channels::RGBA,
-		.pixels = NULL
-	};
+			{
+				.width = static_cast<int>(bufferSize.width),
+				.height = static_cast<int>(bufferSize.height),
+				.channel = channels::RGBA,
+				.pixels = nullptr
+			};
 	auto texture = TextureManager::create(std::make_shared<kernel::Image>("", bufferData));
 	return std::make_shared<kernel::Buffer>(shader, texture);
 }
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Buffer>> hgui::BufferManager::m_buffers;
 
-const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const std::string& bufferID, const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize)
+const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const std::string& bufferID,
+                                                                         const std::shared_ptr<kernel::Shader>& shader,
+                                                                         const size& bufferSize)
 {
-	if (m_buffers.find(bufferID) == m_buffers.end())
+	if (!m_buffers.contains(bufferID))
 	{
 		kernel::ImageData bufferData
-		{
-			.width = static_cast<int>(bufferSize.width),
-				.height = static_cast<int>(bufferSize.height),
-				.channel = channels::RGBA,
-				.pixels = NULL
-		};
+				{
+					.width = static_cast<int>(bufferSize.width),
+					.height = static_cast<int>(bufferSize.height),
+					.channel = channels::RGBA,
+					.pixels = nullptr
+				};
 		auto& texture = TextureManager::create("HGUI_TEXTURE_FRAMEBUFFER_" + bufferID,
-			std::make_shared<kernel::Image>("", bufferData));
+		                                       std::make_shared<kernel::Image>("", bufferData));
 		m_buffers[bufferID] = std::make_shared<kernel::Buffer>(shader, texture);
 		return m_buffers[bufferID];
 	}
@@ -40,7 +42,7 @@ const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const s
 
 const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::get(const std::string& bufferID)
 {
-	if (m_buffers.find(bufferID) != m_buffers.end())
+	if (m_buffers.contains(bufferID))
 	{
 		return m_buffers[bufferID];
 	}

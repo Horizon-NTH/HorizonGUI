@@ -4,21 +4,15 @@
 #include "Maths.hpp"
 #include "Shape.h"
 
-namespace hgui
+namespace hgui::kernel::shape
 {
-	namespace kernel
+	class Circle : public Shape
 	{
-		namespace shape
-		{
-			class Circle : public Shape
-			{
-			public:
-				Circle(const point& centerPosition, float radius, const color& color, bool fill, float thickness);
+	public:
+		Circle(const point& centerPosition, float radius, const color& color, bool fill, float thickness);
 
-				void draw(const std::shared_ptr<Shader>& shader) const override;
+		void draw(const std::shared_ptr<Shader>& shader) const override;
 
-			private:
-			};
-		}
-	}
+	private:
+	};
 }

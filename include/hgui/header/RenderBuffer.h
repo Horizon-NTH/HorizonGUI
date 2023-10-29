@@ -2,25 +2,22 @@
 
 #include "Include.h"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	class RenderBuffer
 	{
-		class RenderBuffer
-		{
-		public:
-			RenderBuffer();
-			~RenderBuffer();
+	public:
+		RenderBuffer();
+		~RenderBuffer();
 
-			void bind();
-			void unbind();
+		void bind() const;
 
-			void create_depth_stencil();
-			GLuint get_id() const;
+		static void unbind();
+		void create_depth_stencil() const;
 
-		private:
-			GLuint m_id;
-		};
-	}
+		[[nodiscard]] GLuint get_id() const;
+
+	private:
+		GLuint m_id;
+	};
 }
-

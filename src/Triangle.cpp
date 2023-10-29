@@ -1,20 +1,21 @@
 #include <hgui/header/Triangle.h>
 
-hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness) :
-	Shape(fill, thickness, (firstVertex + secondVertex + thirdVertex) / 3.0f)
+hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color,
+                                        const bool fill, const float thickness) : Shape(
+	fill, thickness, point((firstVertex + secondVertex + thirdVertex) / 3.0f))
 {
-	float vertices[] = {
-		firstVertex.x, firstVertex.y,  color.r, color.g, color.b,
-		secondVertex.x, secondVertex.y,  color.r, color.g, color.b,
-		thirdVertex.x, thirdVertex.y,  color.r, color.g, color.b
-	};
+	const float vertices[] = {
+				firstVertex.x, firstVertex.y, color.r, color.g, color.b,
+				secondVertex.x, secondVertex.y, color.r, color.g, color.b,
+				thirdVertex.x, thirdVertex.y, color.r, color.g, color.b
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
 	m_VAO->unbind();
 }
 
@@ -34,7 +35,7 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		point p = m_center - scale * m_center;
+		const auto p = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -49,7 +50,7 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		point q = m_center - scale * m_center;
+		const auto q = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

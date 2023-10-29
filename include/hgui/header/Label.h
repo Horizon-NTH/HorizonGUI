@@ -15,8 +15,9 @@ namespace hgui
 		class Label : public Widget
 		{
 		public:
-			Label(const std::string& text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, unsigned int fontSize, const color& color, float scale);
-
+			Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font,
+			      unsigned fontSize,
+			      const color& color, float scale);
 			std::string get_text() const;
 			void set_text(const std::string& newText);
 
@@ -36,4 +37,3 @@ namespace hgui
 		};
 	}
 }
-

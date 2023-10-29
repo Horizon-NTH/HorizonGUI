@@ -1,13 +1,8 @@
 #include <hgui/header/Timer.h>
 
-hgui::Timer::Timer() : 
-	m_counting(false), m_times(0.0)
-{
-}
-
-hgui::Timer::~Timer()
-{
-}
+hgui::Timer::Timer() : m_counting(false),
+                       m_times(0.0)
+{}
 
 void hgui::Timer::start()
 {
@@ -27,7 +22,7 @@ void hgui::Timer::reset()
 	m_counting = false;
 }
 
-double hgui::Timer::get_time()
+double hgui::Timer::get_time() const
 {
 	if (m_counting)
 	{

@@ -1,19 +1,20 @@
-#include <hgui/header/Canva.h>
+#include <hgui/header/Canvas.h>
 
-hgui::kernel::Canva::Canva(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, float angularRotation) :
-	Widget(shader, size, position, color), m_angularRotation(angularRotation), 
-	m_drawer(std::make_shared<kernel::Drawer>(shader, position, size))
+hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color,
+                             const float angularRotation) : Widget(shader, size, position, color),
+                                                            m_angularRotation(angularRotation),
+                                                            m_drawer(std::make_shared<kernel::Drawer>(shader, position, size))
 {
-	set_position(position);
+	Canvas::set_position(position);
 	init_data();
 }
 
-void hgui::kernel::Canva::draw() const
+void hgui::kernel::Canvas::draw() const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
+	        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_VAO->unbind();
@@ -21,7 +22,7 @@ void hgui::kernel::Canva::draw() const
 	m_drawer->draw();
 }
 
-void hgui::kernel::Canva::set_position(const point& newPosition)
+void hgui::kernel::Canvas::set_position(const point& newPosition)
 {
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
@@ -31,25 +32,25 @@ void hgui::kernel::Canva::set_position(const point& newPosition)
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	m_shader->use().set_vec2("canvaPosition", m_position)
-		.set_vec2("canvaSize", m_size);
+	        .set_vec2("canvaSize", m_size);
 }
 
-const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canva::get_drawer() const
+const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canvas::get_drawer() const
 {
 	return m_drawer;
 }
 
-void hgui::kernel::Canva::init_data()
+void hgui::kernel::Canvas::init_data() const
 {
-	float vertices[] = {
-		0.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
-		0.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
-		1.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
+	const float vertices[] = {
+				0.0f, 1.0f, m_color.r, m_color.g, m_color.b,
+				0.0f, 0.0f, m_color.r, m_color.g, m_color.b,
+				1.0f, 0.0f, m_color.r, m_color.g, m_color.b,
 
-		0.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
-		1.0f, 0.0f,  m_color.r, m_color.g, m_color.b,
-		1.0f,  1.0f,  m_color.r, m_color.g, m_color.b,
-	};
+				0.0f, 1.0f, m_color.r, m_color.g, m_color.b,
+				1.0f, 0.0f, m_color.r, m_color.g, m_color.b,
+				1.0f, 1.0f, m_color.r, m_color.g, m_color.b,
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));

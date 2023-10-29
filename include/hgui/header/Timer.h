@@ -8,18 +8,22 @@ namespace hgui
 	{
 	public:
 		Timer();
-		~Timer();
+
+		~Timer() = default;
 
 		void start();
+
 		void stop();
+
 		void reset();
-		double get_time();
-		bool is_counting() const;
+
+		[[nodiscard]] double get_time() const;
+
+		[[nodiscard]] bool is_counting() const;
 
 	private:
 		bool m_counting;
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
-		std::chrono::duration<double> m_times;
+		mutable std::chrono::duration<double> m_times;
 	};
 }
-

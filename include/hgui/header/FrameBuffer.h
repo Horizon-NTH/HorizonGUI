@@ -4,27 +4,24 @@
 #include "Texture.h"
 #include "RenderBuffer.h"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	class FrameBuffer
 	{
-		class FrameBuffer
-		{
-		public:
-			FrameBuffer();
-			~FrameBuffer();
+	public:
+		FrameBuffer();
+		~FrameBuffer();
 
-			void bind() const;
-			void unbind() const;
-			void clear();
-			GLuint get_id() const;
-			bool is_complete() const;
-			void attach_texture(const std::shared_ptr<Texture>& texture);
-			void attach_render_buffer(const std::shared_ptr<RenderBuffer>& renderBuffer);
+		void bind() const;
 
-		private:
-			GLuint m_id;
-		};
-	}
+		static void unbind();
+		void clear() const;
+		[[nodiscard]] GLuint get_id() const;
+		[[nodiscard]] bool is_complete() const;
+		void attach_texture(const std::shared_ptr<Texture>& texture) const;
+		void attach_render_buffer(const std::shared_ptr<RenderBuffer>& renderBuffer) const;
+
+	private:
+		GLuint m_id;
+	};
 }
-

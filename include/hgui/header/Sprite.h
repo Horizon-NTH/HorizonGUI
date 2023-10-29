@@ -5,31 +5,28 @@
 #include "Widget.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	class Sprite final : public Widget
 	{
-		class Sprite : public Widget
-		{
-		public:
-			Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, float angularRoation);
-			~Sprite();
+	public:
+		Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position,
+		       const color& color, float angularRotation);
 
-			void draw() const override;
+		~Sprite() override = default;
 
-			void set_position(const point& newPosition) override;
-			void set_texture(const std::shared_ptr<Texture>& newTexture);
+		void draw() const override;
 
-		private:
-			std::shared_ptr<Texture> m_texture;
-			float m_angularRotation;
-			glm::mat4 m_modelMatrix;
+		void set_position(const point& newPosition) override;
 
-			void init_data();
-		};
-	}
+		void set_texture(const std::shared_ptr<Texture>& newTexture);
+
+	private:
+		std::shared_ptr<Texture> m_texture;
+		float m_angularRotation;
+		glm::mat4 m_modelMatrix;
+
+		void init_data() const;
+	};
 }
-

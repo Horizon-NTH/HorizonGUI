@@ -23,7 +23,7 @@ void hgui::kernel::init_glad()
 {
 	if (glfwGetCurrentContext())
 	{
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 		{
 			glfwTerminate();
 			throw std::runtime_error("ERROR WITH GLAD LOADING");
@@ -51,7 +51,7 @@ void hgui::kernel::resources_cleaner()
 	ButtonManager::m_cursor = nullptr;
 	SpriteManager::m_shader = nullptr;
 	LabelManager::m_shader = nullptr;
-	CanvaManager::m_shader = nullptr;
+	CanvasManager::m_shader = nullptr;
 	Widget::m_binds.clear();
 	Widget::m_bindedTags.clear();
 	Widget::m_widgets.clear();
@@ -60,43 +60,86 @@ void hgui::kernel::resources_cleaner()
 	MouseManager::m_inputs.clear();
 }
 
-void hgui::kernel::debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam)
+void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned int id, const GLenum severity,
+                         GLsizei length, const char* message, const void* userParam)
 {
-	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+	if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+		return;
 
 	std::cout << "---------------" << std::endl;
 	std::cout << "Debug message (" << id << "): " << message << std::endl;
 
 	switch (source)
 	{
-	case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
-	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
-	case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
-	case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
-	case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
-	case GL_DEBUG_SOURCE_OTHER:           std::cout << "Source: Other"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_SOURCE_API:
+		std::cout << "Source: API";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		std::cout << "Source: Window System";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		std::cout << "Source: Shader Compiler";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		std::cout << "Source: Third Party";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION:
+		std::cout << "Source: Application";
+		break;
+	case GL_DEBUG_SOURCE_OTHER:
+		std::cout << "Source: Other";
+		break;
+	}
+	std::cout << std::endl;
 
 	switch (type)
 	{
-	case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break;
-	case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
-	case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
-	case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
-	case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
-	case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
-	case GL_DEBUG_TYPE_OTHER:               std::cout << "Type: Other"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_TYPE_ERROR:
+		std::cout << "Type: Error";
+		break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+		std::cout << "Type: Deprecated Behaviour";
+		break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+		std::cout << "Type: Undefined Behaviour";
+		break;
+	case GL_DEBUG_TYPE_PORTABILITY:
+		std::cout << "Type: Portability";
+		break;
+	case GL_DEBUG_TYPE_PERFORMANCE:
+		std::cout << "Type: Performance";
+		break;
+	case GL_DEBUG_TYPE_MARKER:
+		std::cout << "Type: Marker";
+		break;
+	case GL_DEBUG_TYPE_PUSH_GROUP:
+		std::cout << "Type: Push Group";
+		break;
+	case GL_DEBUG_TYPE_POP_GROUP:
+		std::cout << "Type: Pop Group";
+		break;
+	case GL_DEBUG_TYPE_OTHER:
+		std::cout << "Type: Other";
+		break;
+	}
+	std::cout << std::endl;
 
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
-	case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
-	case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_SEVERITY_HIGH:
+		std::cout << "Severity: high";
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		std::cout << "Severity: medium";
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+		std::cout << "Severity: low";
+		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		std::cout << "Severity: notification";
+		break;
+	}
+	std::cout << std::endl;
 	std::cout << std::endl;
 }
 
@@ -142,7 +185,7 @@ void hgui::kernel::init_glad()
 {
 	if (glfwGetCurrentContext())
 	{
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 		{
 			glfwTerminate();
 			throw std::runtime_error("ERROR WITH GLAD LOADING");
@@ -167,7 +210,7 @@ void hgui::kernel::init_glad()
 void hgui::kernel::init_resources()
 {
 	ShaderManager::create(HGUI_SHADER_FRAMEBUFFER,
-		R"(
+	                      R"(
 			#version 330 core
 			layout (location = 0) in vec4 vertex;
 
@@ -179,7 +222,7 @@ void hgui::kernel::init_resources()
 				gl_Position = vec4(vertex.xy, 0.0, 1.0);
 			}
 		)",
-		R"(
+	                      R"(
 			#version 330 core
 
 			out vec4 fragmentColor;
@@ -233,11 +276,11 @@ void hgui::kernel::init_resources()
 			}
 		)"
 	);
-	kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
+	const auto* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
-		ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), window->get_size());
+	                      ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), window->get_size());
 	ShaderManager::create(HGUI_SHADER_BUTTON,
-		R"(
+	                      R"(
 				#version 330 core
 
 				layout (location = 0) in vec4 vertex;
@@ -252,7 +295,7 @@ void hgui::kernel::init_resources()
 					texturePosition = vertex.zw;
 				}
 			)",
-		R"(
+	                      R"(
 				#version 330 core
 				in vec2 texturePosition;
 				out vec4 fragmentColor;
@@ -315,7 +358,7 @@ void hgui::kernel::init_resources()
 			)"
 	);
 	ShaderManager::create(HGUI_SHADER_LABEL,
-		R"(
+	                      R"(
 				#version 330 core
 
 				layout (location = 0) in vec4 vertex;
@@ -329,7 +372,7 @@ void hgui::kernel::init_resources()
 					texturePosition = vertex.zw;
 				}
 			)",
-		R"(
+	                      R"(
 				#version 330 core
 
 				in vec2 texturePosition;
@@ -346,7 +389,7 @@ void hgui::kernel::init_resources()
 			)"
 	);
 	ShaderManager::create(HGUI_SHADER_SPRITE,
-		R"(
+	                      R"(
 				#version 330 core
 				layout (location = 0) in vec4 vertex;
 
@@ -361,7 +404,7 @@ void hgui::kernel::init_resources()
 					gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
 				}
 			)",
-		R"(
+	                      R"(
 				#version 330 core
 
 				in vec2 texturePosition;
@@ -378,8 +421,8 @@ void hgui::kernel::init_resources()
 				}
 			)"
 	);
-	ShaderManager::create(HGUI_SHADER_CANVA,
-		R"(
+	ShaderManager::create(HGUI_SHADER_CANVAS,
+	                      R"(
 				#version 330 core
 
 				layout (location = 0) in vec2 vertex;
@@ -396,15 +439,15 @@ void hgui::kernel::init_resources()
 					color = vertexColor;
 				}
 			)",
-		R"(
+	                      R"(
 				#version 330 core
 
 				in vec3 color;
 
 				out vec4 fragmentColor;
 
-				uniform vec2 canvaPosition;
-				uniform vec2 canvaSize;
+				uniform vec2 canvasPosition;
+				uniform vec2 canvasSize;
 
 				void main()
 				{
@@ -422,7 +465,7 @@ void hgui::kernel::resources_cleaner()
 	ButtonManager::m_buttons.clear();
 	SpriteManager::m_sprites.clear();
 	LabelManager::m_labels.clear();
-	CanvaManager::m_canvas.clear();
+	CanvasManager::m_canvas.clear();
 	WindowManager::m_windows.clear();
 	Widget::m_binds.clear();
 	Widget::m_widgets.clear();
@@ -431,43 +474,86 @@ void hgui::kernel::resources_cleaner()
 	KeyBoardManager::m_keys.clear();
 }
 
-void hgui::kernel::debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam)
+void hgui::kernel::debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message,
+                         const void* userParam)
 {
-	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+	if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+		return;
 
 	std::cout << "---------------" << std::endl;
 	std::cout << "Debug message (" << id << "): " << message << std::endl;
 
 	switch (source)
 	{
-	case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
-	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
-	case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
-	case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
-	case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
-	case GL_DEBUG_SOURCE_OTHER:           std::cout << "Source: Other"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_SOURCE_API:
+		std::cout << "Source: API";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		std::cout << "Source: Window System";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		std::cout << "Source: Shader Compiler";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		std::cout << "Source: Third Party";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION:
+		std::cout << "Source: Application";
+		break;
+	case GL_DEBUG_SOURCE_OTHER:
+		std::cout << "Source: Other";
+		break;
+	}
+	std::cout << std::endl;
 
 	switch (type)
 	{
-	case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break;
-	case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
-	case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
-	case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
-	case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
-	case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
-	case GL_DEBUG_TYPE_OTHER:               std::cout << "Type: Other"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_TYPE_ERROR:
+		std::cout << "Type: Error";
+		break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+		std::cout << "Type: Deprecated Behaviour";
+		break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+		std::cout << "Type: Undefined Behaviour";
+		break;
+	case GL_DEBUG_TYPE_PORTABILITY:
+		std::cout << "Type: Portability";
+		break;
+	case GL_DEBUG_TYPE_PERFORMANCE:
+		std::cout << "Type: Performance";
+		break;
+	case GL_DEBUG_TYPE_MARKER:
+		std::cout << "Type: Marker";
+		break;
+	case GL_DEBUG_TYPE_PUSH_GROUP:
+		std::cout << "Type: Push Group";
+		break;
+	case GL_DEBUG_TYPE_POP_GROUP:
+		std::cout << "Type: Pop Group";
+		break;
+	case GL_DEBUG_TYPE_OTHER:
+		std::cout << "Type: Other";
+		break;
+	}
+	std::cout << std::endl;
 
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
-	case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
-	case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
-	} std::cout << std::endl;
+	case GL_DEBUG_SEVERITY_HIGH:
+		std::cout << "Severity: high";
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		std::cout << "Severity: medium";
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+		std::cout << "Severity: low";
+		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		std::cout << "Severity: notification";
+		break;
+	}
+	std::cout << std::endl;
 	std::cout << std::endl;
 }
 

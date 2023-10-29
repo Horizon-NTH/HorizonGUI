@@ -1,24 +1,24 @@
 #include <hgui/header/Rectangle.h>
 
-hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, bool fill, float thickness) :
-	Shape(fill, thickness, (topLeftVertex + bottomRightVertex) / 2.0f)
+hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill,
+                                          const float thickness) : Shape(fill, thickness, point((topLeftVertex + bottomRightVertex) / 2.0f))
 {
-	float vertices[] = {
-		topLeftVertex.x, topLeftVertex.y,  color.r, color.g, color.b,
-		topLeftVertex.x, bottomRightVertex.y,  color.r, color.g, color.b,
-		bottomRightVertex.x, topLeftVertex.y,  color.r, color.g, color.b,
+	const float vertices[] = {
+				topLeftVertex.x, topLeftVertex.y, color.r, color.g, color.b,
+				topLeftVertex.x, bottomRightVertex.y, color.r, color.g, color.b,
+				bottomRightVertex.x, topLeftVertex.y, color.r, color.g, color.b,
 
-		bottomRightVertex.x, bottomRightVertex.y,  color.r, color.g, color.b,
-		bottomRightVertex.x, topLeftVertex.y,  color.r, color.g, color.b,
-		topLeftVertex.x, bottomRightVertex.y,  color.r, color.g, color.b
-	};
+				bottomRightVertex.x, bottomRightVertex.y, color.r, color.g, color.b,
+				bottomRightVertex.x, topLeftVertex.y, color.r, color.g, color.b,
+				topLeftVertex.x, bottomRightVertex.y, color.r, color.g, color.b
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
 	m_VAO->unbind();
 }
 
@@ -38,7 +38,7 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		point p = m_center - scale * m_center;
+		const auto p = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -53,7 +53,7 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		point q = m_center - scale * m_center;
+		const auto q = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

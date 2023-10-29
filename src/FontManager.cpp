@@ -10,7 +10,7 @@ std::map<std::string, std::shared_ptr<hgui::kernel::Font>> hgui::FontManager::m_
 
 const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::create(const std::string& fontID, const std::string& fontPath)
 {
-	if (m_fonts.find(fontID) == m_fonts.end())
+	if (!m_fonts.contains(fontID))
 	{
 		m_fonts[fontID] = std::make_shared<kernel::Font>(fontPath);
 		return m_fonts[fontID];
@@ -23,7 +23,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::create(const std::
 
 const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::get(const std::string& fontID)
 {
-	if (m_fonts.find(fontID) != m_fonts.end())
+	if (m_fonts.contains(fontID))
 	{
 		return m_fonts[fontID];
 	}
@@ -37,9 +37,9 @@ void hgui::FontManager::destroy(const std::initializer_list<std::string>& fontsI
 {
 	if (fontsID.size())
 	{
-		for (const auto& fontID : fontsID)
+		for (const auto& id : fontsID)
 		{
-			m_fonts.erase(fontID);
+			m_fonts.erase(id);
 		}
 	}
 	else

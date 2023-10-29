@@ -4,21 +4,15 @@
 #include "Maths.hpp"
 #include "Shape.h"
 
-namespace hgui
+namespace hgui::kernel::shape
 {
-	namespace kernel
+	class StraightLine : public Shape
 	{
-		namespace shape
-		{
-			class StraightLine : public Shape
-			{
-			public:
-				StraightLine(const point& firstVertex, const point& secondVertex, const color& color, float thickness);
+	public:
+		StraightLine(const point& firstVertex, const point& secondVertex, const color& color, float thickness);
 
-				void draw(const std::shared_ptr<Shader>& shader) const override;
+		void draw(const std::shared_ptr<Shader>& shader) const override;
 
-			private:
-			};
-		}
-	}
+	private:
+	};
 }

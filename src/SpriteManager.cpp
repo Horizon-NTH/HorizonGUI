@@ -3,7 +3,9 @@
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Shader> hgui::SpriteManager::m_shader(nullptr);
 
-std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color, float angularRotation)
+std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(
+	const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position,
+	const color& color, float angularRotation)
 {
 	if (!m_shader)
 	{
@@ -42,14 +44,14 @@ std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::var
 		);
 	}
 	std::shared_ptr<kernel::Sprite> widget;
-	if (auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
+	if (const auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
 	{
 		auto& image = *data;
 		auto texture = TextureManager::create(image);
 		widget = std::make_shared<kernel::Sprite>(
 			m_shader, texture, size, position, color, angularRotation);
 	}
-	else if (auto data = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
+	else if (const auto data = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
 	{
 		widget = std::make_shared<kernel::Sprite>(
 			m_shader, *data, size, position, color, angularRotation);
@@ -60,15 +62,19 @@ std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::var
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Sprite>> hgui::SpriteManager::m_sprites;
 
-const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteID, const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color, float angularRotation)
+const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteID,
+                                                                         const std::variant<
+	                                                                         std::shared_ptr<kernel::Texture>, std::shared_ptr<
+		                                                                         kernel::Image>>& texture, const size& size,
+                                                                         const point& position, const color& color, float angularRotation)
 {
-	if (m_sprites.find(spriteID) == m_sprites.end())
+	if (!m_sprites.contains(spriteID))
 	{
-		if (auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
+		if (const auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
 		{
-			auto& texture = TextureManager::create("HGUI_SPRITE_" + spriteID, *data);
+			auto& texture_ptr = TextureManager::create("HGUI_SPRITE_" + spriteID, *data);
 			m_sprites[spriteID] = std::make_shared<kernel::Sprite>(
-				ShaderManager::get(HGUI_SHADER_SPRITE), texture, size, position, color, angularRotation);
+				ShaderManager::get(HGUI_SHADER_SPRITE), texture_ptr, size, position, color, angularRotation);
 		}
 		else if (auto data = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
 		{
@@ -87,7 +93,7 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const s
 
 const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::get(const std::string& spriteID)
 {
-	if (m_sprites.find(spriteID) != m_sprites.end())
+	if (m_sprites.contains(spriteID))
 	{
 		return m_sprites[spriteID];
 	}
@@ -101,9 +107,9 @@ void hgui::SpriteManager::destroy(const std::initializer_list<std::string>& spri
 {
 	if (spritesID.size())
 	{
-		for (const std::string& spriteID : spritesID)
+		for (const std::string& id : spritesID)
 		{
-			m_sprites.erase(spriteID);
+			m_sprites.erase(id);
 		}
 	}
 	else

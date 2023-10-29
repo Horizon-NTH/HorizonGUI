@@ -1,26 +1,26 @@
 #include <hgui/header/Circle.h>
 
-hgui::kernel::shape::Circle::Circle(const point& centerPosition, float radius, const color& color, bool fill, float thickness) :
-	Shape(fill, thickness, centerPosition)
+hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float radius, const color& color, const bool fill,
+                                    const float thickness) : Shape(fill, thickness, centerPosition)
 {
-	int segmentNumber = 100;
-	float angleIncrement = 2.0f * glm::pi<float>() / segmentNumber;
+	constexpr int segmentNumber = 100;
+	constexpr float angleIncrement = 2.0f * glm::pi<float>() / segmentNumber;
 	std::vector<float> vertices;
 	for (int i = 0; i < segmentNumber; i++)
 	{
-		float angle = i * angleIncrement;
-		float x = centerPosition.x + radius * std::cos(angle);
-		float y = centerPosition.y + radius * std::sin(angle);
-		std::vector<float> triangle = { x, y, color.r, color.g, color.b };
+		const float angle = static_cast<float>(i) * angleIncrement;
+		const float x = centerPosition.x + radius * std::cos(angle);
+		const float y = centerPosition.y + radius * std::sin(angle);
+		std::vector<float> triangle = {x, y, color.r, color.g, color.b};
 		vertices.insert(vertices.end(), triangle.begin(), triangle.end());
 	}
 	m_VAO->bind();
 	m_VBO->bind();
-	m_VBO->set_data(vertices.data(), static_cast<int>(vertices.size()) * sizeof(float));
+	m_VBO->set_data(vertices.data(), static_cast<int>(vertices.size()) * static_cast<int>(sizeof(float)));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
 	m_VAO->unbind();
 }
 
@@ -40,7 +40,7 @@ void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) co
 
 		glm::mat4 modelMatrix(1.0f);
 		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		point p = m_center - scale * m_center;
+		const auto p = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -55,7 +55,7 @@ void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) co
 
 		modelMatrix = glm::mat4(1.0f);
 		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		point q = m_center - scale * m_center;
+		const auto q = point(m_center - scale * m_center);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

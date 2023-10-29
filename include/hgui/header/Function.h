@@ -7,7 +7,7 @@
 #include "KeyBoardManager.h"
 #include "LabelManager.h"
 #include "SpriteManager.h"
-#include "CanvaManager.h"
+#include "CanvasManager.h"
 #include "CursorManager.h"
 #include "ButtonManager.h"
 #include "WindowManager.h"
@@ -17,7 +17,6 @@
 
 namespace hgui
 {
-	/*Founction that initialize the HorizonGUI library.*/
 	void init();
 	void end();
 
@@ -25,9 +24,11 @@ namespace hgui
 	{
 		bool init_glfw();
 		void init_glad();
-
+#if defined(HGUI_STATIC)
+		void init_resources();
+#endif
 		void resources_cleaner();
-		void debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam);
+		void debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message,
+		           const void* userParam);
 	}
 }
-

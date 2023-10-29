@@ -3,34 +3,29 @@
 #include "Include.h"
 #include "Maths.hpp"
 
-namespace hgui
+namespace hgui::kernel
 {
-	namespace kernel
+	struct Character
 	{
-		struct Character
-		{
-			GLuint textureID;
-			hgui::size size;
-			ivec2 bearing;
-			unsigned int advance;
-		};
+		GLuint texture_id;
+		hgui::size size;
+		ivec2 bearing;
+		unsigned int advance;
+	};
 
-		class Font
-		{
-		public:
-			Font(const std::string& fontPath);
-			~Font();
+	class Font
+	{
+	public:
+		explicit Font(const std::string& fontPath);
+		~Font() = default;
 
-			Character get_char(char character, unsigned int size) const;
-			
-			void load_font(unsigned int size);
-			bool is_load(unsigned int size) const;
+		[[nodiscard]] Character get_char(char character, unsigned int size) const;
 
-		private:
-			std::string m_fontPath;
-			std::map<unsigned int, std::map<char, Character>> m_characters;
-		};
-	}
+		void load_font(unsigned int size);
+		[[nodiscard]] bool is_load(unsigned int size) const;
+
+	private:
+		std::string m_fontPath;
+		std::map<unsigned int, std::map<char, Character>> m_characters;
+	};
 }
-
-
