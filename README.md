@@ -4,6 +4,8 @@
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
 [![Licence](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+![HorizonGUI Logo](https://github.com/Horizon-NTH/HorizonGUI/blob/master/assets/HorizonGUI.svg)
+
 ## Introduction
 
 **HorizonGUI** is a Graphic User Interface library made in C++ with OpenGL.
