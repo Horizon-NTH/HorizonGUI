@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12+)
 
 option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
 
@@ -26,20 +26,10 @@ file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.c deps/glad/src/glad.c)
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 if(UNIX)
-	add_custom_target(UNIX_PRE_BUILD 
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/KHR ${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image.h
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image_write.h
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/ft2build.h
-		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype ${CMAKE_CURRENT_SOURCE_DIR}/include/freetype
-		COMMENT "Builing with API type: ${type}"
-	)
-	add_dependencies(${PROJECT_NAME} UNIX_PRE_BUILD)
 else()
-	add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+endif()
+
+add_custom_target(PRE_BUILD 
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
@@ -49,15 +39,15 @@ else()
 		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/ft2build.h
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype ${CMAKE_CURRENT_SOURCE_DIR}/include/freetype
 		COMMENT "Builing with API type: ${type}"
-	)
+)
+add_dependencies(${PROJECT_NAME} PRE_BUILD)
 
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/deps/freetype/Debug/freetyped.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/freetyped.lib
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/deps/glfw/src/Debug/glfw3.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/glfw3.lib
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/Debug/horizongui.lib ${CMAKE_CURRENT_SOURCE_DIR}/bin/horizongui.lib
-		COMMENT "Moving .lib files"
-	)
-endif()
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:freetype> ${CMAKE_CURRENT_SOURCE_DIR}/bin
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:glfw> ${CMAKE_CURRENT_SOURCE_DIR}/bin
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_CURRENT_SOURCE_DIR}/bin
+		COMMENT "Moving lib files"
+)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_include_directories(${PROJECT_NAME} PRIVATE include)

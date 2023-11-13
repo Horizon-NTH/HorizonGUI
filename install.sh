@@ -2,7 +2,7 @@
 
 type=OFF
 erase=false
-while getops ":d:s:-:" opt;
+while getops ":d:s:e:-:" opt;
 do
 	case $opt in
 		d)
@@ -36,12 +36,17 @@ do
 	esac	
 done
 
+if [ -d "build" ]
+then
+    rm -rf build
+fi
 mkdir build
 cd build
 cmake .. -DAPI_TYPE=$type
 cmake --build .
 cd ..
-if [ "$erase" ]
+if [ "$erase" = true ]
 then
 	rm -rf build
+	echo "Build files erased."
 fi
