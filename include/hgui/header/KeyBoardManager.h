@@ -24,6 +24,14 @@ namespace hgui
 		friend class WindowManager;
 
 	public:
+		KeyBoardManager() = delete;
+		~KeyBoardManager() = delete;
+		KeyBoardManager(const KeyBoardManager& bufferManager) = delete;
+		KeyBoardManager(KeyBoardManager&& bufferManager) = delete;
+
+		KeyBoardManager& operator=(const KeyBoardManager& bufferManager) = delete;
+		KeyBoardManager& operator=(KeyBoardManager&& bufferManager) = delete;
+
 		static void bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action,
 		                 const std::function<void()>& function);
 		[[nodiscard]] static bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
@@ -31,8 +39,6 @@ namespace hgui
 		static void bind_key_callback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function);
 
 	private:
-		KeyBoardManager() = delete;
-
 		static void process();
 		static void input(GLFWwindow* window, int key, int scan, int action, int mods);
 

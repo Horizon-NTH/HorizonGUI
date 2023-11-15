@@ -15,11 +15,17 @@ namespace hgui
 	class SpriteManager
 	{
 	public:
+		SpriteManager() = delete;
+		~SpriteManager() = delete;
+		SpriteManager(const SpriteManager& bufferManager) = delete;
+		SpriteManager(SpriteManager&& bufferManager) = delete;
+
+		SpriteManager& operator=(const SpriteManager& bufferManager) = delete;
+		SpriteManager& operator=(SpriteManager&& bufferManager) = delete;
+
 		[[nodiscard]] static std::shared_ptr<kernel::Sprite> create(const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, float angularRotation = 0.0f);
 
 	private:
-		SpriteManager() = delete;
-
 		static std::shared_ptr<kernel::Shader> m_shader;
 
 		friend void kernel::resources_cleaner();
@@ -28,6 +34,14 @@ namespace hgui
 	class SpriteManager
 	{
 	public:
+		SpriteManager() = delete;
+		~SpriteManager() = delete;
+		SpriteManager(const SpriteManager& bufferManager) = delete;
+		SpriteManager(SpriteManager&& bufferManager) = delete;
+
+		SpriteManager& operator=(const SpriteManager& bufferManager) = delete;
+		SpriteManager& operator=(SpriteManager&& bufferManager) = delete;
+
 		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteID,
 		                                                     const std::variant<
 			                                                     std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture,
@@ -37,8 +51,6 @@ namespace hgui
 		static void destroy(const std::initializer_list<std::string>& spritesID = {});
 
 	private:
-		SpriteManager() = delete;
-
 		static std::map<std::string, std::shared_ptr<kernel::Sprite>> m_sprites;
 
 		friend void kernel::resources_cleaner();

@@ -1,7 +1,7 @@
 #include <hgui/header/Circle.h>
 
 hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float radius, const color& color, const bool fill,
-                                    const float thickness) : Shape(fill, thickness, centerPosition)
+                                    const float thickness) : Shape(fill, thickness, std::make_pair(centerPosition, radius))
 {
 	constexpr int segmentNumber = 100;
 	constexpr float angleIncrement = 2.0f * glm::pi<float>() / segmentNumber;
@@ -24,47 +24,17 @@ hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float rad
 	m_VAO->unbind();
 }
 
-void hgui::kernel::shape::Circle::draw(const std::shared_ptr<Shader>& shader) const
+void hgui::kernel::shape::Circle::draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const
 {
 	if (m_fill)
 	{
-		shader->use();
+		shaders.second->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 100);
 		m_VAO->unbind();
 	}
 	else
 	{
-		glEnable(GL_STENCIL_TEST);
-		glClear(GL_STENCIL_BUFFER_BIT);
-
-		glm::mat4 modelMatrix(1.0f);
-		float scale = std::abs(1.0f - (m_thickness / 10.0f) / 2.0f);
-		const auto p = point(m_center - scale * m_center);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(p.x, p.y, 0.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-		glStencilMask(0xFF);
-		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		shader->use().set_mat4("modelMatrix", modelMatrix);
-		m_VAO->bind();
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 100);
-		m_VAO->unbind();
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-
-		modelMatrix = glm::mat4(1.0f);
-		scale = std::abs(1.0f + (m_thickness / 10.0f) / 2.0f);
-		const auto q = point(m_center - scale * m_center);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(q.x, q.y, 0.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(scale));
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-		glStencilMask(0xFF);
-		shader->use().set_mat4("modelMatrix", modelMatrix);
-		m_VAO->bind();
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 100);
-		m_VAO->unbind();
-		glDisable(GL_STENCIL_TEST);
+		
 	}
 }

@@ -1,7 +1,7 @@
 #include <hgui/header/Rectangle.h>
 
 hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill,
-                                          const float thickness) : Shape(fill, thickness, point((topLeftVertex + bottomRightVertex) / 2.0f))
+                                          const float thickness) : Shape(fill, thickness, std::make_pair(topLeftVertex, bottomRightVertex))
 {
 	const float vertices[] = {
 				topLeftVertex.x, topLeftVertex.y, color.r, color.g, color.b,
@@ -22,17 +22,18 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 	m_VAO->unbind();
 }
 
-void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader) const
+void hgui::kernel::shape::Rectangle::draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const
 {
 	if (m_fill)
 	{
-		shader->use();
+		shaders.second->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_VAO->unbind();
 	}
 	else
 	{
+		/*
 		glEnable(GL_STENCIL_TEST);
 		glClear(GL_STENCIL_BUFFER_BIT);
 
@@ -64,5 +65,6 @@ void hgui::kernel::shape::Rectangle::draw(const std::shared_ptr<Shader>& shader)
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_VAO->unbind();
 		glDisable(GL_STENCIL_TEST);
+		*/
 	}
 }

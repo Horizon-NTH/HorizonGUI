@@ -5,13 +5,18 @@
 
 namespace hgui::kernel::shape
 {
-	class Rectangle : public Shape
+	class Rectangle final : public Shape
 	{
 	public:
 		Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, bool fill, float thickness);
+		~Rectangle() override = default;
 
-		void draw(const std::shared_ptr<Shader>& shader) const override;
+		Rectangle(const Rectangle& rectangle) = default;
+		Rectangle(Rectangle&& rectangle) = default;
 
-	private:
+		Rectangle& operator=(const Rectangle& rectangle) = default;
+		Rectangle& operator=(Rectangle&& rectangle) = default;
+
+		void draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const override;
 	};
 }

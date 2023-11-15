@@ -2,7 +2,7 @@
 
 hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color,
                                         const bool fill, const float thickness) : Shape(
-	fill, thickness, point((firstVertex + secondVertex + thirdVertex) / 3.0f))
+	fill, thickness, std::array<hgui::point, 3>{firstVertex, secondVertex, thirdVertex})
 {
 	const float vertices[] = {
 				firstVertex.x, firstVertex.y, color.r, color.g, color.b,
@@ -19,17 +19,18 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 	m_VAO->unbind();
 }
 
-void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) const
+void hgui::kernel::shape::Triangle::draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const
 {
 	if (m_fill)
 	{
-		shader->use();
+		shaders.second->use();
 		m_VAO->bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		m_VAO->unbind();
 	}
 	else
 	{
+		/*
 		glEnable(GL_STENCIL_TEST);
 		glClear(GL_STENCIL_BUFFER_BIT);
 
@@ -61,5 +62,6 @@ void hgui::kernel::shape::Triangle::draw(const std::shared_ptr<Shader>& shader) 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		m_VAO->unbind();
 		glDisable(GL_STENCIL_TEST);
+		*/
 	}
 }

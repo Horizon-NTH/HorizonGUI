@@ -12,7 +12,7 @@ namespace hgui
 
 	namespace kernel
 	{
-		class Label : public Widget
+		class Label final : public Widget
 		{
 		public:
 			Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font,

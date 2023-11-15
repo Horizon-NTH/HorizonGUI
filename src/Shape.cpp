@@ -1,11 +1,11 @@
 #include <hgui/header/Shape.h>
 
 hgui::kernel::shape::Shape::Shape(const bool fill, const float thickness,
-                                  const point& center) : m_VAO(std::make_shared<kernel::VertexArrayObject>()),
+                                  const ShapeData& data) : m_VAO(std::make_shared<kernel::VertexArrayObject>()),
                                                          m_VBO(std::make_shared<kernel::VertexBufferObject>()),
                                                          m_fill(fill),
-                                                         m_thickness(thickness),
-                                                         m_center(center)
+                                                         m_thickness(thickness), m_data(data)
+
 {}
 
 float hgui::kernel::shape::Shape::get_thickness() const
@@ -18,7 +18,7 @@ bool hgui::kernel::shape::Shape::is_fill() const
 	return m_fill;
 }
 
-const hgui::point& hgui::kernel::shape::Shape::get_center() const
+const hgui::kernel::shape::ShapeData& hgui::kernel::shape::Shape::get_data() const
 {
-	return m_center;
+    return m_data;
 }

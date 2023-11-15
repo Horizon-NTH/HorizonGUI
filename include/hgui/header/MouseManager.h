@@ -22,6 +22,14 @@ namespace hgui
 		friend class WindowManager;
 
 	public:
+		MouseManager() = delete;
+		~MouseManager() = delete;
+		MouseManager(const MouseManager& bufferManager) = delete;
+		MouseManager(MouseManager&& bufferManager) = delete;
+
+		MouseManager& operator=(const MouseManager& bufferManager) = delete;
+		MouseManager& operator=(MouseManager&& bufferManager) = delete;
+
 		static void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action,
 		                 const std::function<void()>& function);
 
@@ -34,8 +42,6 @@ namespace hgui
 		[[nodiscard]] static dvec2 get_position();
 
 	private:
-		MouseManager() = delete;
-
 		static void process();
 
 		static void scroll(GLFWwindow* window, double xOffset, double yOffset);

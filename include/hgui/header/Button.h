@@ -10,7 +10,7 @@
 
 namespace hgui::kernel
 {
-	class Button : public Widget
+	class Button final : public Widget
 	{
 	public:
 		Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position,

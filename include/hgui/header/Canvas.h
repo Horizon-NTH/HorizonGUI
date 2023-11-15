@@ -7,7 +7,7 @@
 
 namespace hgui::kernel
 {
-	class Canvas : public Widget
+	class Canvas final : public Widget
 	{
 	public:
 		Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color,
