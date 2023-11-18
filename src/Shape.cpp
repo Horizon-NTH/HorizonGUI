@@ -20,6 +20,11 @@ bool hgui::kernel::shape::Shape::is_fill() const
 	return m_fill;
 }
 
+const hgui::color& hgui::kernel::shape::Shape::get_color() const
+{
+	return m_color;
+}
+
 const hgui::kernel::shape::ShapeData& hgui::kernel::shape::Shape::get_data() const
 {
 	return m_data;

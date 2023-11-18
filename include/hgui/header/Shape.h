@@ -32,6 +32,7 @@ namespace hgui::kernel::shape
 
 		[[nodiscard]] float get_thickness() const;
 		[[nodiscard]] bool is_fill() const;
+		[[nodiscard]] const hgui::color& get_color() const;
 		[[nodiscard]] const ShapeData& get_data() const;
 
 	protected:
