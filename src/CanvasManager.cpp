@@ -34,9 +34,6 @@ std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::sha
 
 				out vec4 fragmentColor;
 
-				uniform vec2 canvaPosition;
-				uniform vec2 canvaSize;
-
 				void main()
 				{
 					fragmentColor = vec4(color, 1.0);

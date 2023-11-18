@@ -14,10 +14,14 @@
 
 namespace hgui::kernel
 {
+	class Canvas;
+
 	class Drawer
 	{
+		friend class Canvas;
+
 	public:
-		Drawer(const std::shared_ptr<hgui::kernel::Shader>& shader, const point& position, const size& size);
+		Drawer(const point& position, const size& size);
 
 		void draw_rectangle(const point& topLeftVertex, const point& rightBottomVertex, const color& color, bool fill = true,
 		                    float thickness = 1.0f) const;
@@ -32,7 +36,6 @@ namespace hgui::kernel
 	private:
 		point m_position;
 		size m_size;
-		std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>> m_shaders;
 		std::shared_ptr<std::vector<std::shared_ptr<shape::Shape>>> m_shapes;
 	};
 }

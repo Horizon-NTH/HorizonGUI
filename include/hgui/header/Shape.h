@@ -5,6 +5,7 @@
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
 #include "Shader.h"
+#include "ShaderManager.h"
 
 namespace hgui::kernel::shape
 {
@@ -18,7 +19,7 @@ namespace hgui::kernel::shape
 	class Shape
 	{
 	public:
-		Shape(bool fill, float thickness, const ShapeData& data);
+		Shape(bool fill, float thickness, const hgui::color& color, const ShapeData& data);
 		virtual ~Shape() = default;
 
 		Shape(const Shape& shape) = default;
@@ -27,7 +28,7 @@ namespace hgui::kernel::shape
 		Shape& operator=(const Shape& shape) = default;
 		Shape& operator=(Shape&& shape) = default;
 
-		virtual void draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const = 0;
+		virtual void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const = 0;
 
 		[[nodiscard]] float get_thickness() const;
 		[[nodiscard]] bool is_fill() const;
@@ -38,6 +39,7 @@ namespace hgui::kernel::shape
 		std::shared_ptr<VertexBufferObject> m_VBO;
 		bool m_fill;
 		float m_thickness;
+		hgui::color m_color;
 		ShapeData m_data;
 	};
 }

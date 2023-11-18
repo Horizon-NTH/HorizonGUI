@@ -3,7 +3,7 @@
 hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color,
                              const float angularRotation) : Widget(shader, size, position, color),
                                                             m_angularRotation(angularRotation),
-                                                            m_drawer(std::make_shared<kernel::Drawer>(shader, position, size))
+                                                            m_drawer(std::make_shared<kernel::Drawer>(position, size))
 {
 	Canvas::set_position(position);
 	init_data();
@@ -18,7 +18,6 @@ void hgui::kernel::Canvas::draw() const
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_VAO->unbind();
-	m_shader->set_mat4("modelMatrix", glm::mat4(1.0));
 	m_drawer->draw();
 }
 
@@ -31,8 +30,7 @@ void hgui::kernel::Canvas::set_position(const point& newPosition)
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
-	m_shader->use().set_vec2("canvaPosition", m_position)
-	        .set_vec2("canvaSize", m_size);
+	m_drawer->m_position = newPosition;
 }
 
 const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canvas::get_drawer() const

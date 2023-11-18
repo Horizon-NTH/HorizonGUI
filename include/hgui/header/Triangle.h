@@ -19,6 +19,9 @@ namespace hgui::kernel::shape
 		Triangle& operator=(const Triangle& triangle) = default;
 		Triangle& operator=(Triangle&& triangle) = default;
 
-		void draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const override;
+		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const override;
+
+	private:
+		static std::shared_ptr<Shader> m_shader;
 	};
 }

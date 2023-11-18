@@ -17,6 +17,9 @@ namespace hgui::kernel::shape
 		Rectangle& operator=(const Rectangle& rectangle) = default;
 		Rectangle& operator=(Rectangle&& rectangle) = default;
 
-		void draw(const std::pair<std::shared_ptr<Shader>, std::shared_ptr<Shader>>& shaders) const override;
+		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const override;
+
+	private:
+		static std::shared_ptr<Shader> m_shader;
 	};
 }
