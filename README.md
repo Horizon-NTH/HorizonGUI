@@ -56,7 +56,7 @@ You will now able to choose between [script](#script-installation) or [manual](#
     cmake --build .
     ```
 
-    This command will create all the .lib files you need in `HorizonGUI/bin`.
+    This command will create all the lib files you need in `HorizonGUI/lib`.
 
   - ##### Microsoft Visual Studio
 

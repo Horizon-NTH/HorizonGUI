@@ -38,10 +38,14 @@ void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& p
 
 void hgui::Renderer::loop()
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	m_frameBufferShader = ShaderManager::create(
-		R"(
+	static bool alreadyInLoop = false;
+	if (!alreadyInLoop)
+	{
+		alreadyInLoop = true;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		m_frameBufferShader = ShaderManager::create(
+			R"(
 			#version 330 core
 			layout (location = 0) in vec4 vertex;
 
@@ -53,7 +57,7 @@ void hgui::Renderer::loop()
 				gl_Position = vec4(vertex.xy, 0.0, 1.0);
 			}
 		)",
-		R"(
+			R"(
 			#version 330 core
 
 			out vec4 fragmentColor;
@@ -106,27 +110,29 @@ void hgui::Renderer::loop()
 				}
 			}
 		)"
-	);
-	{
-		const kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
-		m_frameBuffer = BufferManager::create(m_frameBufferShader, window->get_size());
+		);
+		{
+			const kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
+			m_frameBuffer = BufferManager::create(m_frameBufferShader, window->get_size());
+		}
+		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+		{
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_frameBuffer->clear();
+
+			KeyBoardManager::process();
+			MouseManager::process();
+			TaskManager::process();
+
+			render();
+
+			glfwSwapBuffers(glfwGetCurrentContext());
+			glfwPollEvents();
+		}
+		kernel::resources_cleaner();
+		glfwTerminate();
+		alreadyInLoop = false;
 	}
-	while (!glfwWindowShouldClose(glfwGetCurrentContext()))
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		m_frameBuffer->clear();
-
-		KeyBoardManager::process();
-		MouseManager::process();
-		TaskManager::process();
-
-		render();
-
-		glfwSwapBuffers(glfwGetCurrentContext());
-		glfwPollEvents();
-	}
-	kernel::resources_cleaner();
-	glfwTerminate();
 }
 
 void hgui::Renderer::set_background_color(const color& newColor)
@@ -197,24 +203,30 @@ void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& p
 
 void hgui::Renderer::loop()
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+	static bool alreadyInLoop = false;
+	if (!alreadyInLoop)
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->clear();
+		alreadyInLoop = true;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+		{
+			glClear(GL_COLOR_BUFFER_BIT);
+			BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->clear();
 
-		KeyBoardManager::process();
-		MouseManager::process();
-		TaskManager::process();
+			KeyBoardManager::process();
+			MouseManager::process();
+			TaskManager::process();
 
-		render();
+			render();
 
-		glfwSwapBuffers(glfwGetCurrentContext());
-		glfwPollEvents();
+			glfwSwapBuffers(glfwGetCurrentContext());
+			glfwPollEvents();
+		}
+		kernel::resources_cleaner();
+		glfwTerminate();
+		alreadyInLoop = false;
 	}
-	kernel::resources_cleaner();
-	glfwTerminate();
 }
 
 void hgui::Renderer::set_background_color(const color& newColor)

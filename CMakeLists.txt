@@ -25,11 +25,10 @@ file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.c deps/glad/src/glad.c)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
-if(UNIX)
-else()
-endif()
-
-add_custom_target(PRE_BUILD 
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:freetype> ${CMAKE_CURRENT_SOURCE_DIR}/lib/$<TARGET_FILE_NAME:freetype>
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:glfw> ${CMAKE_CURRENT_SOURCE_DIR}/lib/$<TARGET_FILE_NAME:glfw>
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_CURRENT_SOURCE_DIR}/lib/$<TARGET_FILE_NAME:${PROJECT_NAME}>
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW ${CMAKE_CURRENT_SOURCE_DIR}/include/GLFW
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm ${CMAKE_CURRENT_SOURCE_DIR}/include/glm
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad ${CMAKE_CURRENT_SOURCE_DIR}/include/glad
@@ -38,17 +37,16 @@ add_custom_target(PRE_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb_image_write.h
 		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h ${CMAKE_CURRENT_SOURCE_DIR}/include/ft2build.h
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype ${CMAKE_CURRENT_SOURCE_DIR}/include/freetype
-		COMMENT "Builing with API type: ${type}"
-)
-add_dependencies(${PROJECT_NAME} PRE_BUILD)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:freetype> ${CMAKE_CURRENT_SOURCE_DIR}/bin
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:glfw> ${CMAKE_CURRENT_SOURCE_DIR}/bin
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_CURRENT_SOURCE_DIR}/bin
-		COMMENT "Moving lib files"
+		COMMENT "Moving files"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE 
+	include
+	{CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/glm
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include
+	${CMAKE_CURRENT_SOURCE_DIR}/deps
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype)
