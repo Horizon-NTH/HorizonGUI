@@ -341,6 +341,8 @@ namespace hgui
 			Color() noexcept;
 			explicit Color(T rgb, T a = static_cast<T>(1)) noexcept;
 			Color(T r, T g, T b, T a = static_cast<T>(1)) noexcept;
+			template<typename U>
+			Color(U r, U g, U b, U a = static_cast<U>(1)) noexcept;
 			Color(const Color<T>& color) noexcept;
 			Color(const kernel::Vector<T, 3>& color) noexcept;
 			Color(const kernel::Vector<T, 4>& color) noexcept;
@@ -1205,6 +1207,16 @@ a((*this)[3])
 
 template<typename T>
 inline hgui::kernel::Color<T>::Color(T r, T g, T b, T a) noexcept : Vector<T, 4>({ r, g, b, a }),
+r((*this)[0]),
+g((*this)[1]),
+b((*this)[2]),
+a((*this)[3])
+{
+}
+
+template<typename T>
+template<typename U>
+hgui::kernel::Color<T>::Color(U r, U g, U b, U a) noexcept : Vector<T, 4>({ static_cast<T>(r), static_cast<T>(g), static_cast<T>(b), static_cast<T>(a) }),
 r((*this)[0]),
 g((*this)[1]),
 b((*this)[2]),

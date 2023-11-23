@@ -6,6 +6,16 @@
 namespace hgui::kernel
 {
 	template<typename T, std::size_t dimension>
+	class Vector;
+
+	template<typename T, std::size_t dimension>
+	T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
+	template<typename T, std::size_t dimension>
+	Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v);
+	template<typename T, std::size_t dimension>
+	T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
+
+	template<typename T, std::size_t dimension>
 	class Vector
 	{
 	public:
@@ -15,9 +25,10 @@ namespace hgui::kernel
 		using const_reverse_iterator = ConstReverseIterator<T>;
 
 		Vector() noexcept;
+		virtual ~Vector() = default;
 		explicit Vector(const T& initializationValue) noexcept;
-		Vector(const Vector<T, dimension>& vector) noexcept;
-		Vector(const Vector<T, dimension>&& vector) noexcept;
+		Vector(const Vector<T, dimension>& vector) noexcept = default;
+		Vector(Vector<T, dimension>&& vector) noexcept = default;
 		explicit Vector(const std::valarray<T>& vector) noexcept;
 		explicit Vector(const std::valarray<T>&& vector) noexcept;
 
@@ -29,7 +40,8 @@ namespace hgui::kernel
 		const T& operator[](int index) const noexcept;
 		void operator-() noexcept;
 
-		Vector<T, dimension>& operator=(const Vector<T, dimension>& vector) noexcept;
+		Vector<T, dimension>& operator=(const Vector<T, dimension>& vector) noexcept = default;
+		Vector<T, dimension>& operator=(Vector<T, dimension>&& vector) noexcept = default;
 
 		friend Vector<T, dimension> operator+(const Vector<T, dimension>& u, const Vector<T, dimension>& v) noexcept
 		{
@@ -98,20 +110,13 @@ namespace hgui::kernel
 			return stream;
 		}
 
-		template<typename U>
-		friend T dot(const Vector<U, dimension>& u, const Vector<U, dimension>& v);
-		template<typename U>
-		friend Vector<T, 3> cross(const Vector<U, 3>& u, const Vector<U, 3>& v);
-		template<typename U>
-		friend T distance(const Vector<U, dimension>& u, const Vector<U, dimension>& v);
-
-		iterator begin() noexcept;
+		[[nodiscard]] iterator begin() noexcept;
 		[[nodiscard]] const_iterator begin() const noexcept;
-		iterator end() noexcept;
+		[[nodiscard]] iterator end() noexcept;
 		[[nodiscard]] const_iterator end() const noexcept;
-		reverse_iterator rbegin() noexcept;
+		[[nodiscard]] reverse_iterator rbegin() noexcept;
 		[[nodiscard]] const_reverse_iterator rbegin() const noexcept;
-		reverse_iterator rend() noexcept;
+		[[nodiscard]] reverse_iterator rend() noexcept;
 		[[nodiscard]] const_reverse_iterator rend() const noexcept;
 		[[nodiscard]] const_iterator cbegin() const noexcept;
 		[[nodiscard]] const_iterator cend() const noexcept;
@@ -120,52 +125,55 @@ namespace hgui::kernel
 
 	private:
 		std::valarray<T> m_data;
+
+		template<typename T, std::size_t dimension>
+		friend T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
+		template<typename T, std::size_t dimension>
+		friend Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v);
+		template<typename T, std::size_t dimension>
+		friend T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
 	};
-
-	template<typename T, std::size_t dimension>
-	T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v)
-	{
-		return std::inner_product(std::begin(u.m_data), std::end(u.m_data), std::begin(v.m_data), T{});
-	}
-
-	template<typename T, std::size_t dimension>
-	Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v)
-	{
-		return hgui::kernel::Vector<T, 3>({u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]});
-	}
-
-	template<typename T, std::size_t dimension>
-	T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v)
-	{
-		return (u - v).length();
-	}
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 template<typename T, std::size_t dimension>
+T hgui::kernel::dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v)
+{
+	return std::inner_product(std::begin(u.m_data), std::end(u.m_data), std::begin(v.m_data), T{});
+}
+
+template<typename T, std::size_t dimension>
+hgui::kernel::Vector<T, 3> hgui::kernel::cross(const Vector<T, 3>& u, const Vector<T, 3>& v)
+{
+	return hgui::kernel::Vector<T, 3>({ u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0] });
+}
+
+template<typename T, std::size_t dimension>
+T hgui::kernel::distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v)
+{
+	return (u - v).length();
+}
+
+template<typename T, std::size_t dimension>
 hgui::kernel::Vector<T, dimension>::Vector() noexcept : m_data(dimension)
-{}
+{
+}
 
 template<typename T, std::size_t dimension>
 hgui::kernel::Vector<T, dimension>::Vector(const T& initializationValue) noexcept : m_data(initializationValue, dimension)
-{}
-
-template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector(const Vector<T, dimension>& vector) noexcept : m_data(vector.m_data)
-{}
-
-template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector(const Vector<T, dimension>&& vector) noexcept : m_data(std::move(vector.m_data))
-{}
+{
+}
 
 template<typename T, std::size_t dimension>
 hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>& vector) noexcept : m_data(vector)
-{}
+{
+}
 
 template<typename T, std::size_t dimension>
 hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>&& vector) noexcept : m_data(std::move(vector))
-{}
+{
+}
 
 template<typename T, std::size_t dimension>
 T hgui::kernel::Vector<T, dimension>::length() const
@@ -202,13 +210,6 @@ template<typename T, std::size_t dimension>
 void hgui::kernel::Vector<T, dimension>::operator-() noexcept
 {
 	m_data = -m_data;
-}
-
-template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>& hgui::kernel::Vector<T, dimension>::operator=(const Vector<T, dimension>& vector) noexcept
-{
-	m_data = vector.m_data;
-	return m_data;
 }
 
 template<typename T, std::size_t dimension>

@@ -35,15 +35,9 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype DESTINATION
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
-target_include_directories(${PROJECT_NAME} PRIVATE 
-	include
-	{CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/glm
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include
-	${CMAKE_CURRENT_SOURCE_DIR}/deps
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
 ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
 ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
