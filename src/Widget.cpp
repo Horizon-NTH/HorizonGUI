@@ -146,6 +146,7 @@ void hgui::Widget::active(const std::vector<std::string>& tags)
 			m_bindedTags.push_back(tag);
 		}
 	}
+	glfwSetCursor(glfwGetCurrentContext(), glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
 }
 
 const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)

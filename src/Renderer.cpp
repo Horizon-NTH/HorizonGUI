@@ -5,6 +5,7 @@ std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::ef
 hgui::color hgui::Renderer::m_backGroundColor;
 std::shared_ptr<hgui::kernel::Buffer> hgui::Renderer::m_frameBuffer(nullptr);
 std::shared_ptr<hgui::kernel::Shader> hgui::Renderer::m_frameBufferShader(nullptr);
+std::function<void()> hgui::Renderer::m_drawCallBack(nullptr);
 
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
@@ -126,6 +127,11 @@ void hgui::Renderer::loop()
 
 			render();
 
+			if (m_drawCallBack)
+			{
+				m_drawCallBack();
+			}
+
 			glfwSwapBuffers(glfwGetCurrentContext());
 			glfwPollEvents();
 		}
@@ -138,7 +144,12 @@ void hgui::Renderer::loop()
 void hgui::Renderer::set_background_color(const color& newColor)
 {
 	m_backGroundColor = newColor;
-	glClearColor(newColor.r, newColor.g, newColor.b, 1.0f);
+	glClearColor(newColor.r, newColor.g, newColor.b, newColor.a);
+}
+
+void hgui::Renderer::set_draw_callback(const std::function<void()>& function)
+{
+	m_drawCallBack = function;
 }
 
 const hgui::color& hgui::Renderer::get_background_color()
@@ -170,6 +181,7 @@ void hgui::Renderer::render()
 #elif defined(HGUI_STATIC)
 std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
 hgui::color hgui::Renderer::m_backGroundColor;
+std::function<void()> hgui::Renderer::m_drawCallBack(nullptr);
 
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
@@ -220,6 +232,11 @@ void hgui::Renderer::loop()
 
 			render();
 
+			if (m_drawCallBack)
+			{
+				m_drawCallBack();
+			}
+
 			glfwSwapBuffers(glfwGetCurrentContext());
 			glfwPollEvents();
 		}
@@ -232,12 +249,17 @@ void hgui::Renderer::loop()
 void hgui::Renderer::set_background_color(const color& newColor)
 {
 	m_backGroundColor = newColor;
-	glClearColor(newColor.r, newColor.g, newColor.b, 1.0f);
+	glClearColor(newColor.r, newColor.g, newColor.b, newColor.a);
 }
 
 const hgui::color& hgui::Renderer::get_background_color()
 {
 	return m_backGroundColor;
+}
+
+void hgui::Renderer::set_draw_callback(const std::function<void()>& function)
+{
+	m_drawCallBack = function;
 }
 
 void hgui::Renderer::render()
