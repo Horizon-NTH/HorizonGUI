@@ -35,6 +35,17 @@ void hgui::TaskManager::deprogram(const std::string& id)
 	}
 }
 
+std::vector<std::string> hgui::TaskManager::get_ids()
+{
+	std::vector<std::string> ids;
+	ids.reserve(m_tasks.size());
+	for (auto [id, task] : m_tasks)
+	{
+		ids.push_back(id);
+	}
+	return ids;
+}
+
 void hgui::TaskManager::process()
 {
 	std::vector<std::function<void()>> taskToDo;

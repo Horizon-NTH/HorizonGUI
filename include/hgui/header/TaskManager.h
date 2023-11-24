@@ -21,6 +21,8 @@ namespace hgui
 		static void program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id = "");
 		static void deprogram(const std::string& id);
 
+		static std::vector<std::string> get_ids();
+
 	private:
 		static void process();
 
