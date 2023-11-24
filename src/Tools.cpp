@@ -34,7 +34,7 @@ bool hgui::random(const double chances)
 		std::srand(static_cast<unsigned int>(std::time(nullptr)));
 		firstTime = false;
 	}
-	return std::rand() / RAND_MAX <= chances;
+	return static_cast<double>(std::rand()) / RAND_MAX <= chances;
 }
 
 std::string hgui::get_unique_id()

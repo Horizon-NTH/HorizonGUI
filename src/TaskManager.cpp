@@ -49,23 +49,18 @@ std::vector<std::string> hgui::TaskManager::get_ids()
 
 void hgui::TaskManager::process()
 {
-	std::vector<std::function<void()>> taskToDo;
-	std::vector<std::string> done;
+	std::vector<std::string> taskToDo;
 	for (const auto& [id, task] : m_tasks)
 	{
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(task)->get_time())) 
 			>= std::get<1>(task))
 		{
-			taskToDo.push_back(std::get<0>(task));
-			done.push_back(id);
+			taskToDo.push_back(id);
 		}
 	}
-	for (auto& task : taskToDo)
+	for (const auto& id : taskToDo)
 	{
-		task();
-	}
-	for (auto id : done)
-	{
+		std::get<0>(m_tasks[id])();
 		m_tasks.erase(id);
 	}
 }
