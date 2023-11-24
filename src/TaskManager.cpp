@@ -1,3 +1,4 @@
+#include <ranges>
 #include <hgui/header/TaskManager.h>
 
 std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<hgui::Timer>>> hgui::TaskManager::m_tasks;
@@ -39,7 +40,7 @@ std::vector<std::string> hgui::TaskManager::get_ids()
 {
 	std::vector<std::string> ids;
 	ids.reserve(m_tasks.size());
-	for (auto [id, task] : m_tasks)
+	for (const auto& id : m_tasks | std::views::keys)
 	{
 		ids.push_back(id);
 	}
