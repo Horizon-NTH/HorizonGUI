@@ -18,11 +18,12 @@ namespace hgui
 		TaskManager& operator=(const TaskManager& bufferManager) = delete;
 		TaskManager& operator=(TaskManager&& bufferManager) = delete;
 
-		static void program(const std::chrono::milliseconds& delay, std::function<void()> function);
+		static void program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id = "");
+		static void deprogram(const std::string& id);
 
 	private:
 		static void process();
 
-		static std::vector<std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<Timer>>> m_tasks;
+		static std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<Timer>>> m_tasks;
 	};
 }
