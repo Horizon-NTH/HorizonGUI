@@ -1,7 +1,7 @@
 # HorizonGUI
 
-![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
-![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
+[![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)](https://github.com/Horizon-NTH/HorizonGUI/releases)
+[![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)](https://en.wikipedia.org/wiki/C++)
 [![Licence](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ![HorizonGUI Logo](https://github.com/Horizon-NTH/HorizonGUI/blob/master/assets/HorizonGUI.svg)
