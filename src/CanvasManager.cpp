@@ -65,7 +65,7 @@ const std::shared_ptr<hgui::kernel::Canvas>& hgui::CanvasManager::create(const s
 	}
 	else
 	{
-		throw std::runtime_error(("THERE IS ALREADY A TEXT AREA WITH THE ID : " + canvasID).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A CANVAS WITH THE ID : " + canvasID).c_str());
 	}
 }
 
