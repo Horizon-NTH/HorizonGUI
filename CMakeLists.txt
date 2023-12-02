@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12+)
 
 option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
 
-project(horizongui VERSION 2.0.0)
+project(horizongui VERSION 2.0)
 
 if(API_TYPE)
     set(type STATIC)
