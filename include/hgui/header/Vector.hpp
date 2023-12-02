@@ -125,13 +125,6 @@ namespace hgui::kernel
 
 	private:
 		std::valarray<T> m_data;
-
-		template<typename T, std::size_t dimension>
-		friend T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
-		template<typename T, std::size_t dimension>
-		friend Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v);
-		template<typename T, std::size_t dimension>
-		friend T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
 	};
 }
 
@@ -140,7 +133,7 @@ namespace hgui::kernel
 template<typename T, std::size_t dimension>
 T hgui::kernel::dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v)
 {
-	return std::inner_product(std::begin(u.m_data), std::end(u.m_data), std::begin(v.m_data), T{});
+	return std::inner_product(u.cbegin(), u.cend(), v.cbegin(), T{});
 }
 
 template<typename T, std::size_t dimension>
