@@ -7,6 +7,9 @@ include/GLFW
 include/glm  
 include/KHR  
 include/stb  
-.vs  
+include/AL
+.vs
 .gitignore  
-lib  
+lib
+CMakeSettings.json  
+.vscode  
