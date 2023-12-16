@@ -1,7 +1,9 @@
 #include <hgui/header/Font.h>
 
-hgui::kernel::Font::Font(const std::string& fontPath) : m_fontPath(fontPath)
-{}
+hgui::kernel::Font::Font(const std::string& fontPath) :
+	m_fontPath(fontPath)
+{
+}
 
 hgui::kernel::Character hgui::kernel::Font::get_char(const char character, const unsigned int size) const
 {
@@ -35,31 +37,26 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 			{
 				throw std::runtime_error(std::string("ERROR FAILED TO LOAD GLYPH : " + static_cast<char>(c)).c_str());
 			}
-			unsigned int texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
-				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
-				GL_RED,
-				GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer
-			);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			ImageData data
+			{
+				.width = face->glyph->bitmap.width,
+				.height = face->glyph->bitmap.rows,
+				.channel = hgui::channels::GREYSCALE,
+				.pixels = face->glyph->bitmap.buffer
+			};
+			auto texture = std::make_shared<Texture>(std::make_shared<Image>("", data),
+				TextureOption
+				{
+					.wrap_s = GL_CLAMP_TO_BORDER,
+					.wrap_t = GL_CLAMP_TO_BORDER
+				});
 			Character character
-					{
-						.textureID = texture,
-						.size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-						.bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-						.advance = static_cast<unsigned int>(face->glyph->advance.x)
-					};
+			{
+				.texture = texture,
+				.size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				.bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				.advance = static_cast<unsigned int>(face->glyph->advance.x)
+			};
 			m_characters[size].insert(std::pair<char, Character>(c, character));
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);

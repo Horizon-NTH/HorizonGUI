@@ -52,7 +52,7 @@ void hgui::TaskManager::process()
 	std::vector<std::string> taskToDo;
 	for (const auto& [id, task] : m_tasks)
 	{
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(task)->get_time())) 
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(task)->get_time()))
 			>= std::get<1>(task))
 		{
 			taskToDo.push_back(id);

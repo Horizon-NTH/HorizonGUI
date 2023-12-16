@@ -15,8 +15,15 @@ namespace hgui::kernel
 
 	public:
 		ConstIterator() noexcept;
-
 		explicit ConstIterator(const T* ptr) noexcept;
+		ConstIterator(const ConstIterator& iterator) noexcept = default;
+		ConstIterator(ConstIterator&& iterator) noexcept = default;
+
+		~ConstIterator() = default;
+
+		ConstIterator& operator=(const ConstIterator& iterator) noexcept = default;
+		ConstIterator& operator=(ConstIterator&& iterator) noexcept = default;
+
 
 		reference operator*() const noexcept;
 
@@ -101,8 +108,14 @@ namespace hgui::kernel
 
 	public:
 		ConstReverseIterator() noexcept;
-
 		explicit ConstReverseIterator(const T* ptr) noexcept;
+		ConstReverseIterator(const ConstReverseIterator& iterator) noexcept = default;
+		ConstReverseIterator(ConstReverseIterator&& iterator) noexcept = default;
+
+		~ConstReverseIterator() = default;
+
+		ConstReverseIterator& operator=(const ConstReverseIterator& iterator) noexcept = default;
+		ConstReverseIterator& operator=(ConstReverseIterator&& iterator) noexcept = default;
 
 		reference operator*() const noexcept;
 
@@ -187,8 +200,14 @@ namespace hgui::kernel
 
 	public:
 		Iterator() noexcept;
-
 		explicit Iterator(T* ptr) noexcept;
+		Iterator(const Iterator& iterator) noexcept = default;
+		Iterator(Iterator&& iterator) noexcept = default;
+
+		~Iterator() = default;
+
+		Iterator& operator=(const Iterator& iterator) noexcept = default;
+		Iterator& operator=(Iterator&& iterator) noexcept = default;
 
 		reference operator*() const noexcept;
 
@@ -273,8 +292,14 @@ namespace hgui::kernel
 
 	public:
 		ReverseIterator() noexcept;
-
 		explicit ReverseIterator(T* ptr) noexcept;
+		ReverseIterator(const ReverseIterator& iterator) noexcept = default;
+		ReverseIterator(ReverseIterator&& iterator) noexcept = default;
+
+		~ReverseIterator() = default;
+
+		ReverseIterator& operator=(const ReverseIterator& iterator) noexcept = default;
+		ReverseIterator& operator=(ReverseIterator&& iterator) noexcept = default;
 
 		reference operator*() const noexcept;
 
@@ -351,11 +376,13 @@ namespace hgui::kernel
 
 template<typename T>
 inline hgui::kernel::ConstIterator<T>::ConstIterator() noexcept : m_ptr(nullptr)
-{}
+{
+}
 
 template<typename T>
 inline hgui::kernel::ConstIterator<T>::ConstIterator(const T* ptr) noexcept : m_ptr(ptr)
-{}
+{
+}
 
 template<typename T>
 inline typename hgui::kernel::ConstIterator<T>::reference hgui::kernel::ConstIterator<T>::operator*() const noexcept
@@ -424,11 +451,13 @@ inline typename hgui::kernel::ConstIterator<T>& hgui::kernel::ConstIterator<T>::
 
 template<typename T>
 inline hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator() noexcept : m_ptr(nullptr)
-{}
+{
+}
 
 template<typename T>
 inline hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator(const T* ptr) noexcept : m_ptr(ptr)
-{}
+{
+}
 
 template<typename T>
 inline typename hgui::kernel::ConstReverseIterator<T>::reference hgui::kernel::ConstReverseIterator<T>::operator
@@ -503,11 +532,13 @@ inline typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator& hgu
 
 template<typename T>
 inline hgui::kernel::Iterator<T>::Iterator() noexcept : m_ptr(nullptr)
-{}
+{
+}
 
 template<typename T>
 inline hgui::kernel::Iterator<T>::Iterator(T* ptr) noexcept : m_ptr(ptr)
-{}
+{
+}
 
 template<typename T>
 inline typename hgui::kernel::Iterator<T>::reference hgui::kernel::Iterator<T>::operator*() const noexcept
@@ -576,11 +607,13 @@ inline typename hgui::kernel::Iterator<T>::Iterator& hgui::kernel::Iterator<T>::
 
 template<typename T>
 inline hgui::kernel::ReverseIterator<T>::ReverseIterator() noexcept : m_ptr(nullptr)
-{}
+{
+}
 
 template<typename T>
 inline hgui::kernel::ReverseIterator<T>::ReverseIterator(T* ptr) noexcept : m_ptr(ptr)
-{}
+{
+}
 
 template<typename T>
 inline typename hgui::kernel::ReverseIterator<T>::reference hgui::kernel::ReverseIterator<T>::operator*() const noexcept

@@ -7,12 +7,17 @@ namespace hgui::kernel
 	class VertexArrayObject
 	{
 	public:
-		VertexArrayObject();
-		~VertexArrayObject();
+		VertexArrayObject() noexcept;
+		VertexArrayObject(const VertexArrayObject& vertexArrayObject) noexcept = delete;
+		VertexArrayObject(VertexArrayObject&& vertexArrayObject) noexcept = delete;
 
-		void bind() const;
+		~VertexArrayObject() noexcept;
 
-		void unbind() const;
+		VertexArrayObject& operator=(const VertexArrayObject& vertexArrayObject) noexcept = delete;
+		VertexArrayObject& operator=(VertexArrayObject&& vertexArrayObject) noexcept = delete;
+
+		void bind() const noexcept;
+		void unbind() const noexcept;
 
 	private:
 		GLuint m_id;

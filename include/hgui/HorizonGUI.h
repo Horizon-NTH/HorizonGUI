@@ -16,6 +16,7 @@
 #include "header/ButtonManager.h"
 #include "header/SpriteManager.h"
 #include "header/CanvasManager.h"
+#include "header/SliderManager.h"
 #include "header/Renderer.h"
 #include "header/WindowManager.h"
 #include "header/Function.h"

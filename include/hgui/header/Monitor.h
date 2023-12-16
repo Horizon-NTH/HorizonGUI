@@ -9,11 +9,18 @@ namespace hgui::kernel
 	{
 	public:
 		explicit Monitor(GLFWmonitor* monitorPTR);
+		Monitor(const Monitor& monitor) noexcept = default;
+		Monitor(Monitor&& monitor) noexcept = default;
 
-		[[nodiscard]] GLFWmonitor* get_monitor_ptr() const;
-		[[nodiscard]] const size& get_size() const;
-		[[nodiscard]] std::string get_name() const;
-		[[nodiscard]] const point& get_position() const;
+		~Monitor() noexcept = default;
+
+		Monitor& operator=(const Monitor& monitor) noexcept = default;
+		Monitor& operator=(Monitor&& monitor) noexcept = default;
+
+		[[nodiscard]] GLFWmonitor* get_monitor_ptr() const noexcept;
+		[[nodiscard]] const size& get_size() const noexcept;
+		[[nodiscard]] std::string get_name() const noexcept;
+		[[nodiscard]] const point& get_position() const noexcept;
 
 	private:
 		GLFWmonitor* m_monitorPTR;

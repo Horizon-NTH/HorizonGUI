@@ -18,6 +18,7 @@ endif(API_TYPE)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft)
 
 file(GLOB_RECURSE HEADER_FILES include/hgui/*.h include/hgui/*.hpp)
 
@@ -31,33 +32,29 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image.h DESTINATION ${CMAKE_C
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/stb)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft/include/AL DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/generate_shaders.cmake)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype OpenAL)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
-ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
-set_target_properties(freetype PROPERTIES
-ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
-ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
-set_target_properties(glfw PROPERTIES
-ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
-ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	set_target_properties(${PROJECT_NAME} PROPERTIES
-		COMPILE_OPTIONS "/Z7"
-	)
-	set_target_properties(glfw PROPERTIES
-		COMPILE_OPTIONS "/Z7"
-	)
-	set_target_properties(freetype PROPERTIES
-		COMPILE_OPTIONS "/Z7"
-	)
-endif()
+function(set_common_target_properties target_name)
+    set_target_properties(${target_name} PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        set_target_properties(${target_name} PROPERTIES
+            COMPILE_OPTIONS "/Z7"
+        )
+    endif()
+endfunction()
+
+set_common_target_properties(${PROJECT_NAME})
+set_common_target_properties(freetype)
+set_common_target_properties(glfw)
+set_common_target_properties(OpenAL)

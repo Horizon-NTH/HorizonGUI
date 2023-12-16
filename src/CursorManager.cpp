@@ -1,8 +1,7 @@
 #include <hgui/header/CursorManager.h>
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor,
-                                                                  const point& clickPosition)
+std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition)
 {
 	return std::make_shared<kernel::Cursor>(cursor, clickPosition);
 }
@@ -24,9 +23,7 @@ void hgui::CursorManager::reveal()
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Cursor>> hgui::CursorManager::m_cursors;
 
-const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const std::string& cursorID,
-                                                                         const std::shared_ptr<kernel::Image>& customCursor,
-                                                                         const point& clickPosition)
+const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const std::string& cursorID, const std::shared_ptr<kernel::Image>& customCursor, const point& clickPosition)
 {
 	if (!m_cursors.contains(cursorID))
 	{

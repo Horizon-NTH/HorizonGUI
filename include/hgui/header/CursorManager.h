@@ -13,11 +13,11 @@ namespace hgui
 	public:
 		CursorManager() = delete;
 		~CursorManager() = delete;
-		CursorManager(const CursorManager& bufferManager) = delete;
-		CursorManager(CursorManager&& bufferManager) = delete;
+		CursorManager(const CursorManager& cursorManager) = delete;
+		CursorManager(CursorManager&& cursorManager) = delete;
 
-		CursorManager& operator=(const CursorManager& bufferManager) = delete;
-		CursorManager& operator=(CursorManager&& bufferManager) = delete;
+		CursorManager& operator=(const CursorManager& cursorManager) = delete;
+		CursorManager& operator=(CursorManager&& cursorManager) = delete;
 
 		[[nodiscard]] static std::shared_ptr<kernel::Cursor> create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition);
 		[[nodiscard]] static std::shared_ptr<kernel::Cursor> create(cursors cursor);
@@ -37,9 +37,7 @@ namespace hgui
 		CursorManager& operator=(const CursorManager& bufferManager) = delete;
 		CursorManager& operator=(CursorManager&& bufferManager) = delete;
 
-		static const std::shared_ptr<kernel::Cursor>& create(const std::string& cursorID,
-		                                                     const std::shared_ptr<kernel::Image>& customCursor,
-		                                                     const point& clickPosition);
+		static const std::shared_ptr<kernel::Cursor>& create(const std::string& cursorID, const std::shared_ptr<kernel::Image>& customCursor, const point& clickPosition);
 		[[nodiscard]] static const std::shared_ptr<kernel::Cursor>& get(const std::string& cursorID);
 		static void destroy(const std::initializer_list<std::string>& cursorsID = {});
 

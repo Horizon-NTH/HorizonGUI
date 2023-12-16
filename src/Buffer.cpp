@@ -1,6 +1,7 @@
 #include <hgui/header/Buffer.h>
 
-hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture) : m_shader(shader),
+hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture) :
+	m_shader(shader),
 	m_frameBuffer(std::make_shared<FrameBuffer>()),
 	m_renderBuffer(std::make_shared<RenderBuffer>()),
 	m_texture(texture),
@@ -56,14 +57,14 @@ void hgui::kernel::Buffer::clear() const
 void hgui::kernel::Buffer::init_data() const
 {
 	constexpr float vertices[] = {
-				-1.0f, 1.0f, 0.0f, 1.0f,
-				-1.0f, -1.0f, 0.0f, 0.0f,
-				1.0f, -1.0f, 1.0f, 0.0f,
+			-1.0f, 1.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f,
+			1.0f, -1.0f, 1.0f, 0.0f,
 
-				-1.0f, 1.0f, 0.0f, 1.0f,
-				1.0f, -1.0f, 1.0f, 0.0f,
-				1.0f, 1.0f, 1.0f, 1.0f
-			};
+			-1.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, -1.0f, 1.0f, 0.0f,
+			1.0f, 1.0f, 1.0f, 1.0f
+		};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));

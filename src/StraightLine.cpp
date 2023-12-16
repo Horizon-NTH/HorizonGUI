@@ -1,10 +1,15 @@
 #include <hgui/header/StraightLine.h>
+#include <hgui/header/GLSL.h>
 
 std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::StraightLine::m_shader(nullptr);
 
-hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const point& secondVertex, const color& color,
-	const float thickness) : Shape(true, thickness, color, std::make_tuple(firstVertex, secondVertex, thickness))
+hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const point& secondVertex, const color& color, const float thickness) :
+	Shape(true, thickness, color, std::make_tuple(firstVertex, secondVertex, thickness))
 {
+	if (!m_shader)
+	{
+		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_STRAIGHTLINE, HGUI_GLSL_FRAGMENT_STRAIGHTLINE);
+	}
 	float halfThickness = thickness / 2.0f;
 	hgui::point v = secondVertex - firstVertex;
 	hgui::point n(-v.y, v.x); n.normalize();
@@ -35,54 +40,9 @@ hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), static_cast<void*>(nullptr));
 	m_VAO->unbind();
-	if (!m_shader)
-	{
-		m_shader = ShaderManager::create(
-			R"(
-				#version 330 core
-
-				layout (location = 0) in vec2 vertex;
-
-				uniform mat4 projectionMatrix;
-
-				void main()
-				{
-					gl_Position = projectionMatrix * vec4(vertex, 0.0, 1.0);
-				}
-			)",
-			R"(
-				#version 330 core
-
-				layout(origin_upper_left, pixel_center_integer) in vec4 gl_FragCoord;
-
-
-				out vec4 fragmentColor;
-
-				uniform vec2 canvasPosition;
-				uniform vec2 canvasSize;
-				uniform vec2 center;
-				uniform vec3 color;
-				uniform float radius;
-				uniform bool circle;
-
-				void main()
-				{
-				    vec2 pixelCoords = gl_FragCoord.xy;
-
-				    if (pixelCoords.x < canvasPosition.x || pixelCoords.x >= canvasPosition.x + canvasSize.x ||
-				        pixelCoords.y < canvasPosition.y || pixelCoords.y >= canvasPosition.y + canvasSize.y ||
-						(circle && distance(pixelCoords, center) > radius))
-				    {
-				        discard;
-				    } 
-					fragmentColor = vec4(color, 1.0);
-				} 
-			)"
-		);
-	}
 }
 
-void hgui::kernel::shape::StraightLine::draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const
+void hgui::kernel::shape::StraightLine::draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, const float canvasRotation) const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
@@ -90,6 +50,7 @@ void hgui::kernel::shape::StraightLine::draw(const hgui::point& canvasPosition, 
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
 		.set_vec2("canvasPosition", canvasPosition)
 		.set_vec2("canvasSize", canvasSize)
+		.set_float("canvasRotation", canvasRotation)
 		.set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
 		.set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();

@@ -1,21 +1,21 @@
 #include <hgui/header/RenderBuffer.h>
 
-hgui::kernel::RenderBuffer::RenderBuffer()
+hgui::kernel::RenderBuffer::RenderBuffer() noexcept
 {
 	glGenRenderbuffers(1, &m_id);
 }
 
-hgui::kernel::RenderBuffer::~RenderBuffer()
+hgui::kernel::RenderBuffer::~RenderBuffer() noexcept
 {
 	glDeleteRenderbuffers(1, &m_id);
 }
 
-void hgui::kernel::RenderBuffer::bind() const
+void hgui::kernel::RenderBuffer::bind() const noexcept
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, m_id);
 }
 
-void hgui::kernel::RenderBuffer::unbind() const
+void hgui::kernel::RenderBuffer::unbind() const noexcept
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
@@ -29,7 +29,7 @@ void hgui::kernel::RenderBuffer::create_depth_stencil() const
 	unbind();
 }
 
-GLuint hgui::kernel::RenderBuffer::get_id() const
+GLuint hgui::kernel::RenderBuffer::get_id() const noexcept
 {
 	return m_id;
 }

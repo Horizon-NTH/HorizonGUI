@@ -1,47 +1,14 @@
 #include <hgui/header/SpriteManager.h>
+#include <hgui/header/GLSL.h>
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Shader> hgui::SpriteManager::m_shader(nullptr);
 
-std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(
-	const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position,
-	const color& color, float angularRotation)
+std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation)
 {
 	if (!m_shader)
 	{
-		m_shader = ShaderManager::create(
-			R"(
-				#version 330 core
-				layout (location = 0) in vec4 vertex;
-
-				out vec2 texturePosition;
-
-				uniform mat4 modelMatrix;
-				uniform mat4 projectionMatrix;
-
-				void main()
-				{
-					texturePosition = vertex.zw;
-					gl_Position = projectionMatrix * modelMatrix * vec4(vertex.xy, 0.0, 1.0);
-				}
-			)",
-			R"(
-				#version 330 core
-
-				in vec2 texturePosition;
-				out vec4 fragmentColor;
-
-				uniform sampler2D sprite;
-				uniform vec4 spriteColor;
-
-				void main()
-				{
-					fragmentColor = vec4(spriteColor) * texture(sprite, texturePosition);
-					if (fragmentColor.w < 1)
-						discard;
-				}
-			)"
-		);
+		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_SPRITE, HGUI_GLSL_FRAGMENT_SPRITE);
 	}
 	std::shared_ptr<kernel::Sprite> widget;
 	if (const auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
@@ -62,11 +29,7 @@ std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Sprite>> hgui::SpriteManager::m_sprites;
 
-const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteID,
-                                                                         const std::variant<
-	                                                                         std::shared_ptr<kernel::Texture>, std::shared_ptr<
-		                                                                         kernel::Image>>& texture, const size& size,
-                                                                         const point& position, const color& color, float angularRotation)
+const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const std::string& spriteID, const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>&texture, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation)
 {
 	if (!m_sprites.contains(spriteID))
 	{

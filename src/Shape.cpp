@@ -1,12 +1,11 @@
 #include <hgui/header/Shape.h>
 
-hgui::kernel::shape::Shape::Shape(const bool fill, const float thickness, const hgui::color& color,
-	const ShapeData& data) : m_VAO(std::make_shared<kernel::VertexArrayObject>()),
+hgui::kernel::shape::Shape::Shape(const bool fill, const float thickness, const hgui::color& color, const ShapeData& data) :
+	m_VAO(std::make_shared<kernel::VertexArrayObject>()),
 	m_VBO(std::make_shared<kernel::VertexBufferObject>()),
 	m_fill(fill),
 	m_thickness(thickness),
 	m_color(color), m_data(data)
-
 {
 }
 

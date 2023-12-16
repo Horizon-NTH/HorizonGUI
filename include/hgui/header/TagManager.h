@@ -10,11 +10,11 @@ namespace hgui
 	public:
 		TagManager() = delete;
 		~TagManager() = delete;
-		TagManager(const TagManager& bufferManager) = delete;
-		TagManager(TagManager&& bufferManager) = delete;
+		TagManager(const TagManager& tagManager) = delete;
+		TagManager(TagManager&& tagManager) = delete;
 
-		TagManager& operator=(const TagManager& bufferManager) = delete;
-		TagManager& operator=(TagManager&& bufferManager) = delete;
+		TagManager& operator=(const TagManager& tagManager) = delete;
+		TagManager& operator=(TagManager&& tagManager) = delete;
 
 		static std::string create_tag(const std::string& newTag);
 		[[nodiscard]] static const std::vector<std::string>& get_tags();

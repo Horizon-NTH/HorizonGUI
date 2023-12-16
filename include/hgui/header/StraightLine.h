@@ -18,7 +18,7 @@ namespace hgui::kernel::shape
 		StraightLine& operator=(const StraightLine& straightLine) = default;
 		StraightLine& operator=(StraightLine&& straightLine) = default;
 
-		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const override;
+		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, float canvasRotation = 0.f) const override;
 
 	private:
 		static std::shared_ptr<Shader> m_shader;

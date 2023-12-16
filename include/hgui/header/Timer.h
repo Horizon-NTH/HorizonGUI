@@ -7,19 +7,21 @@ namespace hgui
 	class Timer
 	{
 	public:
-		Timer();
+		Timer() noexcept;
+		Timer(const Timer& timer) noexcept = default;
+		Timer(Timer&& timer) noexcept = default;
 
-		~Timer() = default;
+		~Timer() noexcept = default;
 
-		void start();
+		Timer& operator=(const Timer& timer) noexcept = default;
+		Timer& operator=(Timer&& timer) noexcept = default;
 
-		void stop();
+		void start() noexcept;
+		void stop() noexcept;
+		void reset() noexcept;
 
-		void reset();
-
-		[[nodiscard]] double get_time() const;
-
-		[[nodiscard]] bool is_counting() const;
+		[[nodiscard]] double get_time() const noexcept;
+		[[nodiscard]] bool is_counting() const noexcept;
 
 	private:
 		bool m_counting;

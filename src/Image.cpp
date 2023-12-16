@@ -1,17 +1,25 @@
 #include <hgui/header/Image.h>
 
-hgui::kernel::Image::Image(const std::string& imagePath) : m_path(imagePath)
+hgui::kernel::Image::Image(const std::string& imagePath) :
+	m_path(imagePath), 
+	m_autoLoaded(true)
 {
 	load_image();
 }
 
-hgui::kernel::Image::Image(const std::string& imagePath, const ImageData& data) : m_path(imagePath),
-                                                                                  m_data(data)
-{}
+hgui::kernel::Image::Image(const std::string& imagePath, const ImageData& data) :
+	m_path(imagePath),
+	m_data(data),
+	m_autoLoaded(false)
+{
+}
 
 hgui::kernel::Image::~Image()
 {
-	stbi_image_free(m_data.pixels);
+	if (m_autoLoaded)
+	{
+		stbi_image_free(m_data.pixels);
+	}
 }
 
 const hgui::kernel::ImageData& hgui::kernel::Image::get_data() const
@@ -21,7 +29,12 @@ const hgui::kernel::ImageData& hgui::kernel::Image::get_data() const
 
 void hgui::kernel::Image::set_data(const ImageData& newData)
 {
+	if (m_autoLoaded)
+	{
+		stbi_image_free(m_data.pixels);
+	}
 	m_data = newData;
+	m_autoLoaded = false;
 }
 
 hgui::size hgui::kernel::Image::get_size() const
@@ -32,7 +45,7 @@ hgui::size hgui::kernel::Image::get_size() const
 void hgui::kernel::Image::load_image()
 {
 	int channel;
-	m_data.pixels = stbi_load(m_path.c_str(), &m_data.width, &m_data.height, &channel, 0);
+	m_data.pixels = stbi_load(m_path.c_str(), reinterpret_cast<int*>(&m_data.width), reinterpret_cast<int*>(&m_data.height), &channel, 0);
 	switch (channel)
 	{
 	case 1:

@@ -1,21 +1,21 @@
 #include <hgui/header/VertexArrayObject.h>
 
-hgui::kernel::VertexArrayObject::VertexArrayObject()
+hgui::kernel::VertexArrayObject::VertexArrayObject() noexcept
 {
 	glGenVertexArrays(1, &m_id);
 }
 
-hgui::kernel::VertexArrayObject::~VertexArrayObject()
+hgui::kernel::VertexArrayObject::~VertexArrayObject() noexcept
 {
 	glDeleteVertexArrays(1, &m_id);
 }
 
-void hgui::kernel::VertexArrayObject::bind() const
+void hgui::kernel::VertexArrayObject::bind() const noexcept
 {
 	glBindVertexArray(m_id);
 }
 
-void hgui::kernel::VertexArrayObject::unbind() const
+void hgui::kernel::VertexArrayObject::unbind() const noexcept
 {
 	glBindVertexArray(0);
 }

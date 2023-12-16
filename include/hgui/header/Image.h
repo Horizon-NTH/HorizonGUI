@@ -8,8 +8,8 @@ namespace hgui::kernel
 {
 	struct ImageData
 	{
-		int width;
-		int height;
+		unsigned int width;
+		unsigned int height;
 		channels channel;
 		unsigned char* pixels;
 	};
@@ -19,11 +19,18 @@ namespace hgui::kernel
 	public:
 		explicit Image(const std::string& imagePath);
 		Image(const std::string& imagePath, const ImageData& data);
+		Image(const Image& image) = default;
+		Image(Image&& image) = default;
+
 		~Image();
 
+		Image& operator=(const Image& image) = default;
+		Image& operator=(Image&& image) = default;
+
 		[[nodiscard]] const ImageData& get_data() const;
-		void set_data(const ImageData& newData);
 		[[nodiscard]] size get_size() const;
+
+		void set_data(const ImageData& newData);
 
 		void load_image();
 		void save_image();
@@ -31,5 +38,6 @@ namespace hgui::kernel
 	private:
 		std::string m_path;
 		ImageData m_data;
+		bool m_autoLoaded;
 	};
 }

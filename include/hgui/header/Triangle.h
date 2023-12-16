@@ -9,8 +9,7 @@ namespace hgui::kernel::shape
 	class Triangle final : public Shape
 	{
 	public:
-		Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill,
-		         float thickness);
+		Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness);
 		~Triangle() override = default;
 
 		Triangle(const Triangle& triangle) = default;
@@ -19,7 +18,7 @@ namespace hgui::kernel::shape
 		Triangle& operator=(const Triangle& triangle) = default;
 		Triangle& operator=(Triangle&& triangle) = default;
 
-		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize) const override;
+		void draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, float canvasRotation = 0.f) const override;
 
 	private:
 		static std::shared_ptr<Shader> m_shader;

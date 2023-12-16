@@ -18,8 +18,13 @@ namespace hgui
 		public:
 			explicit Cursor(cursors standardCursor);
 			Cursor(const std::shared_ptr<Image>& customCursor, const point& clickPosition);
+			Cursor(const Cursor& cursor) = delete;
+			Cursor(Cursor&& cursor) = delete;
 
 			~Cursor();
+
+			Cursor& operator=(const Cursor& cursor) = delete;
+			Cursor& operator=(Cursor&& cursor) = delete;
 
 			void use() const;
 

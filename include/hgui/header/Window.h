@@ -11,9 +11,14 @@ namespace hgui::kernel
 	class Window
 	{
 	public:
-		Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon,
-		       const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options);
+		Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options);
+		Window(const Window& window) = delete;
+		Window(Window&& window) = delete;
+
 		~Window();
+
+		Window& operator=(const Window& window) = delete;
+		Window& operator=(Window&& window) = delete;
 
 		[[nodiscard]] const size& get_size() const;
 		void set_size(const size& newSize) const;

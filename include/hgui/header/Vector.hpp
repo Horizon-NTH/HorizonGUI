@@ -25,7 +25,7 @@ namespace hgui::kernel
 		using const_reverse_iterator = ConstReverseIterator<T>;
 
 		Vector() noexcept;
-		virtual ~Vector() = default;
+		virtual ~Vector() noexcept = default;
 		explicit Vector(const T& initializationValue) noexcept;
 		Vector(const Vector<T, dimension>& vector) noexcept = default;
 		Vector(Vector<T, dimension>&& vector) noexcept = default;

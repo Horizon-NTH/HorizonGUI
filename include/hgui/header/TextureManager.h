@@ -12,11 +12,11 @@ namespace hgui
 	public:
 		TextureManager() = delete;
 		~TextureManager() = delete;
-		TextureManager(const TextureManager& bufferManager) = delete;
-		TextureManager(TextureManager&& bufferManager) = delete;
+		TextureManager(const TextureManager& textureManager) = delete;
+		TextureManager(TextureManager&& textureManager) = delete;
 
-		TextureManager& operator=(const TextureManager& bufferManager) = delete;
-		TextureManager& operator=(TextureManager&& bufferManager) = delete;
+		TextureManager& operator=(const TextureManager& textureManager) = delete;
+		TextureManager& operator=(TextureManager&& textureManager) = delete;
 
 		[[nodiscard]] static std::shared_ptr<kernel::Texture> create(const std::shared_ptr<kernel::Image>& image);
 	};

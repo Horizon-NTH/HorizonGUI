@@ -1,8 +1,8 @@
 #pragma once
-//OpengGL library
+// OpengGL library
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-//STL library
+// STL library
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -20,15 +20,15 @@
 #include <variant>
 #include <numeric>
 #include <valarray>
-//STBI library
+// STBI library
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
-//GLM library
+// GLM library
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-//FreeType library
+// FreeType library
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+// HorizonGUI APT Type
 #define HGUI_DYNAMIC

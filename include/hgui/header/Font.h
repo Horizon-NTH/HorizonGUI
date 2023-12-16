@@ -2,12 +2,13 @@
 
 #include "Include.h"
 #include "Maths.hpp"
+#include "Texture.h"
 
 namespace hgui::kernel
 {
 	struct Character
 	{
-		GLuint textureID;
+		std::shared_ptr<Texture> texture;
 		hgui::size size;
 		ivec2 bearing;
 		unsigned int advance;
@@ -17,7 +18,13 @@ namespace hgui::kernel
 	{
 	public:
 		explicit Font(const std::string& fontPath);
+		Font(const Font& font) = delete;
+		Font(Font&& font) = default;
+
 		~Font() = default;
+
+		Font& operator=(const Font& font) = delete;
+		Font& operator=(Font&& font) = default;
 
 		[[nodiscard]] Character get_char(char character, unsigned int size) const;
 

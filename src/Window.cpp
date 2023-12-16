@@ -1,8 +1,7 @@
 #include <hgui/header/Window.h>
 
-hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon,
-                             const std::shared_ptr<Monitor>& monitor,
-                             const std::initializer_list<std::pair<options, bool>>& options) : m_name(name),
+hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
+	m_name(name),
 	m_size(size),
 	m_position(position)
 {
@@ -18,7 +17,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(),
-	                               monitor ? monitor->get_monitor_ptr() : nullptr, nullptr);
+		monitor ? monitor->get_monitor_ptr() : nullptr, nullptr);
 	if (!m_windowPTR)
 	{
 		glfwTerminate();
@@ -30,7 +29,11 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	if (icon)
 	{
 		const ImageData data = icon->get_data();
-		const GLFWimage ico{.width = data.width, .height = data.height, .pixels = data.pixels};
+		const GLFWimage ico{ 
+			.width = static_cast<int>(data.width), 
+			.height = static_cast<int>(data.height), 
+			.pixels = data.pixels 
+		};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}
 	int width, height;
@@ -78,7 +81,7 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	auto* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 	if (glad_glViewport != nullptr)
 		glViewport(0, 0, width, height);
-	win->m_size = glm::vec2(width, height);
+	win->m_size = size(width, height);
 	EM<float>::referenceSize = win->m_size;
 }
 

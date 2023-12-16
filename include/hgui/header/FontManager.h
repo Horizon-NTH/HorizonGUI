@@ -12,11 +12,11 @@ namespace hgui
 	public:
 		FontManager() = delete;
 		~FontManager() = delete;
-		FontManager(const FontManager& bufferManager) = delete;
-		FontManager(FontManager&& bufferManager) = delete;
+		FontManager(const FontManager& fontManager) = delete;
+		FontManager(FontManager&& fontManager) = delete;
 
-		FontManager& operator=(const FontManager& bufferManager) = delete;
-		FontManager& operator=(FontManager&& bufferManager) = delete;
+		FontManager& operator=(const FontManager& fontManager) = delete;
+		FontManager& operator=(FontManager&& fontManager) = delete;
 
 		[[nodiscard]] static std::shared_ptr<kernel::Font> create(const std::string& fontPath);
 	};

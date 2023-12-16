@@ -14,6 +14,7 @@
 #include "FontManager.h"
 #include "BufferManager.h"
 #include "MonitorManager.h"
+#include "SliderManager.h"
 
 namespace hgui
 {

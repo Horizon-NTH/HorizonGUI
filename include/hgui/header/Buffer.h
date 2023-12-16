@@ -14,6 +14,13 @@ namespace hgui::kernel
 	{
 	public:
 		Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture);
+		Buffer(const Buffer& buffer) = delete;
+		Buffer(Buffer&& buffer) = default;
+
+		~Buffer() = default;
+
+		Buffer& operator=(const Buffer& buffer) = delete;
+		Buffer& operator=(Buffer&& buffer) = default;
 
 		void bind() const;
 		void unbind() const;

@@ -1,10 +1,7 @@
 #include <hgui/header/WindowManager.h>
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Window> hgui::WindowManager::create(const std::string& windowName, const size& size, const point& position,
-                                                                  const std::shared_ptr<kernel::Image>& icon,
-                                                                  const std::shared_ptr<kernel::Monitor>& monitor,
-                                                                  const std::initializer_list<std::pair<options, bool>>& options)
+std::shared_ptr<hgui::kernel::Window> hgui::WindowManager::create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon, const std::shared_ptr<kernel::Monitor>& monitor, const std::initializer_list<WindowOption>& options)
 {
 	auto window = std::make_shared<kernel::Window>(windowName, size, position, icon, monitor, options);
 	glfwMakeContextCurrent(window->get_window_ptr());
@@ -17,11 +14,7 @@ std::shared_ptr<hgui::kernel::Window> hgui::WindowManager::create(const std::str
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Window>> hgui::WindowManager::m_windows;
 
-const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const std::string& windowID, const std::string& windowName,
-                                                                         const size& size, const point& position,
-                                                                         const std::shared_ptr<kernel::Image>& icon,
-                                                                         const std::shared_ptr<kernel::Monitor>& monitor,
-                                                                         const std::initializer_list<std::pair<options, bool>>& options)
+const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const std::string& windowID, const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon, const std::shared_ptr<kernel::Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options)
 {
 	if (!m_windows.contains(windowID))
 	{

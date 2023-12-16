@@ -8,8 +8,7 @@ std::shared_ptr<hgui::kernel::Texture> hgui::TextureManager::create(const std::s
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Texture>> hgui::TextureManager::m_textures;
 
-std::shared_ptr<hgui::kernel::Texture>& hgui::TextureManager::create(const std::string& textureID,
-                                                                     const std::shared_ptr<kernel::Image>& image)
+std::shared_ptr<hgui::kernel::Texture>& hgui::TextureManager::create(const std::string& textureID, const std::shared_ptr<kernel::Image>& image)
 {
 	if (!m_textures.contains(textureID))
 	{

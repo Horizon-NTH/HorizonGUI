@@ -1,18 +1,14 @@
 #include <hgui/header/ShaderManager.h>
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Shader> hgui::ShaderManager::create(const std::string& vertexShaderCode,
-                                                                  const std::string& fragmentShaderCode,
-                                                                  const std::string& geometryShaderCode)
+std::shared_ptr<hgui::kernel::Shader> hgui::ShaderManager::create(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)
 {
 	return std::make_shared<kernel::Shader>(vertexShaderCode, fragmentShaderCode, geometryShaderCode);
 }
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Shader>> hgui::ShaderManager::m_shaders;
 
-std::shared_ptr<hgui::kernel::Shader>& hgui::ShaderManager::create(const std::string& shaderID, const std::string& vertexShaderCode,
-                                                                   const std::string& fragmentShaderCode,
-                                                                   const std::string& geometryShaderCode)
+std::shared_ptr<hgui::kernel::Shader>& hgui::ShaderManager::create(const std::string& shaderID, const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)
 {
 	if (!m_shaders.contains(shaderID))
 	{

@@ -12,11 +12,11 @@ namespace hgui
 	public:
 		TaskManager() = delete;
 		~TaskManager() = delete;
-		TaskManager(const TaskManager& bufferManager) = delete;
-		TaskManager(TaskManager&& bufferManager) = delete;
+		TaskManager(const TaskManager& taskManager) = delete;
+		TaskManager(TaskManager&& taskManager) = delete;
 
-		TaskManager& operator=(const TaskManager& bufferManager) = delete;
-		TaskManager& operator=(TaskManager&& bufferManager) = delete;
+		TaskManager& operator=(const TaskManager& taskManager) = delete;
+		TaskManager& operator=(TaskManager&& taskManager) = delete;
 
 		static void program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id = "");
 		static void deprogram(const std::string& id);

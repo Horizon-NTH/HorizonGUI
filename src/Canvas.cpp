@@ -1,9 +1,8 @@
 #include <hgui/header/Canvas.h>
 
-hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color,
-                             const float angularRotation) : Widget(shader, size, position, color),
-                                                            m_angularRotation(angularRotation),
-                                                            m_drawer(std::make_shared<kernel::Drawer>(position, size))
+hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
+	Widget(shader, size, position, color, angularRotation),
+	m_drawer(std::make_shared<kernel::Drawer>(position, size))
 {
 	Canvas::set_position(position);
 	init_data();
@@ -14,7 +13,7 @@ void hgui::kernel::Canvas::draw() const
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-	        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
+		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_VAO->unbind();
@@ -33,6 +32,17 @@ void hgui::kernel::Canvas::set_position(const point& newPosition)
 	m_drawer->m_position = newPosition;
 }
 
+bool hgui::kernel::Canvas::is_inside(const point& point) const
+{
+	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
+	const auto A = hgui::point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
+		B = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
+		C = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
+		D = hgui::point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
+
+	return hgui::point::is_in_rectangle(A, B, D, point);
+}
+
 const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canvas::get_drawer() const
 {
 	return m_drawer;
@@ -48,7 +58,7 @@ void hgui::kernel::Canvas::init_data() const
 				0.0f, 1.0f, m_color.r, m_color.g, m_color.b,
 				1.0f, 0.0f, m_color.r, m_color.g, m_color.b,
 				1.0f, 1.0f, m_color.r, m_color.g, m_color.b,
-			};
+	};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));

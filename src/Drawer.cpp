@@ -1,21 +1,19 @@
 #include <hgui/header/Drawer.h>
 
-hgui::kernel::Drawer::Drawer(const point& position,
-	const size& size) : m_position(position),
+hgui::kernel::Drawer::Drawer(const point& position, const size& size) :
+	m_position(position),
 	m_size(size),
 	m_shapes(std::make_shared<std::vector<std::shared_ptr<shape::Shape>>>())
 {
 }
 
-void hgui::kernel::Drawer::draw_rectangle(const point& topLeftVertex, const point& rightBottomVertex, const color& color, bool fill,
-	float thickness) const
+void hgui::kernel::Drawer::draw_rectangle(const point& topLeftVertex, const point& rightBottomVertex, const color& color, bool fill, float thickness) const
 {
 	m_shapes->push_back(std::make_shared<shape::Rectangle>(point(m_position + topLeftVertex), point(m_position + rightBottomVertex),
 		color, fill, thickness));
 }
 
-void hgui::kernel::Drawer::draw_triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color,
-	bool fill, float thickness) const
+void hgui::kernel::Drawer::draw_triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill, float thickness) const
 {
 	m_shapes->push_back(std::make_shared<shape::Triangle>(point(m_position + firstVertex), point(m_position + secondVertex),
 		point(m_position + thirdVertex), color, fill, thickness));
