@@ -100,7 +100,7 @@ void hgui::kernel::Slider::set_value(HGUI_PRECISION newValue)
 	newValue = m_range.round(std::clamp(newValue, m_range.min, m_range.max));
 	const HGUI_PRECISION offset = (newValue - m_range.min) / (m_range.max - m_range.min) * hgui::kernel::distance(left, right);
 	point direction = right - left; direction.normalize();
-	m_slider = clamp(m_slider + offset * direction);
+	m_slider = clamp(left + offset * direction);
 }
 
 void hgui::kernel::Slider::set_range(const Ranges& newRange)

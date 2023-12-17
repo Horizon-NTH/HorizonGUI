@@ -8,7 +8,7 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 	auto widget = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, angularRotation);
 	std::weak_ptr<kernel::Slider> wwidget = std::static_pointer_cast<kernel::Slider>(widget->shared_from_this());
 	Widget::m_widgets[TagManager::get_current_tag()].push_back(wwidget);
-	widget->bind(inputs::OVER, [wwidget]()
+	widget->bind(inputs::OVER, []()
 		{
 			if (!m_cursor)
 			{
@@ -18,9 +18,35 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 		});
 	widget->bind(inputs::NOVER, [wwidget]()
 		{
-			m_cursor = nullptr;
+			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				{
+					if (auto isHover = []() -> bool
+						{
+							std::pair<double, double> mousePosition;
+							glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
+							point click = {mousePosition.first, mousePosition.second};
+							for (auto& tag : Widget::m_bindedTags)
+							{
+								for (auto& ptr : Widget::m_widgets[tag])
+								{
+									if (const auto slider = std::dynamic_pointer_cast<
+										kernel::Slider>(ptr.lock()))
+									{
+										if (slider->is_inside(click))
+										{
+											return true;
+										}
+									}
+								}
+							}
+							return false;
+						}; !isHover())
+					{
+						m_cursor = nullptr;
+					}
+				});
 		});
-	static std::function<void()> move = [&, wwidget]()
+	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::PRESS), [wwidget]()
 		{
 			std::pair<double, double> mousePosition;
 			glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
@@ -28,10 +54,14 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 			widget->set_slider_position(point(mousePosition.first, mousePosition.second));
 			if (!widget->is_bind(std::make_pair(buttons::LEFT, actions::REPEAT)))
 			{
-				widget->bind(std::make_pair(buttons::LEFT, actions::REPEAT), move);
+				widget->bind(std::make_pair(buttons::LEFT, actions::REPEAT), [wwidget]
+					{
+						std::pair<double, double> mousePosition;
+						glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
+						wwidget.lock()->set_slider_position(point(mousePosition.first, mousePosition.second));
+					});
 			}
-		};
-	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::PRESS), move);
+		});
 	widget->bind(std::make_pair(buttons::LEFT, actions::RELEASE), [wwidget]()
 		{
 			auto widget = wwidget.lock();
