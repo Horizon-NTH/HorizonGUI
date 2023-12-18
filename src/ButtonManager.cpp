@@ -22,16 +22,21 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(widget->shared_from_this());
 	widget->bind(inputs::OVER, [wwidget]()
 		{
-			wwidget.lock()->set_state(state::HOVER);
-			if (!m_cursor)
+			if (auto widget = wwidget.lock())
 			{
-				m_cursor = CursorManager::create(cursors::HAND);
+				widget->set_state(state::HOVER);
+				if (!m_cursor)
+				{
+					m_cursor = CursorManager::create(cursors::HAND);
+				}
+				m_cursor->use();
 			}
-			m_cursor->use();
 		});
 	widget->bind(inputs::NOVER, [wwidget]()
 		{
-			wwidget.lock()->set_state(state::NORMAL);
+			if (auto widget = wwidget.lock())
+			{
+				widget->set_state(state::NORMAL);
 			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
 				{
 					if (auto isHover = []() -> bool
@@ -57,39 +62,46 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 						m_cursor = nullptr;
 					}
 				});
+			}
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()
 		{
-			wwidget.lock()->set_state(state::PRESS);
+			if (auto widget = wwidget.lock())
+			{
+				widget->set_state(state::PRESS);
+			}
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [wwidget]()
 		{
-			wwidget.lock()->press();
-			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
-				{
-					if (auto isHover = []() -> bool
-						{
-							for (auto& tag : Widget::m_bindedTags)
+			if (auto widget = wwidget.lock())
+			{
+				widget->press();
+				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+					{
+						if (auto isHover = []() -> bool
 							{
-								for (auto& ptr : Widget::m_widgets[tag])
+								for (auto& tag : Widget::m_bindedTags)
 								{
-									if (const auto button = std::dynamic_pointer_cast<
-										kernel::Button>(ptr.lock()))
+									for (auto& ptr : Widget::m_widgets[tag])
 									{
-										if (button->get_state() == state::HOVER ||
-											button->get_state() == state::PRESS)
+										if (const auto button = std::dynamic_pointer_cast<
+											kernel::Button>(ptr.lock()))
 										{
-											return true;
+											if (button->get_state() == state::HOVER ||
+												button->get_state() == state::PRESS)
+											{
+												return true;
+											}
 										}
 									}
 								}
-							}
-							return false;
-						}; !isHover())
-					{
-						m_cursor = nullptr;
-					}
-				});
+								return false;
+							}; !isHover())
+						{
+							m_cursor = nullptr;
+						}
+					});
+			}
 		});
 	return widget;
 }
