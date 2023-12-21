@@ -19,20 +19,37 @@ void hgui::TaskManager::program(const std::chrono::milliseconds& delay, const st
 	}
 	else
 	{
-		throw std::runtime_error(("THERE IS ALREADY A TEXT AREA WITH THE ID : " + id).c_str());
+		throw std::runtime_error(("THERE IS ALREADY A TASK WITH THE ID : " + id).c_str());
 	}
 	timer->start();
 }
 
-void hgui::TaskManager::deprogram(const std::string& id)
+void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<std::string>>& tasks)
 {
-	if (m_tasks.contains(id))
+	if (const auto id = std::get_if<std::string>(&tasks))
 	{
-		m_tasks.erase(id);
+		if (m_tasks.contains(*id))
+		{
+			m_tasks.erase(*id);
+		}
+		else
+		{
+			throw std::runtime_error(("THERE IS NO TASK WITH THE ID : " + *id).c_str());
+		}
 	}
-	else
+	else if (const auto ids = std::get_if<std::vector<std::string>>(&tasks))
 	{
-		throw std::runtime_error(("THERE IS NO CANVAS WITH THE ID : " + id).c_str());
+		for (const auto& id : *ids)
+		{
+			if (m_tasks.contains(id))
+			{
+				m_tasks.erase(id);
+			}
+			else
+			{
+				throw std::runtime_error(("THERE IS NO TASK WITH THE ID : " + id).c_str());
+			}
+		}
 	}
 }
 
