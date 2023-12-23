@@ -37,7 +37,7 @@ bool is_in_rectangle(const vec2 A, const vec2 B, const vec2 D, const vec2 point)
 
 vec2 rotate(const vec2 point, const vec2 center, const float theta)
 {
-	const vec2 translated = point - center;
+	vec2 translated = point - center;
 
 	float angleRadians = radians(theta);
 	float cosTheta = cos(angleRadians);

@@ -8,7 +8,6 @@ uniform vec4 buttonColor;
 uniform int focused;
 uniform bool custom;
 
-
 void main()
 {
     if (!custom)
