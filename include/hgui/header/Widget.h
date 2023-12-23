@@ -20,7 +20,23 @@ namespace hgui
 		{
 			bool operator()(const std::weak_ptr<T>& lhs, const std::weak_ptr<T>& rhs) const
 			{
-				return lhs.lock() < rhs.lock();
+				const auto lhsShared = lhs.lock();
+				const auto rhsShared = rhs.lock();
+
+				if (!lhsShared && !rhsShared)
+				{
+					return false;
+				}
+				else if (!lhsShared)
+				{
+					return true;
+				}
+				else if (!rhsShared)
+				{
+					return false;
+				}
+
+				return lhsShared < rhsShared;
 			}
 		};
 	}

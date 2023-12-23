@@ -37,31 +37,31 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 			if (auto widget = wwidget.lock())
 			{
 				widget->set_state(state::NORMAL);
-			hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
-				{
-					if (auto isHover = []() -> bool
-						{
-							for (auto& tag : Widget::m_bindedTags)
+				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+					{
+						if (auto isHover = []() -> bool
 							{
-								for (auto& ptr : Widget::m_widgets[tag])
+								for (auto& tag : Widget::m_bindedTags)
 								{
-									if (const auto button = std::dynamic_pointer_cast<
-										kernel::Button>(ptr.lock()))
+									for (auto& ptr : Widget::m_widgets[tag])
 									{
-										if (button->get_state() == state::HOVER ||
-											button->get_state() == state::PRESS)
+										if (const auto button = std::dynamic_pointer_cast<
+											kernel::Button>(ptr.lock()))
 										{
-											return true;
+											if (button->get_state() == state::HOVER ||
+												button->get_state() == state::PRESS)
+											{
+												return true;
+											}
 										}
 									}
 								}
-							}
-							return false;
-						}; !isHover())
-					{
-						m_cursor = nullptr;
-					}
-				});
+								return false;
+							}; !isHover())
+						{
+							m_cursor = nullptr;
+						}
+					});
 			}
 		});
 	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()

@@ -163,8 +163,8 @@ void hgui::MouseManager::process()
 			{
 				for (auto& input : Widget::m_binds[wwidget])
 				{
-					const auto widget = wwidget.lock();
 					static std::pair<double, double> lastMousePosition;
+					const auto widget = wwidget.lock();
 					if (!input.second.second || !widget)
 					{
 						continue;
@@ -387,8 +387,8 @@ void hgui::MouseManager::scroll(GLFWwindow* window, const double xOffset, const 
 			{
 				for (auto& input : Widget::m_binds[wwidget])
 				{
-					const auto widget = wwidget.lock();
 					static std::pair<double, double> lastMousePosition;
+					const auto widget = wwidget.lock();
 					if (!input.second.second || !widget)
 					{
 						continue;

@@ -80,26 +80,32 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 	}
 	else if (widgets.index() == 1)
 	{
-		for (const auto& widget : get_widgets(std::get<std::string>(widgets)))
+		for (const auto& wwidget : get_widgets(std::get<std::string>(widgets)))
 		{
-			if (Widget::is_bind(widget.lock(), action))
+			if (auto widget = wwidget.lock())
 			{
-				throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
+				if (Widget::is_bind(widget, action))
+				{
+					throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
+				}
+				m_binds[wwidget].push_back({ action, {std::make_shared<Timer>(), function} });
 			}
-			m_binds[widget].push_back({ action, {std::make_shared<Timer>(), function} });
 		}
 	}
 	else if (widgets.index() == 2)
 	{
 		for (const std::string& tag : std::get<std::vector<std::string>>(widgets))
 		{
-			for (const auto& widget : get_widgets(tag))
+			for (const auto& wwidget : get_widgets(tag))
 			{
-				if (Widget::is_bind(widget.lock(), action))
+				if (auto widget = wwidget.lock())
 				{
-					throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
+					if (Widget::is_bind(widget, action))
+					{
+						throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
+					}
+					m_binds[wwidget].push_back({ action, {std::make_shared<Timer>(), function} });
 				}
-				m_binds[widget].push_back({ action, {std::make_shared<Timer>(), function} });
 			}
 		}
 	}
@@ -132,26 +138,32 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 	}
 	else if (widgets.index() == 1)
 	{
-		for (const auto& widget : get_widgets(std::get<std::string>(widgets)))
+		for (const auto& wwidget : get_widgets(std::get<std::string>(widgets)))
 		{
-			if (!Widget::is_bind(widget.lock(), action))
+			if (auto widget = wwidget.lock())
 			{
-				throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
+				if (!Widget::is_bind(widget, action))
+				{
+					throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
+				}
+				std::erase_if(m_binds[wwidget], [&](const type& el) { return el.first == action; });
 			}
-			std::erase_if(m_binds[widget], [&](const type& el) { return el.first == action; });
 		}
 	}
 	else if (widgets.index() == 2)
 	{
 		for (const std::string& tag : std::get<std::vector<std::string>>(widgets))
 		{
-			for (const auto& widget : get_widgets(tag))
+			for (const auto& wwidget : get_widgets(tag))
 			{
-				if (!Widget::is_bind(widget.lock(), action))
+				if (auto widget = wwidget.lock())
 				{
-					throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
+					if (!Widget::is_bind(widget, action))
+					{
+						throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
+					}
+					std::erase_if(m_binds[wwidget], [&](const type& el) { return el.first == action; });
 				}
-				std::erase_if(m_binds[widget], [&](const type& el) { return el.first == action; });
 			}
 		}
 	}

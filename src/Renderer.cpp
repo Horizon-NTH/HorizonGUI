@@ -98,18 +98,24 @@ void hgui::Renderer::render()
 	m_frameBuffer->bind();
 	for (const std::string& tag : m_draws.second.first)
 	{
-		for (const auto& widget : Widget::get_widgets(tag))
+		for (const auto& wwidget : Widget::get_widgets(tag))
 		{
-			widget.lock()->draw();
+			if (const auto widget = wwidget.lock())
+			{
+				widget->draw();
+			}
 		}
 	}
 	m_frameBuffer->unbind();
 	m_frameBuffer->show();
 	for (const std::string& tag : m_draws.first)
 	{
-		for (const auto& widget : Widget::get_widgets(tag))
+		for (const auto& wwidget : Widget::get_widgets(tag))
 		{
-			widget.lock()->draw();
+			if (const auto widget = wwidget.lock())
+			{
+				widget->draw();
+			}
 		}
 	}
 }
@@ -203,18 +209,24 @@ void hgui::Renderer::render()
 	BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->bind();
 	for (const std::string& tag : m_draws.second.first)
 	{
-		for (const auto& widget : Widget::get_widgets(tag))
+		for (const auto& wwidget : Widget::get_widgets(tag))
 		{
-			widget.lock()->draw();
+			if (const auto widget = wwidget.lock())
+			{
+				widget->draw();
+			}
 		}
 	}
 	BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->unbind();
 	BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->show();
 	for (const std::string& tag : m_draws.first)
 	{
-		for (const auto& widget : Widget::get_widgets(tag))
+		for (const auto& wwidget : Widget::get_widgets(tag))
 		{
-			widget.lock()->draw();
+			if (const auto widget = wwidget.lock())
+			{
+				widget->draw();
+			}
 		}
 	}
 }
