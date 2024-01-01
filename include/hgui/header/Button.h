@@ -17,14 +17,14 @@ namespace hgui::kernel
 		Button(const Button& button) = delete;
 		Button(Button&& button) = default;
 
-		~Button() = default;
+		~Button() override = default;
 
 		Button& operator=(const Button& button) = delete;
 		Button& operator=(Button&& button) = delete;
 
 		void press() const;
 		void draw() const override;
-		bool is_inside(const point& point) const override;
+		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		[[nodiscard]] const state& get_state() const;
 

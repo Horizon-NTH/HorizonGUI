@@ -1,13 +1,15 @@
 #include <hgui/header/Slider.h>
 
-hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, const Function& function, const HGUI_PRECISION angularRotation) :
+#include <utility>
+
+hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function  function, const HGUI_PRECISION angularRotation) :
 	Widget(nullptr, size, position, color, angularRotation),
 	m_modelMatrix(1.0f),
 	m_range(range),
 	m_inactiveBarColor(inactiveBarColor),
 	m_activeBarColor(activeBarColor),
 	m_slider(0.f),
-	m_function(function)
+	m_function(std::move(function))
 {
 	m_range.sort();
 	set_points();
@@ -32,8 +34,8 @@ bool hgui::kernel::Slider::is_inside(const point& point) const
 	const HGUI_PRECISION a = right.y - left.y;
 	const HGUI_PRECISION b = left.x - right.x;
 	const HGUI_PRECISION c = right.x * left.y - left.x * right.y;
-	const bool nearPoint = hgui::kernel::distance(m_slider, point) <= m_size.height / 2.f || hgui::kernel::distance(right, point) <= m_size.height / 8.f ||
-		hgui::kernel::distance(left, point) <= m_size.height / 8.f;
+	const bool nearPoint = distance(m_slider, point) <= m_size.height / 2.f || distance(right, point) <= m_size.height / 8.f ||
+	                       distance(left, point) <= m_size.height / 8.f;
 	if (std::abs(a) < 1e-6f)
 	{
 		return nearPoint || (point.x >= std::min(right.x, left.x) &&
@@ -90,15 +92,15 @@ void hgui::kernel::Slider::set_rotation(const HGUI_PRECISION newAngularRotation)
 	const HGUI_PRECISION old = m_angularRotation;
 	Widget::set_rotation(newAngularRotation);
 	set_points();
-	m_slider = clamp(hgui::point::rotate(hgui::point::rotate(m_slider, std::get<0>(m_points), -old), std::get<0>(m_points), newAngularRotation));
+	m_slider = clamp(point::rotate(point::rotate(m_slider, std::get<0>(m_points), -old), std::get<0>(m_points), newAngularRotation));
 }
 
 void hgui::kernel::Slider::set_value(HGUI_PRECISION newValue)
 {
-	const hgui::point left(std::get<1>(m_points)),
+	const point left(std::get<1>(m_points)),
 		right(std::get<2>(m_points));
 	newValue = m_range.round(std::clamp(newValue, m_range.min, m_range.max));
-	const HGUI_PRECISION offset = (newValue - m_range.min) / (m_range.max - m_range.min) * hgui::kernel::distance(left, right);
+	const HGUI_PRECISION offset = (newValue - m_range.min) / (m_range.max - m_range.min) * distance(left, right);
 	point direction = right - left; direction.normalize();
 	m_slider = clamp(left + offset * direction);
 }
@@ -111,12 +113,11 @@ void hgui::kernel::Slider::set_range(const Ranges& newRange)
 
 void hgui::kernel::Slider::set_slider_position(point newPosition)
 {
-	const hgui::point left(std::get<1>(m_points)),
+	const point left(std::get<1>(m_points)),
 		right(std::get<2>(m_points));
-	point AB = right - left,
+	const point AB = right - left,
 		AP = newPosition - left;
-	HGUI_PRECISION projection = hgui::kernel::dot(AP, AB) / hgui::kernel::dot(AB, AB);
-	if (projection < 0)
+	if (const HGUI_PRECISION projection = dot(AP, AB) / dot(AB, AB); projection < 0)
 	{
 		newPosition = left;
 	}
@@ -128,7 +129,7 @@ void hgui::kernel::Slider::set_slider_position(point newPosition)
 	{
 		newPosition = left + projection * AB;
 	}
-	if (auto function = std::get_if<std::function<void()>>(&m_function))
+	if (const auto function = std::get_if<std::function<void()>>(&m_function))
 	{
 		m_slider = clamp(newPosition);
 		if (*function)
@@ -136,13 +137,13 @@ void hgui::kernel::Slider::set_slider_position(point newPosition)
 			(*function)();
 		}
 	}
-	else if (auto function = std::get_if<std::function<void(HGUI_PRECISION, HGUI_PRECISION, std::shared_ptr<Slider>)>>(&m_function))
+	else if (const auto functionWithParameter = std::get_if<std::function<void(HGUI_PRECISION, HGUI_PRECISION, std::shared_ptr<Slider>)>>(&m_function))
 	{
-		HGUI_PRECISION pastValue = get_value();
+		const HGUI_PRECISION pastValue = get_value();
 		m_slider = clamp(newPosition);
-		if (*function)
+		if (*functionWithParameter)
 		{
-			(*function)(get_value(), pastValue, std::dynamic_pointer_cast<Slider>(shared_from_this()));
+			(*functionWithParameter)(get_value(), pastValue, std::dynamic_pointer_cast<Slider>(shared_from_this()));
 		}
 	}
 }
@@ -159,16 +160,15 @@ hgui::point hgui::kernel::Slider::clamp(const point& value) const
 		const point left(std::get<1>(m_points)),
 			right(std::get<2>(m_points));
 		point direction = right - left; direction.normalize();
-		const HGUI_PRECISION size = hgui::kernel::distance(left, right),
-			offset = size / m_range.step;
+		const HGUI_PRECISION size = distance(left, right),
+			offset = size / static_cast<float>(m_range.step);
 		point actualPoint = left,
 			minPoint = actualPoint;
-		HGUI_PRECISION minDistance = hgui::kernel::distance(value, actualPoint);
-		while (hgui::kernel::distance(left, actualPoint) < size)
+		HGUI_PRECISION minDistance = distance(value, actualPoint);
+		while (distance(left, actualPoint) < size)
 		{
 			actualPoint += offset * direction;
-			HGUI_PRECISION distance = hgui::kernel::distance(value, actualPoint);
-			if (distance < minDistance)
+			if (const HGUI_PRECISION distance = kernel::distance(value, actualPoint); distance < minDistance)
 			{
 				minDistance = distance;
 				minPoint = actualPoint;
@@ -176,23 +176,20 @@ hgui::point hgui::kernel::Slider::clamp(const point& value) const
 		}
 		return minPoint;
 	}
-	else
-	{
-		return value;
-	}
+	return value;
 }
 
 void hgui::kernel::Slider::set_points()
 {
 	auto center = m_position + m_size / 2.f;
 	m_points = std::make_tuple(center,
-		hgui::point::rotate(m_position + hgui::point(m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation),
-		hgui::point::rotate(m_position + hgui::point(m_size.width - m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation));
+		point::rotate(m_position + point(m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation),
+		point::rotate(m_position + point(m_size.width - m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation));
 }
 
-HGUI_PRECISION hgui::kernel::Ranges::round(HGUI_PRECISION value) const
+HGUI_PRECISION hgui::kernel::Ranges::round(const HGUI_PRECISION value) const
 {
-	HGUI_PRECISION factor = static_cast<HGUI_PRECISION>(std::pow(10, precision));
+	const auto factor = static_cast<HGUI_PRECISION>(std::pow(10, precision));
 	return std::round(value * factor) / factor;
 }
 

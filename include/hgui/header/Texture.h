@@ -16,7 +16,7 @@ namespace hgui::kernel
 	class Texture
 	{
 	public:
-		Texture(const std::shared_ptr<Image>& image, TextureOption options = {});
+		explicit Texture(const std::shared_ptr<Image>& image, TextureOption options = {});
 		Texture(const Texture& texture) noexcept = delete;
 		Texture(Texture&& texture) noexcept = delete;
 

@@ -14,7 +14,7 @@ namespace hgui::kernel
 		Canvas(const Canvas& canvas) = delete;
 		Canvas(Canvas&& canvas) = default;
 
-		~Canvas() = default;
+		~Canvas() override = default;
 
 		Canvas& operator=(const Canvas& canvas) = delete;
 		Canvas& operator=(Canvas&& canvas) = default;
@@ -23,12 +23,12 @@ namespace hgui::kernel
 
 		void set_position(const point& newPosition) override;
 
-		bool is_inside(const point& point) const override;
+		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		[[nodiscard]] const std::shared_ptr<kernel::Drawer>& get_drawer() const;
 
 	private:
-		glm::mat4 m_modelMatrix;
+		glm::mat4 m_modelMatrix{};
 		std::shared_ptr<kernel::Drawer> m_drawer;
 
 		void init_data() const;

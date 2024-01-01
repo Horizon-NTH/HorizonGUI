@@ -1,6 +1,7 @@
 #include <hgui/header/VertexBufferObject.h>
 
-hgui::kernel::VertexBufferObject::VertexBufferObject() noexcept
+hgui::kernel::VertexBufferObject::VertexBufferObject() noexcept :
+	m_id()
 {
 	glGenBuffers(1, &m_id);
 }

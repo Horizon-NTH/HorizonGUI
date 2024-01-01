@@ -1,6 +1,7 @@
 #include <hgui/header/FrameBuffer.h>
 
-hgui::kernel::FrameBuffer::FrameBuffer() noexcept
+hgui::kernel::FrameBuffer::FrameBuffer() noexcept :
+	m_id()
 {
 	glGenFramebuffers(1, &m_id);
 }

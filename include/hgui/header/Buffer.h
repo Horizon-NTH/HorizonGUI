@@ -13,7 +13,7 @@ namespace hgui::kernel
 	class Buffer
 	{
 	public:
-		Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture);
+		Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture);
 		Buffer(const Buffer& buffer) = delete;
 		Buffer(Buffer&& buffer) = default;
 

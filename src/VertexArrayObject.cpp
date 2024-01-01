@@ -1,6 +1,7 @@
 #include <hgui/header/VertexArrayObject.h>
 
-hgui::kernel::VertexArrayObject::VertexArrayObject() noexcept
+hgui::kernel::VertexArrayObject::VertexArrayObject() noexcept :
+	m_id()
 {
 	glGenVertexArrays(1, &m_id);
 }

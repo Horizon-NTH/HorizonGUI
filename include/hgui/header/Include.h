@@ -20,6 +20,7 @@
 #include <variant>
 #include <numeric>
 #include <valarray>
+#include <random>
 // STBI library
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
@@ -30,5 +31,11 @@
 // FreeType library
 #include <ft2build.h>
 #include FT_FREETYPE_H
+// OpenAL library
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
+// Libsndfile library
+#include <sndfile.h>
 // HorizonGUI APT Type
 #define HGUI_DYNAMIC

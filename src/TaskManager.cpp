@@ -3,7 +3,7 @@
 
 std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<hgui::Timer>>> hgui::TaskManager::m_tasks;
 
-void hgui::TaskManager::program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id)
+std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id)
 {
 	static unsigned long long ids = 0;
 	const auto timer = std::make_shared<Timer>();
@@ -22,6 +22,7 @@ void hgui::TaskManager::program(const std::chrono::milliseconds& delay, const st
 		throw std::runtime_error(("THERE IS ALREADY A TASK WITH THE ID : " + id).c_str());
 	}
 	timer->start();
+	return std::move(id);
 }
 
 void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<std::string>>& tasks)
@@ -39,15 +40,15 @@ void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<st
 	}
 	else if (const auto ids = std::get_if<std::vector<std::string>>(&tasks))
 	{
-		for (const auto& id : *ids)
+		for (const auto& identifiant : *ids)
 		{
-			if (m_tasks.contains(id))
+			if (m_tasks.contains(identifiant))
 			{
-				m_tasks.erase(id);
+				m_tasks.erase(identifiant);
 			}
 			else
 			{
-				throw std::runtime_error(("THERE IS NO TASK WITH THE ID : " + id).c_str());
+				throw std::runtime_error(("THERE IS NO TASK WITH THE ID : " + identifiant).c_str());
 			}
 		}
 	}
@@ -70,7 +71,7 @@ void hgui::TaskManager::process()
 	for (const auto& [id, task] : m_tasks)
 	{
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(task)->get_time()))
-			>= std::get<1>(task))
+		    >= std::get<1>(task))
 		{
 			taskToDo.push_back(id);
 		}

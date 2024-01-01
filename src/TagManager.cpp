@@ -5,7 +5,7 @@ std::vector<std::string> hgui::TagManager::m_tags;
 
 std::string hgui::TagManager::create_tag(const std::string& newTag)
 {
-	if (std::find(m_tags.begin(), m_tags.end(), newTag) == m_tags.end())
+	if (std::ranges::find(m_tags, newTag) == m_tags.end())
 	{
 		m_tags.push_back(newTag);
 		return newTag;
@@ -28,7 +28,7 @@ const std::string& hgui::TagManager::get_current_tag()
 
 void hgui::TagManager::set_current_tag(const std::string& tag)
 {
-	if (std::find(m_tags.begin(), m_tags.end(), tag) != m_tags.end())
+	if (std::ranges::find(m_tags, tag) != m_tags.end())
 	{
 		m_currentTag = tag;
 	}

@@ -17,3 +17,6 @@
 [submodule "deps/openal-soft"]
 	path = deps/openal-soft
 	url = https://github.com/kcat/openal-soft.git
+[submodule "deps/libsndfile"]
+	path = deps/libsndfile
+	url = https://github.com/libsndfile/libsndfile.git

@@ -69,14 +69,14 @@ namespace hgui
 		virtual void set_rotation(const HGUI_PRECISION newAngularRotation);
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
-		bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
+		[[nodiscard]] bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 		void unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		virtual void draw() const = 0;
-		virtual bool is_inside(const point& point) const = 0;
-		  
+		[[nodiscard]] virtual bool is_inside(const point& point) const = 0;
+
 		static void bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
-		static bool is_bind(const std::shared_ptr<Widget>& widget, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
+		[[nodiscard]] static bool is_bind(const std::shared_ptr<Widget>& widget, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 		static void unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		static void active(const std::vector<std::string>& tags = {});
@@ -92,10 +92,10 @@ namespace hgui
 
 	private:
 		static std::vector<std::string> m_bindedTags;
-		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair< std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
+		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
 		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
 
-		static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
+		[[nodiscard]] static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
 
 		friend void kernel::resources_cleaner();
 	};

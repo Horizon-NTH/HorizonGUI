@@ -18,10 +18,10 @@ namespace hgui
 		TaskManager& operator=(const TaskManager& taskManager) = delete;
 		TaskManager& operator=(TaskManager&& taskManager) = delete;
 
-		static void program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id = "");
+		static std::string program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id = "");
 		static void deprogram(const std::variant<std::string, std::vector<std::string>>& tasks = hgui::TaskManager::get_ids());
 
-		static std::vector<std::string> get_ids();
+		[[nodiscard]] static std::vector<std::string> get_ids();
 
 	private:
 		static void process();

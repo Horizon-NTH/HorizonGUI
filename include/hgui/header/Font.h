@@ -17,7 +17,7 @@ namespace hgui::kernel
 	class Font
 	{
 	public:
-		explicit Font(const std::string& fontPath);
+		explicit Font(std::string fontPath);
 		Font(const Font& font) = delete;
 		Font(Font&& font) = default;
 

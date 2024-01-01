@@ -58,7 +58,7 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 void hgui::kernel::Label::set_width(const unsigned int newWidth)
 {
 	int max = 1000, min = 10;
-	while (std::abs(hgui::size(m_size).width - static_cast<HGUI_PRECISION>(newWidth)) > hgui::size(1_em).width && max != min)
+	while (std::abs(size(m_size).width - static_cast<HGUI_PRECISION>(newWidth)) > size(1_em).width && max != min)
 	{
 		m_fontSize = (max + min) / 2;
 		m_fontSize++;
@@ -87,7 +87,7 @@ void hgui::kernel::Label::set_width(const unsigned int newWidth)
 void hgui::kernel::Label::set_height(const unsigned int newHeight)
 {
 	int max = 1000, min = 10;
-	while (std::abs(hgui::size(m_size).height - static_cast<HGUI_PRECISION>(newHeight)) > hgui::size(1_em).height && max != min)
+	while (std::abs(size(m_size).height - static_cast<HGUI_PRECISION>(newHeight)) > size(1_em).height && max != min)
 	{
 		m_fontSize = (max + min) / 2;
 		m_fontSize++;
@@ -129,7 +129,7 @@ void hgui::kernel::Label::draw() const
 	{
 		const Character ch = m_font->get_char(c, m_fontSize);
 
-		const hgui::point pos = hgui::point(position.x + static_cast<float>(ch.bearing.x), position.y + (static_cast<float>(m_font->get_char('H', m_fontSize).bearing.y) - static_cast<float>(ch.bearing.y))) * m_scale;
+		const point pos = point(position.x + static_cast<float>(ch.bearing.x), position.y + (static_cast<float>(m_font->get_char('H', m_fontSize).bearing.y) - static_cast<float>(ch.bearing.y))) * m_scale;
 
 		const float w = ch.size.width * m_scale;
 		const float h = ch.size.height * m_scale;
@@ -146,7 +146,7 @@ void hgui::kernel::Label::draw() const
 
 		for (auto& vertex : vertices)
 		{
-			const point pt = hgui::point::rotate(point(vertex[0], vertex[1]), center, m_angularRotation);
+			const point pt = point::rotate(point(vertex[0], vertex[1]), center, m_angularRotation);
 			vertex[0] = pt.x;
 			vertex[1] = pt.y;
 		}
@@ -163,10 +163,10 @@ void hgui::kernel::Label::draw() const
 bool hgui::kernel::Label::is_inside(const point& point) const
 {
 	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
-	const auto A = hgui::point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-		B = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-		C = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-		D = hgui::point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
+	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
+		B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
+		C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
+		D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
 
-	return hgui::point::is_in_rectangle(A, B, D, point);
+	return point::is_in_rectangle(A, B, D, point);
 }

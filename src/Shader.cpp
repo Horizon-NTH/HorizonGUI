@@ -135,7 +135,7 @@ GLuint hgui::kernel::Shader::load_shader(const std::string& vertexShaderCode, co
 			glDeleteShader(geometryShader);
 		}
 		std::cout << e.what() << std::endl;
-		throw e;
+		throw;
 	}
 
 	return shaderProgram;

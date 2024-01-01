@@ -13,3 +13,7 @@ include/AL
 lib
 CMakeSettings.json  
 .vscode  
+.idea 
+cmake-build-debug  
+include/sndfile.h  
+include/sndfile.hh  

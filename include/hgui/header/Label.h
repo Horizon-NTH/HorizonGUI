@@ -19,7 +19,7 @@ namespace hgui
 			Label(const Label& label) = delete;
 			Label(Label&& label) = default;
 
-			~Label() = default;
+			~Label() override = default;
 
 			Label& operator=(const Label& label) = delete;
 			Label& operator=(Label&& labe) = default;
@@ -35,7 +35,7 @@ namespace hgui
 
 			void draw() const override;
 
-			bool is_inside(const point& point) const override;
+			[[nodiscard]] bool is_inside(const point& point) const override;
 
 		private:
 			std::string m_text;

@@ -1,3 +1,4 @@
+#include <ranges>
 #include <hgui/header/MonitorManager.h>
 
 std::map<std::string, std::shared_ptr<hgui::kernel::Monitor>> hgui::MonitorManager::m_monitors;
@@ -8,19 +9,16 @@ const std::shared_ptr<hgui::kernel::Monitor>& hgui::MonitorManager::get(const st
 	{
 		return m_monitors[monitorName];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO MONITOR WITH THE NAME : " + monitorName).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO MONITOR WITH THE NAME : " + monitorName).c_str());
 }
 
 std::vector<std::string> hgui::MonitorManager::get_monitors_names()
 {
 	std::vector<std::string> monitorsNames;
 	monitorsNames.reserve(m_monitors.size());
-	for (const auto& monitor : m_monitors)
+	for (const auto& monitor : m_monitors | std::ranges::views::keys)
 	{
-		monitorsNames.push_back(monitor.first);
+		monitorsNames.push_back(monitor);
 	}
 	return monitorsNames;
 }

@@ -5,9 +5,9 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	m_size(size),
 	m_position(position)
 {
-	for (const auto& option : options)
+	for (const auto& [option, state] : options)
 	{
-		glfwWindowHint(static_cast<int>(option.first), option.second);
+		glfwWindowHint(static_cast<int>(option), state);
 	}
 #ifndef DEBUG
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -28,11 +28,11 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	glfwSetWindowPosCallback(m_windowPTR, position_callback);
 	if (icon)
 	{
-		const ImageData data = icon->get_data();
+		const auto [width, height, channel, pixels] = icon->get_data();
 		const GLFWimage ico{ 
-			.width = static_cast<int>(data.width), 
-			.height = static_cast<int>(data.height), 
-			.pixels = data.pixels 
+			.width = static_cast<int>(width), 
+			.height = static_cast<int>(height), 
+			.pixels = pixels 
 		};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}

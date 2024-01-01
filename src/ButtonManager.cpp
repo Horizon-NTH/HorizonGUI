@@ -11,18 +11,18 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	{
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);
 	}
-	auto widget = std::make_shared<kernel::Button>(function,
+	auto button = std::make_shared<kernel::Button>(function,
 		m_shader, size, position,
 		font ?
 		LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation) :
 		nullptr,
 		color, angularRotation, borderRadius, texture);
 	auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
-	widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), widget->weak_from_this());
-	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(widget->shared_from_this());
-	widget->bind(inputs::OVER, [wwidget]()
+	widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), button->weak_from_this());
+	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(button->shared_from_this());
+	button->bind(inputs::OVER, [wwidget]()
 		{
-			if (auto widget = wwidget.lock())
+			if (const auto widget = wwidget.lock())
 			{
 				widget->set_state(state::HOVER);
 				if (!m_cursor)
@@ -32,9 +32,9 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 				m_cursor->use();
 			}
 		});
-	widget->bind(inputs::NOVER, [wwidget]()
+	button->bind(inputs::NOVER, [wwidget]()
 		{
-			if (auto widget = wwidget.lock())
+			if (const auto widget = wwidget.lock())
 			{
 				widget->set_state(state::NORMAL);
 				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
@@ -45,11 +45,11 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 								{
 									for (auto& ptr : Widget::m_widgets[tag])
 									{
-										if (const auto button = std::dynamic_pointer_cast<
+										if (const auto button_ptr = std::dynamic_pointer_cast<
 											kernel::Button>(ptr.lock()))
 										{
-											if (button->get_state() == state::HOVER ||
-												button->get_state() == state::PRESS)
+											if (button_ptr->get_state() == state::HOVER ||
+												button_ptr->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -64,16 +64,16 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 					});
 			}
 		});
-	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()
+	button->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [wwidget]()
 		{
-			if (auto widget = wwidget.lock())
+			if (const auto widget = wwidget.lock())
 			{
 				widget->set_state(state::PRESS);
 			}
 		});
-	widget->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [wwidget]()
+	button->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [wwidget]()
 		{
-			if (auto widget = wwidget.lock())
+			if (const auto widget = wwidget.lock())
 			{
 				widget->press();
 				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
@@ -84,11 +84,11 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 								{
 									for (auto& ptr : Widget::m_widgets[tag])
 									{
-										if (const auto button = std::dynamic_pointer_cast<
+										if (const auto button_ptr = std::dynamic_pointer_cast<
 											kernel::Button>(ptr.lock()))
 										{
-											if (button->get_state() == state::HOVER ||
-												button->get_state() == state::PRESS)
+											if (button_ptr->get_state() == state::HOVER ||
+												button_ptr->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -103,7 +103,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 					});
 			}
 		});
-	return widget;
+	return button;
 }
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;

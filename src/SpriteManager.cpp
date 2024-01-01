@@ -14,14 +14,14 @@ std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::var
 	if (const auto data = std::get_if<std::shared_ptr<kernel::Image>>(&texture))
 	{
 		auto& image = *data;
-		auto texture = TextureManager::create(image);
+		auto texture_ptr = TextureManager::create(image);
 		widget = std::make_shared<kernel::Sprite>(
-			m_shader, texture, size, position, color, angularRotation);
+			m_shader, texture_ptr, size, position, color, angularRotation);
 	}
-	else if (const auto data = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
+	else if (const auto texture_ptr = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
 	{
 		widget = std::make_shared<kernel::Sprite>(
-			m_shader, *data, size, position, color, angularRotation);
+			m_shader, *texture_ptr, size, position, color, angularRotation);
 	}
 	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;

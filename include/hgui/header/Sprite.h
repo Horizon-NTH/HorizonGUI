@@ -22,7 +22,7 @@ namespace hgui::kernel
 
 		void draw() const override;
 
-		bool is_inside(const point& point) const override;
+		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		void set_position(const point& newPosition) override;
 		void set_texture(const std::shared_ptr<Texture>& newTexture);

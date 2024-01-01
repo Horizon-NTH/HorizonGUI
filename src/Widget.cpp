@@ -1,3 +1,4 @@
+#include <ranges>
 #include <hgui/header/Widget.h>
 
 std::vector<std::string> hgui::Widget::m_bindedTags;
@@ -16,15 +17,15 @@ m_angularRotation(angularRotation)
 
 hgui::Widget::~Widget()
 {
-	for (auto& widgets : Widget::m_widgets)
+	for (auto& widgets : m_widgets | std::ranges::views::values)
 	{
-		std::erase_if(widgets.second, [](const std::weak_ptr<Widget>& widget) -> bool
+		std::erase_if(widgets, [](const std::weak_ptr<Widget>& widget) -> bool
 			{
 				return widget.expired();
 			});
 	}
-	for (auto it = Widget::m_binds.begin(); it != Widget::m_binds.end();
-		it->first.expired() ? it = Widget::m_binds.erase(it) : it++);
+	for (auto it = m_binds.begin(); it != m_binds.end();
+		it->first.expired() ? it = m_binds.erase(it) : it++);
 }
 
 const hgui::point& hgui::Widget::get_position() const
@@ -54,17 +55,17 @@ void hgui::Widget::set_rotation(const HGUI_PRECISION newAngularRotation)
 
 void hgui::Widget::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {
-	Widget::bind(shared_from_this(), action, function);
+	bind(shared_from_this(), action, function);
 }
 
 bool hgui::Widget::is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
-	return Widget::is_bind(shared_from_this(), action);
+	return is_bind(shared_from_this(), action);
 }
 
 void hgui::Widget::unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
-	Widget::unbind(shared_from_this(), action);
+	unbind(shared_from_this(), action);
 }
 
 void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
@@ -72,7 +73,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 	if (widgets.index() == 0)
 	{
 		const auto& widget = std::get<std::shared_ptr<Widget>>(widgets);
-		if (Widget::is_bind(widget, action))
+		if (is_bind(widget, action))
 		{
 			throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 		}
@@ -84,7 +85,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 		{
 			if (auto widget = wwidget.lock())
 			{
-				if (Widget::is_bind(widget, action))
+				if (is_bind(widget, action))
 				{
 					throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 				}
@@ -100,7 +101,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 			{
 				if (auto widget = wwidget.lock())
 				{
-					if (Widget::is_bind(widget, action))
+					if (is_bind(widget, action))
 					{
 						throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 					}
@@ -117,7 +118,7 @@ bool hgui::Widget::is_bind(const std::shared_ptr<Widget>& widget, const std::var
 	{
 		return false;
 	}
-	using type = std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>;
+	using type = std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>;
 	return std::ranges::any_of(m_binds[widget], [&](const type& el) -> bool
 		{
 			return el.first == action;
@@ -126,11 +127,11 @@ bool hgui::Widget::is_bind(const std::shared_ptr<Widget>& widget, const std::var
 
 void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
-	using type = std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>;
+	using type = std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>;
 	if (widgets.index() == 0)
 	{
 		const auto& widget = std::get<std::shared_ptr<Widget>>(widgets);
-		if (!Widget::is_bind(widget, action))
+		if (!is_bind(widget, action))
 		{
 			throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
 		}
@@ -142,7 +143,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 		{
 			if (auto widget = wwidget.lock())
 			{
-				if (!Widget::is_bind(widget, action))
+				if (!is_bind(widget, action))
 				{
 					throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
 				}
@@ -158,7 +159,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 			{
 				if (auto widget = wwidget.lock())
 				{
-					if (!Widget::is_bind(widget, action))
+					if (!is_bind(widget, action))
 					{
 						throw std::runtime_error("THERE IS NO BIND ASSOCIATED TO THIS WIDGET");
 					}
@@ -172,7 +173,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 void hgui::Widget::active(const std::vector<std::string>& tags)
 {
 	m_bindedTags.clear();
-	const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
+	const std::vector<std::string>& tagsList = TagManager::get_tags();
 	for (const std::string& tag : !tags.empty() ? tags : tagsList)
 	{
 		if (std::ranges::find(tagsList, tag) != tagsList.end())
@@ -185,13 +186,10 @@ void hgui::Widget::active(const std::vector<std::string>& tags)
 
 const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
 {
-	const std::vector<std::string>& tagsList = hgui::TagManager::get_tags();
+	const std::vector<std::string>& tagsList = TagManager::get_tags();
 	if (std::ranges::find(tagsList, tag) != tagsList.end())
 	{
-		return Widget::m_widgets[tag];
+		return m_widgets[tag];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
 }

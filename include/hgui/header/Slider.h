@@ -23,22 +23,22 @@ namespace hgui::kernel
 		using Function = std::variant<std::function<void()>, std::function<void(HGUI_PRECISION, HGUI_PRECISION, std::shared_ptr<Slider>)>>;
 
 	public:
-		Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, const Function& function, HGUI_PRECISION angularRotation);
+		Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function, HGUI_PRECISION angularRotation);
 		Slider(const Slider& slider) = default;
 		Slider(Slider&& slider) = default;
 
-		~Slider() = default;
+		~Slider() override = default;
 
 		Slider& operator=(const Slider& slider) = default;
 		Slider& operator=(Slider&& slider) = default;
 
 		void draw() const override;
-		bool is_inside(const point& point) const override;
+		[[nodiscard]] bool is_inside(const point& point) const override;
 
-		HGUI_PRECISION get_value() const;
-		const Ranges& get_range() const;
-		const point& get_slider_position() const;
-		const Function& get_function() const;
+		[[nodiscard]] HGUI_PRECISION get_value() const;
+		[[nodiscard]] const Ranges& get_range() const;
+		[[nodiscard]] const point& get_slider_position() const;
+		[[nodiscard]] const Function& get_function() const;
 
 		void set_position(const point& newPosition) override;
 		void set_rotation(const HGUI_PRECISION newAngularRotation) override;

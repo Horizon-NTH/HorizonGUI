@@ -17,8 +17,8 @@ namespace hgui::kernel
 	class Image
 	{
 	public:
-		explicit Image(const std::string& imagePath);
-		Image(const std::string& imagePath, const ImageData& data);
+		explicit Image(std::string  imagePath);
+		Image(std::string  imagePath, const ImageData& data);
 		Image(const Image& image) = default;
 		Image(Image&& image) = default;
 

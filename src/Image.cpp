@@ -1,14 +1,17 @@
 #include <hgui/header/Image.h>
 
-hgui::kernel::Image::Image(const std::string& imagePath) :
-	m_path(imagePath), 
+#include <utility>
+
+hgui::kernel::Image::Image(std::string  imagePath) :
+	m_path(std::move(imagePath)),
+	m_data(),
 	m_autoLoaded(true)
 {
 	load_image();
 }
 
-hgui::kernel::Image::Image(const std::string& imagePath, const ImageData& data) :
-	m_path(imagePath),
+hgui::kernel::Image::Image(std::string  imagePath, const ImageData& data) :
+	m_path(std::move(imagePath)),
 	m_data(data),
 	m_autoLoaded(false)
 {
@@ -39,7 +42,7 @@ void hgui::kernel::Image::set_data(const ImageData& newData)
 
 hgui::size hgui::kernel::Image::get_size() const
 {
-	return size(m_data.width, m_data.height);
+	return {m_data.width, m_data.height};
 }
 
 void hgui::kernel::Image::load_image()

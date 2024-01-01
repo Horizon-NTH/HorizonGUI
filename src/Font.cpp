@@ -1,7 +1,9 @@
 #include <hgui/header/Font.h>
 
-hgui::kernel::Font::Font(const std::string& fontPath) :
-	m_fontPath(fontPath)
+#include <utility>
+
+hgui::kernel::Font::Font(std::string  fontPath) :
+	m_fontPath(std::move(fontPath))
 {
 }
 
@@ -44,7 +46,7 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 				.channel = hgui::channels::GREYSCALE,
 				.pixels = face->glyph->bitmap.buffer
 			};
-			auto texture = std::make_shared<Texture>(std::make_shared<Image>("", data),
+			const auto texture = std::make_shared<Texture>(std::make_shared<Image>("", data),
 				TextureOption
 				{
 					.wrap_s = GL_CLAMP_TO_BORDER,
@@ -71,5 +73,5 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 
 bool hgui::kernel::Font::is_load(const unsigned int size) const
 {
-	return m_characters.find(size) != m_characters.end();
+	return m_characters.contains(size);
 }

@@ -11,9 +11,9 @@ hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const 
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_STRAIGHTLINE, HGUI_GLSL_FRAGMENT_STRAIGHTLINE);
 	}
 	float halfThickness = thickness / 2.0f;
-	hgui::point v = secondVertex - firstVertex;
-	hgui::point n(-v.y, v.x); n.normalize();
-	hgui::point corner1 = firstVertex - n * halfThickness,
+	point v = secondVertex - firstVertex;
+	point n(-v.y, v.x); n.normalize();
+	point corner1 = firstVertex - n * halfThickness,
 		corner2 = firstVertex + n * halfThickness,
 		corner3 = secondVertex + n * halfThickness,
 		corner4 = secondVertex - n * halfThickness;
@@ -42,11 +42,11 @@ hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const 
 	m_VAO->unbind();
 }
 
-void hgui::kernel::shape::StraightLine::draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, const float canvasRotation) const
+void hgui::kernel::shape::StraightLine::draw(const point& canvasPosition, const size& canvasSize, const float canvasRotation) const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	const auto& [P1, P2, thickness] = std::get<std::tuple<hgui::point, hgui::point, HGUI_PRECISION>>(m_data);
+	const auto& [P1, P2, thickness] = std::get<std::tuple<point, point, HGUI_PRECISION>>(m_data);
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
 		.set_vec2("canvasPosition", canvasPosition)
 		.set_vec2("canvasSize", canvasSize)

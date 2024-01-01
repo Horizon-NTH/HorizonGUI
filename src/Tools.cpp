@@ -2,18 +2,22 @@
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
-	hgui::TaskManager::program(delay, function);
+	TaskManager::program(delay, function);
 }
 
 std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
 {
-	return std::make_shared<hgui::kernel::Image>(imagePath);
+	return std::make_shared<kernel::Image>(imagePath);
+}
+
+std::shared_ptr<hgui::kernel::Audio> hgui::audio_loader(const std::string& audioPath)
+{
+	return std::make_shared<kernel::Audio>(audioPath);
 }
 
 std::string hgui::file_reader(const std::string& filePath)
 {
-	std::ifstream istream(filePath);
-	if (istream.is_open())
+	if (std::ifstream istream(filePath); istream.is_open())
 	{
 		std::stringstream sstream;
 		sstream << istream.rdbuf();
@@ -28,13 +32,11 @@ std::string hgui::file_reader(const std::string& filePath)
 
 bool hgui::random(const double chances)
 {
-	static bool firstTime = true;
-	if (firstTime)
-	{
-		std::srand(static_cast<unsigned int>(std::time(nullptr)));
-		firstTime = false;
-	}
-	return static_cast<double>(std::rand()) / RAND_MAX <= chances;
+	const double probability = std::clamp(chances, 0., 1.);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::bernoulli_distribution distribution(probability);
+	return distribution(gen);
 }
 
 std::string hgui::get_unique_id()

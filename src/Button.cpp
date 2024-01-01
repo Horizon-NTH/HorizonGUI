@@ -1,5 +1,7 @@
 #include <hgui/header/Button.h>
 
+#include <cmath>
+
 hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, const HGUI_PRECISION angularRotation, const HGUI_PRECISION cornerAngularRadius, const std::shared_ptr<Texture>& texture) :
 	Widget(shader, size, position, color, angularRotation),
 	m_state(state::NORMAL),
@@ -152,60 +154,60 @@ void hgui::kernel::Button::init_data()
 	for (int i = 0; i < numSegments; i++)
 	{
 		angle = static_cast<float>(i) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle));
 		angle = static_cast<float>(i + 1) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle));
 		vertices.emplace_back(0.f + m_cornerAngularRadius, 0.0f + m_cornerAngularRadius, 0.f + m_cornerAngularRadius,
 			0.0f + m_cornerAngularRadius);
 	}
 	for (int i = 0; i < numSegments; i++)
 	{
 		angle = static_cast<float>(i) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle),
-			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle),
+			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle));
 		angle = static_cast<float>(i + 1) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle),
-			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle),
+			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::sin(angle));
 		vertices.emplace_back(m_size.width - m_cornerAngularRadius, 0.0f + m_cornerAngularRadius,
 			m_size.width - m_cornerAngularRadius, 0.0f + m_cornerAngularRadius);
 	}
 	for (int i = 0; i < numSegments; i++)
 	{
 		angle = static_cast<float>(i) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle),
-			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle),
+			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle));
 		angle = static_cast<float>(i + 1) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle),
-			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle),
+			m_size.width - m_cornerAngularRadius + m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle));
 		vertices.emplace_back(m_size.width - m_cornerAngularRadius, m_size.height - m_cornerAngularRadius,
 			m_size.width - m_cornerAngularRadius, m_size.height - m_cornerAngularRadius);
 	}
 	for (int i = 0; i < numSegments; i++)
 	{
 		angle = static_cast<float>(i) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle));
 		angle = static_cast<float>(i + 1) * glm::pi<float>() / (2 * numSegments);
-		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle),
-			m_cornerAngularRadius - m_cornerAngularRadius * cos(angle),
-			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * sin(angle));
+		vertices.emplace_back(m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle),
+			m_cornerAngularRadius - m_cornerAngularRadius * std::cos(angle),
+			m_size.height - m_cornerAngularRadius + m_cornerAngularRadius * std::sin(angle));
 		vertices.emplace_back(0.0f + m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, 0.0f + m_cornerAngularRadius,
 			m_size.height - m_cornerAngularRadius);
 	}

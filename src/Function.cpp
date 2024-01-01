@@ -1,5 +1,4 @@
 #include <hgui/header/Function.h>
-#include <hgui/header/GLSL.h>
 
 #if defined(HGUI_DYNAMIC)
 void hgui::init()
@@ -9,6 +8,7 @@ void hgui::init()
 	{
 		kernel::init_glfw();
 		MonitorManager::init();
+		SoundPlayerManager::init();
 		TagManager::create_tag(HGUI_TAG_MAIN);
 		TagManager::set_current_tag(HGUI_TAG_MAIN);
 		alreadyInitialize = true;
@@ -60,6 +60,7 @@ void hgui::kernel::resources_cleaner()
 	TagManager::m_tags.clear();
 	KeyBoardManager::m_keys.clear();
 	MouseManager::m_inputs.clear();
+	SoundPlayerManager::clean();
 }
 
 void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned int id, const GLenum severity, GLsizei length, const char* message, const void* userParam)
@@ -89,6 +90,9 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 		break;
 	case GL_DEBUG_SOURCE_OTHER:
 		std::cout << "Source: Other";
+		break;
+	default:
+		std::cout << "Source: Unknow";
 		break;
 	}
 	std::cout << std::endl;
@@ -122,6 +126,9 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 	case GL_DEBUG_TYPE_OTHER:
 		std::cout << "Type: Other";
 		break;
+	default:
+		std::cout << "Type: Unknow";
+		break;
 	}
 	std::cout << std::endl;
 
@@ -138,6 +145,9 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 		break;
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
 		std::cout << "Severity: notification";
+		break;
+	default:
+		std::cout << "Severity: Unknow";
 		break;
 	}
 	std::cout << std::endl;
@@ -163,6 +173,8 @@ bool hgui::kernel::init_glfw()
 	}
 }
 #elif defined(HGUI_STATIC)
+#include <hgui/header/GLSL.h>
+
 void hgui::init()
 {
 	static bool alreadyInitialize = false;
@@ -170,6 +182,7 @@ void hgui::init()
 	{
 		kernel::init_glfw();
 		MonitorManager::init();
+		SoundManager::init();
 		TagManager::create_tag(HGUI_TAG_MAIN);
 		TagManager::set_current_tag(HGUI_TAG_MAIN);
 		CursorManager::init();
@@ -235,6 +248,7 @@ void hgui::kernel::resources_cleaner()
 	TagManager::m_tags.clear();
 	MonitorManager::m_monitors.clear();
 	KeyBoardManager::m_keys.clear();
+	SoundManager::clean();
 }
 
 void hgui::kernel::debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message,
