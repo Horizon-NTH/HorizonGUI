@@ -1,4 +1,4 @@
-#include <hgui/header/Buffer.h>
+#include "../include/hgui/header/Buffer.h"
 
 hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture) :
 	m_shader(shader),
@@ -20,7 +20,7 @@ hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::s
 	else
 	{
 		throw std::runtime_error(("ERROR WITH THE CREATION OF THE BUFFER : HGUI_FRAMEBUFFER_"
-			+ std::to_string(m_frameBuffer->get_id())).c_str());
+		                          + std::to_string(m_frameBuffer->get_id())).c_str());
 	}
 	init_data();
 }
@@ -29,7 +29,7 @@ void hgui::kernel::Buffer::bind() const
 {
 	m_frameBuffer->bind();
 	const auto& [width, height, channel, pixels] = m_texture->get_image()->get_data();
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 void hgui::kernel::Buffer::unbind() const
@@ -57,14 +57,14 @@ void hgui::kernel::Buffer::clear() const
 void hgui::kernel::Buffer::init_data() const
 {
 	constexpr float vertices[] = {
-			-1.0f, 1.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f,
-			1.0f, -1.0f, 1.0f, 0.0f,
+				-1.0f, 1.0f, 0.0f, 1.0f,
+				-1.0f, -1.0f, 0.0f, 0.0f,
+				1.0f, -1.0f, 1.0f, 0.0f,
 
-			-1.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, -1.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 1.0f, 1.0f
-		};
+				-1.0f, 1.0f, 0.0f, 1.0f,
+				1.0f, -1.0f, 1.0f, 0.0f,
+				1.0f, 1.0f, 1.0f, 1.0f
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));

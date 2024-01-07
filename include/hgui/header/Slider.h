@@ -2,8 +2,6 @@
 
 #include "Include.h"
 #include "Widget.h"
-#include "Circle.h"
-#include "StraightLine.h"
 
 namespace hgui::kernel
 {
@@ -14,7 +12,7 @@ namespace hgui::kernel
 		unsigned int step = 0u;
 		unsigned int precision = 2u;
 
-		HGUI_PRECISION round(HGUI_PRECISION value) const;
+		[[nodiscard]] HGUI_PRECISION round(HGUI_PRECISION value) const;
 		void sort();
 	};
 
@@ -41,7 +39,7 @@ namespace hgui::kernel
 		[[nodiscard]] const Function& get_function() const;
 
 		void set_position(const point& newPosition) override;
-		void set_rotation(const HGUI_PRECISION newAngularRotation) override;
+		void set_rotation(HGUI_PRECISION newAngularRotation) override;
 		void set_value(HGUI_PRECISION newValue);
 		void set_range(const Ranges& newRange);
 		void set_slider_position(point newPosition);

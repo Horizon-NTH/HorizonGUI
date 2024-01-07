@@ -1,4 +1,4 @@
-#include <hgui/header/Shader.h>
+#include "../include/hgui/header/Shader.h"
 
 hgui::kernel::Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader, const std::string& geometryShader) :
 	m_id(load_shader(vertexShader, fragmentShader, geometryShader))

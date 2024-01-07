@@ -21,6 +21,7 @@
 #include <numeric>
 #include <valarray>
 #include <random>
+#include <ranges>
 // STBI library
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
@@ -36,6 +37,8 @@
 #include <AL/alc.h>
 #include <AL/alext.h>
 // Libsndfile library
-#include <sndfile.h>
-// HorizonGUI APT Type
+#include <snd/sndfile.h>
+// HorizonGUI API Type
+#if !defined(HGUI_DYNAMIC) && !defined(HGUI_STATIC)
 #define HGUI_DYNAMIC
+#endif

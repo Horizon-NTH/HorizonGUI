@@ -1,4 +1,4 @@
-#include <hgui/header/TagManager.h>
+#include "../include/hgui/header/TagManager.h"
 
 std::string hgui::TagManager::m_currentTag;
 std::vector<std::string> hgui::TagManager::m_tags;
@@ -10,10 +10,7 @@ std::string hgui::TagManager::create_tag(const std::string& newTag)
 		m_tags.push_back(newTag);
 		return newTag;
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A TAG WITH THE NAME : " + newTag).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A TAG WITH THE NAME : " + newTag).c_str());
 }
 
 const std::vector<std::string>& hgui::TagManager::get_tags()

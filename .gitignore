@@ -8,12 +8,11 @@ include/glm
 include/KHR  
 include/stb  
 include/AL
+include/snd
 .vs
 .gitignore  
 lib
 CMakeSettings.json  
 .vscode  
 .idea 
-cmake-build-debug  
-include/sndfile.h  
-include/sndfile.hh  
+cmake-build-debug

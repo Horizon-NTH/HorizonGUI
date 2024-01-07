@@ -2,7 +2,6 @@
 
 #include "Include.h"
 #include "Define.h"
-#include "Widget.h"
 #include "Timer.h"
 #include "Window.h"
 
@@ -47,7 +46,7 @@ namespace hgui
 		static void scroll(GLFWwindow* window, double xOffset, double yOffset);
 		static void input(GLFWwindow* window, int button, int action, int mods);
 
-		[[nodiscard]] static bool is_mouse_in_sector(const std::pair<double, double>& mousePosition, const point& sectorPosition, const size& sectorSize);
+		[[nodiscard]] static bool is_mouse_in_sector(const point& mousePosition, const point& sectorPosition, const size& sectorSize);
 		[[nodiscard]] static bool is_action_verified(const std::pair<std::pair<buttons, actions>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input);
 
 		static std::variant<std::function<void()>, std::function<void(buttons, actions)>> m_clickCallback;

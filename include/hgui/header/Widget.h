@@ -6,7 +6,6 @@
 #include "Shader.h"
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
-#include "TagManager.h"
 #include "Timer.h"
 
 namespace hgui

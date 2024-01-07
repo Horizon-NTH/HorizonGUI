@@ -1,7 +1,10 @@
-#include <hgui/header/LabelManager.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/LabelManager.h"
+#include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/TagManager.h"
 
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/GLSL.h"
+
 std::shared_ptr<hgui::kernel::Shader> hgui::LabelManager::m_shader(nullptr);
 
 std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION angularRotation)
@@ -29,10 +32,7 @@ const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::create(const std
 		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_labels[labelID]->weak_from_this());
 		return m_labels[labelID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::get(const std::string& labelID)
@@ -41,10 +41,7 @@ const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::get(const std::s
 	{
 		return m_labels[labelID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO LABEL WITH THE ID : " + labelID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO LABEL WITH THE ID : " + labelID).c_str());
 }
 
 void hgui::LabelManager::destroy(const std::initializer_list<std::string>& labelsID)

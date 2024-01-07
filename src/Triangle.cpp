@@ -1,22 +1,26 @@
-#include <hgui/header/Triangle.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/Triangle.h"
 
 std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::Triangle::m_shader(nullptr);
 
 hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, const bool fill, const float thickness) :
-	Shape(fill, thickness, color, std::array<hgui::point, 3>{firstVertex, secondVertex, thirdVertex})
+	Shape(fill, thickness, color, std::array{firstVertex, secondVertex, thirdVertex})
 {
 	if (!m_shader)
 	{
-		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_TRIANGLE, HGUI_GLSL_FRAGMENT_TRIANGLE);
+#if defined(HGUI_DYNAMIC)
+		#include "../include/hgui/header/GLSL.h"
+		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
+#elif defined(HGUI_STATIC)
+		m_shader = ShaderManager::get(HGUI_SHADER_TRIANGLE);
+#endif
 	}
 	if (fill)
 	{
 		const float vertices[] = {
-			firstVertex.x, firstVertex.y,
-			secondVertex.x, secondVertex.y,
-			thirdVertex.x, thirdVertex.y,
-		};
+					firstVertex.x, firstVertex.y,
+					secondVertex.x, secondVertex.y,
+					thirdVertex.x, thirdVertex.y,
+				};
 		m_VAO->bind();
 		m_VBO->bind();
 		m_VBO->set_data(vertices, sizeof(vertices));
@@ -30,12 +34,13 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 		std::vector<float> vertices;
 		vertices.reserve(72);
 		// First Line
-		hgui::point v = secondVertex - firstVertex;
-		hgui::point n(-v.y, v.x); n.normalize();
-		hgui::point corner1 = firstVertex - n * halfThickness,
-			corner2 = firstVertex + n * halfThickness,
-			corner3 = secondVertex + n * halfThickness,
-			corner4 = secondVertex - n * halfThickness;
+		point v = secondVertex - firstVertex;
+		point n(-v.y, v.x);
+		n.normalize();
+		point corner1 = firstVertex - n * halfThickness,
+				corner2 = firstVertex + n * halfThickness,
+				corner3 = secondVertex + n * halfThickness,
+				corner4 = secondVertex - n * halfThickness;
 		vertices.insert(vertices.end(),
 			{
 				firstVertex.x - halfThickness, firstVertex.y - halfThickness,
@@ -55,7 +60,8 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 			});
 		// Second Line
 		v = thirdVertex - secondVertex;
-		n = hgui::point(-v.y, v.x); n.normalize();
+		n = point(-v.y, v.x);
+		n.normalize();
 		corner1 = secondVertex - n * halfThickness;
 		corner2 = secondVertex + n * halfThickness;
 		corner3 = thirdVertex + n * halfThickness;
@@ -79,7 +85,8 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 			});
 		// Third Line
 		v = firstVertex - thirdVertex;
-		n = hgui::point(-v.y, v.x); n.normalize();
+		n = point(-v.y, v.x);
+		n.normalize();
 		corner1 = thirdVertex - n * halfThickness;
 		corner2 = thirdVertex + n * halfThickness;
 		corner3 = firstVertex + n * halfThickness;
@@ -111,17 +118,17 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 	}
 }
 
-void hgui::kernel::shape::Triangle::draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, const float canvasRotation) const
+void hgui::kernel::shape::Triangle::draw(const point& canvasPosition, const size& canvasSize, const float canvasRotation) const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	const auto points = std::get<std::array<hgui::point, 3>>(m_data);
+	const auto points = std::get<std::array<point, 3>>(m_data);
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_vec2("canvasPosition", canvasPosition)
-		.set_vec2("canvasSize", canvasSize)
-		.set_float("canvasRotation", canvasRotation)
-		.set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
-		.set_float("radius", m_thickness / 2.0f);
+	        .set_vec2("canvasPosition", canvasPosition)
+	        .set_vec2("canvasSize", canvasSize)
+	        .set_float("canvasRotation", canvasRotation)
+	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();
 	if (m_fill)
 	{

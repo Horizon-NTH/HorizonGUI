@@ -1,28 +1,19 @@
-#include <hgui/header/Image.h>
+#include "../include/hgui/header/Image.h"
 
-#include <utility>
-
-hgui::kernel::Image::Image(std::string  imagePath) :
-	m_path(std::move(imagePath)),
-	m_data(),
-	m_autoLoaded(true)
+hgui::kernel::Image::Image(const std::string& imagePath)
 {
-	load_image();
+	load_image(imagePath);
 }
 
-hgui::kernel::Image::Image(std::string  imagePath, const ImageData& data) :
-	m_path(std::move(imagePath)),
-	m_data(data),
-	m_autoLoaded(false)
+hgui::kernel::Image::Image(ImageData&& data) :
+	m_data(std::move(data))
 {
 }
 
-hgui::kernel::Image::~Image()
+hgui::kernel::Image& hgui::kernel::Image::operator=(ImageData&& image) noexcept
 {
-	if (m_autoLoaded)
-	{
-		stbi_image_free(m_data.pixels);
-	}
+	m_data = std::move(image);
+	return *this;
 }
 
 const hgui::kernel::ImageData& hgui::kernel::Image::get_data() const
@@ -30,14 +21,43 @@ const hgui::kernel::ImageData& hgui::kernel::Image::get_data() const
 	return m_data;
 }
 
-void hgui::kernel::Image::set_data(const ImageData& newData)
+void hgui::kernel::Image::set_data(ImageData&& newData)
 {
-	if (m_autoLoaded)
+	m_data = std::move(newData);
+}
+
+void hgui::kernel::Image::load_image(const std::string& filePath)
+{
+	int channel;
+	m_data.pixels = ImageData::pointer(
+		stbi_load(filePath.c_str(), reinterpret_cast<int*>(&m_data.width), reinterpret_cast<int*>(&m_data.height), &channel, 0),
+		[](unsigned char* data)
+			{
+				stbi_image_free(data);
+			}
+	);
+	switch (channel)
 	{
-		stbi_image_free(m_data.pixels);
+		case 1:
+			m_data.channel = channels::GREYSCALE;
+			break;
+		case 2:
+			m_data.channel = channels::GREYSCALE_ALPHA;
+			break;
+		case 3:
+			m_data.channel = channels::RGB;
+			break;
+		case 4:
+			m_data.channel = channels::RGBA;
+			break;
+		default:
+			m_data.channel = channels::UNKNOW;
+			break;
 	}
-	m_data = newData;
-	m_autoLoaded = false;
+	if (!m_data.pixels)
+	{
+		throw std::runtime_error("ERROR WHILE LOADING IMAGE : " + filePath);
+	}
 }
 
 hgui::size hgui::kernel::Image::get_size() const
@@ -45,43 +65,28 @@ hgui::size hgui::kernel::Image::get_size() const
 	return {m_data.width, m_data.height};
 }
 
-void hgui::kernel::Image::load_image()
+void hgui::kernel::Image::save_image(const std::string& filePath) const
 {
-	int channel;
-	m_data.pixels = stbi_load(m_path.c_str(), reinterpret_cast<int*>(&m_data.width), reinterpret_cast<int*>(&m_data.height), &channel, 0);
-	switch (channel)
+	int channel = 3;
+	switch (m_data.channel)
 	{
-	case 1:
-		m_data.channel = channels::GREYSCALE;
-		break;
-	case 2:
-		m_data.channel = channels::GREYSCALE_ALPHA;
-		break;
-	case 3:
-		m_data.channel = channels::RGB;
-		break;
-	case 4:
-		m_data.channel = channels::RGBA;
-		break;
-	default:
-		break;
+		case channels::GREYSCALE:
+			channel = 1;
+			break;
+		case channels::GREYSCALE_ALPHA:
+			channel = 2;
+			break;
+		case channels::RGB:
+			channel = 3;
+			break;
+		case channels::RGBA:
+			channel = 4;
+			break;
+		default:
+			break;
 	}
-	if (!m_data.pixels)
+	if (!stbi_write_png(filePath.c_str(), static_cast<int>(m_data.width), static_cast<int>(m_data.height), channel, m_data.pixels.get(), static_cast<int>(m_data.width) * channel))
 	{
-		throw std::runtime_error(("ERROR WHILE LOADING IMAGE : " + m_path).c_str());
+		throw std::runtime_error("ERROR WHILE SAVING IMAGE : " + filePath);
 	}
-}
-
-void hgui::kernel::Image::save_image()
-{
-	auto function = [this](const size& size)
-		{
-			std::vector<unsigned char> pixels(static_cast<int>(this->m_data.channel)
-				* static_cast<int>(size.width) * static_cast<int>(size.height));
-			glReadPixels(0, 0, 1920, 1080, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
-			stbi_write_png(this->m_path.c_str(), 1920, 1080, 4, pixels.data(), 1920 * 4);
-		};
-	int width, height;
-	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	function(hgui::size(width, height));
 }

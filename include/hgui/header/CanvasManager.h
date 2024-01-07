@@ -4,8 +4,6 @@
 #include "Maths.hpp"
 #include "Define.h"
 #include "Canvas.h"
-#include "ShaderManager.h"
-#include "TagManager.h"
 
 namespace hgui
 {

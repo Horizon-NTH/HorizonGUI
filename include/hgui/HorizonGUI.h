@@ -22,3 +22,4 @@
 #include "header/Function.h"
 #include "header/KeyBoardManager.h"
 #include "header/MouseManager.h"
+#include "header/SoundPlayerManager.h"

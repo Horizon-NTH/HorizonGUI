@@ -4,9 +4,6 @@
 #include "Define.h"
 #include "Maths.hpp"
 #include "Window.h"
-#include "MouseManager.h"
-#include "KeyBoardManager.h"
-#include "Function.h"
 
 namespace hgui
 {

@@ -1,4 +1,4 @@
-#include <hgui/header/RenderBuffer.h>
+#include "../include/hgui/header/RenderBuffer.h"
 
 hgui::kernel::RenderBuffer::RenderBuffer() noexcept :
 	m_id()

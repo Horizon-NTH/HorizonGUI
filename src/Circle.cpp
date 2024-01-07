@@ -1,5 +1,5 @@
-#include <hgui/header/Circle.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/Circle.h"
+#include "../include/hgui/header/GLSL.h"
 
 std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::Circle::m_shader(nullptr);
 
@@ -8,16 +8,20 @@ hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float rad
 {
 	if (!m_shader)
 	{
+#if defined(HGUI_DYNAMIC)
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CIRCLE, HGUI_GLSL_FRAGMENT_CIRCLE);
+#elif defined(HGUI_STATIC)
+		m_shader = ShaderManager::get(HGUI_SHADER_CIRCLE);
+#endif
 	}
 	if (fill)
 		thickness = 0.0f;
 	const float vertices[] = {
-		centerPosition.x - radius - thickness, centerPosition.y - radius - thickness,
-		centerPosition.x + radius + thickness, centerPosition.y - radius - thickness,
-		centerPosition.x - radius - thickness, centerPosition.y + radius + thickness,
-		centerPosition.x + radius + thickness, centerPosition.y + radius + thickness,
-	};
+				centerPosition.x - radius - thickness, centerPosition.y - radius - thickness,
+				centerPosition.x + radius + thickness, centerPosition.y - radius - thickness,
+				centerPosition.x - radius - thickness, centerPosition.y + radius + thickness,
+				centerPosition.x + radius + thickness, centerPosition.y + radius + thickness,
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));
@@ -26,20 +30,20 @@ hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float rad
 	m_VAO->unbind();
 }
 
-void hgui::kernel::shape::Circle::draw(const hgui::point& canvasPosition, const hgui::size& canvasSize, const float canvasRotation) const
+void hgui::kernel::shape::Circle::draw(const point& canvasPosition, const size& canvasSize, const float canvasRotation) const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	const auto [center, radius] = std::get<std::pair<hgui::point, HGUI_PRECISION>>(m_data);
+	const auto [center, radius] = std::get<std::pair<point, HGUI_PRECISION>>(m_data);
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_vec2("canvasPosition", canvasPosition)
-		.set_vec2("canvasSize", canvasSize)
-		.set_float("canvasRotation", canvasRotation)
-		.set_vec2("center", center)
-		.set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
-		.set_float("radius", radius)
-		.set_float("thickness", m_thickness)
-		.set_int("fill", m_fill);
+	        .set_vec2("canvasPosition", canvasPosition)
+	        .set_vec2("canvasSize", canvasSize)
+	        .set_float("canvasRotation", canvasRotation)
+	        .set_vec2("center", center)
+	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_float("radius", radius)
+	        .set_float("thickness", m_thickness)
+	        .set_int("fill", m_fill);
 	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	m_VAO->unbind();

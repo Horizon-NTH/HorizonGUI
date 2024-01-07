@@ -1,21 +1,6 @@
 #pragma once
 
 #include "Include.h"
-#include "ShaderManager.h"
-#include "Widget.h"
-#include "MouseManager.h"
-#include "KeyBoardManager.h"
-#include "LabelManager.h"
-#include "SpriteManager.h"
-#include "CanvasManager.h"
-#include "CursorManager.h"
-#include "ButtonManager.h"
-#include "WindowManager.h"
-#include "FontManager.h"
-#include "BufferManager.h"
-#include "MonitorManager.h"
-#include "SliderManager.h"
-#include "SoundPlayerManager.h"
 
 namespace hgui
 {
@@ -31,6 +16,6 @@ namespace hgui
 #endif
 		void resources_cleaner();
 		void debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message,
-		           const void* userParam);
+		const void* userParam);
 	}
 }

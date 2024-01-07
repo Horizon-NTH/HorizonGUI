@@ -1,4 +1,4 @@
-#include <hgui/header/FontManager.h>
+#include "../include/hgui/header/FontManager.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Font> hgui::FontManager::create(const std::string& fontPath)
@@ -15,10 +15,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::create(const std::
 		m_fonts[fontID] = std::make_shared<kernel::Font>(fontPath);
 		return m_fonts[fontID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A FONT WITH THE ID : " + fontID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A FONT WITH THE ID : " + fontID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::get(const std::string& fontID)
@@ -27,10 +24,7 @@ const std::shared_ptr<hgui::kernel::Font>& hgui::FontManager::get(const std::str
 	{
 		return m_fonts[fontID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO FONT WITH THE ID : " + fontID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO FONT WITH THE ID : " + fontID).c_str());
 }
 
 void hgui::FontManager::destroy(const std::initializer_list<std::string>& fontsID)

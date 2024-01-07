@@ -1,4 +1,4 @@
-#include <hgui/header/Window.h>
+#include "../include/hgui/header/Window.h"
 
 hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name),
@@ -9,7 +9,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	{
 		glfwWindowHint(static_cast<int>(option), state);
 	}
-#ifndef DEBUG
+#ifndef HGUI_DEBUG_VERSION
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -28,12 +28,13 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	glfwSetWindowPosCallback(m_windowPTR, position_callback);
 	if (icon)
 	{
-		const auto [width, height, channel, pixels] = icon->get_data();
-		const GLFWimage ico{ 
-			.width = static_cast<int>(width), 
-			.height = static_cast<int>(height), 
-			.pixels = pixels 
-		};
+		const auto& [width, height, channel, pixels] = icon->get_data();
+		const GLFWimage ico
+				{
+					.width = static_cast<int>(width),
+					.height = static_cast<int>(height),
+					.pixels = pixels.get()
+				};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}
 	int width, height;

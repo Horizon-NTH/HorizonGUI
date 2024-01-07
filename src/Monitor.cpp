@@ -1,4 +1,4 @@
-#include <hgui/header/Monitor.h>
+#include "../include/hgui/header/Monitor.h"
 
 hgui::kernel::Monitor::Monitor(GLFWmonitor* monitorPTR) :
 	m_monitorPTR(monitorPTR),

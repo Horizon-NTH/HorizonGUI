@@ -1,4 +1,7 @@
-#include <hgui/header/WindowManager.h>
+#include "../include/hgui/header/WindowManager.h"
+#include "../include/hgui/header/MouseManager.h"
+#include "../include/hgui/header/KeyBoardManager.h"
+#include "../include/hgui/header/Function.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Window> hgui::WindowManager::create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon, const std::shared_ptr<kernel::Monitor>& monitor, const std::initializer_list<WindowOption>& options)
@@ -27,10 +30,7 @@ const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::create(const s
 		kernel::init_resources();
 		return m_windows[windowID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A WINDOW WITH THE ID : " + windowID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A WINDOW WITH THE ID : " + windowID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::get(const std::string& windowID)
@@ -39,10 +39,7 @@ const std::shared_ptr<hgui::kernel::Window>& hgui::WindowManager::get(const std:
 	{
 		return m_windows[windowID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO WINDOW WITH THE ID : " + windowID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO WINDOW WITH THE ID : " + windowID).c_str());
 }
 
 void hgui::WindowManager::destroy(const std::initializer_list<std::string>& windowsID)

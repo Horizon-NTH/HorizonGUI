@@ -1,4 +1,4 @@
-#include <hgui/header/Timer.h>
+#include "../include/hgui/header/Timer.h"
 
 hgui::Timer::Timer() noexcept :
 	m_counting(false),

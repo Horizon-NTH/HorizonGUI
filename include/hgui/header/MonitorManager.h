@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Include.h"
-#include "Define.h"
 #include "Monitor.h"
 
 namespace hgui

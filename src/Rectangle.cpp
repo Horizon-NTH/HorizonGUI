@@ -1,26 +1,31 @@
-#include <hgui/header/Rectangle.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/Rectangle.h"
 
 std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::Rectangle::m_shader(nullptr);
 
-hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill, const float thickness) : Shape(fill, thickness, color, std::make_pair(topLeftVertex, bottomRightVertex))
+hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill, const float thickness) :
+	Shape(fill, thickness, color, std::make_pair(topLeftVertex, bottomRightVertex))
 {
 	if (!m_shader)
 	{
+#if defined(HGUI_DYNAMIC)
+		#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
+#elif defined(HGUI_STATIC)
+		m_shader = ShaderManager::get(HGUI_SHADER_RECTANGLE);
+#endif
 	}
 	point firstVertex = topLeftVertex,
-		secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
-		thirdVertex = bottomRightVertex,
-		fourthVertex = point(topLeftVertex.x, bottomRightVertex.y);
+			secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
+			thirdVertex = bottomRightVertex,
+			fourthVertex = point(topLeftVertex.x, bottomRightVertex.y);
 	if (fill)
 	{
 		const float vertices[] = {
-			secondVertex.x, secondVertex.y,
-			firstVertex.x, firstVertex.y,
-			thirdVertex.x, thirdVertex.y,
-			fourthVertex.x, fourthVertex.y
-		};
+					secondVertex.x, secondVertex.y,
+					firstVertex.x, firstVertex.y,
+					thirdVertex.x, thirdVertex.y,
+					fourthVertex.x, fourthVertex.y
+				};
 		m_VAO->bind();
 		m_VBO->bind();
 		m_VBO->set_data(vertices, sizeof(vertices));
@@ -35,11 +40,12 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 		vertices.reserve(96);
 		// First Line
 		point v = secondVertex - firstVertex;
-		point n(-v.y, v.x); n.normalize();
+		point n(-v.y, v.x);
+		n.normalize();
 		point corner1 = firstVertex - n * halfThickness,
-			corner2 = firstVertex + n * halfThickness,
-			corner3 = secondVertex + n * halfThickness,
-			corner4 = secondVertex - n * halfThickness;
+				corner2 = firstVertex + n * halfThickness,
+				corner3 = secondVertex + n * halfThickness,
+				corner4 = secondVertex - n * halfThickness;
 		vertices.insert(vertices.end(),
 			{
 				firstVertex.x - halfThickness, firstVertex.y - halfThickness,
@@ -59,7 +65,8 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 			});
 		// Second Line
 		v = thirdVertex - secondVertex;
-		n = point(-v.y, v.x); n.normalize();
+		n = point(-v.y, v.x);
+		n.normalize();
 		corner1 = secondVertex - n * halfThickness;
 		corner2 = secondVertex + n * halfThickness;
 		corner3 = thirdVertex + n * halfThickness;
@@ -83,7 +90,8 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 			});
 		// Third Line
 		v = fourthVertex - thirdVertex;
-		n = point(-v.y, v.x); n.normalize();
+		n = point(-v.y, v.x);
+		n.normalize();
 		corner1 = thirdVertex - n * halfThickness;
 		corner2 = thirdVertex + n * halfThickness;
 		corner3 = fourthVertex + n * halfThickness;
@@ -107,7 +115,8 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 			});
 		// Fourth Line
 		v = firstVertex - fourthVertex;
-		n = point(-v.y, v.x); n.normalize();
+		n = point(-v.y, v.x);
+		n.normalize();
 		corner1 = fourthVertex - n * halfThickness;
 		corner2 = fourthVertex + n * halfThickness;
 		corner3 = firstVertex + n * halfThickness;
@@ -145,15 +154,15 @@ void hgui::kernel::shape::Rectangle::draw(const point& canvasPosition, const siz
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	const auto& [topLeftVertex, bottomRightVertex] = std::get<std::pair<point, point>>(m_data);
 	const point firstVertex = topLeftVertex,
-		secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
-		thirdVertex = bottomRightVertex,
-		fourthVertex = point(topLeftVertex.x, bottomRightVertex.y);
+			secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
+			thirdVertex = bottomRightVertex,
+			fourthVertex = point(topLeftVertex.x, bottomRightVertex.y);
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_vec2("canvasPosition", canvasPosition)
-		.set_vec2("canvasSize", canvasSize)
-		.set_float("canvasRotation", canvasRotation)
-		.set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
-		.set_float("radius", m_thickness / 2.0f);
+	        .set_vec2("canvasPosition", canvasPosition)
+	        .set_vec2("canvasSize", canvasSize)
+	        .set_float("canvasRotation", canvasRotation)
+	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();
 	if (m_fill)
 	{

@@ -1,7 +1,12 @@
-#include <hgui/header/ButtonManager.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/ButtonManager.h"
+#include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/LabelManager.h"
+#include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/TagManager.h"
 
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/GLSL.h"
+
 std::shared_ptr<hgui::kernel::Shader> hgui::ButtonManager::m_shader(nullptr);
 std::shared_ptr<hgui::kernel::Cursor> hgui::ButtonManager::m_cursor(nullptr);
 
@@ -13,13 +18,11 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	}
 	auto button = std::make_shared<kernel::Button>(function,
 		m_shader, size, position,
-		font ?
-		LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation) :
-		nullptr,
+		font ? LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation) : nullptr,
 		color, angularRotation, borderRadius, texture);
 	auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
 	widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), button->weak_from_this());
-	std::weak_ptr<kernel::Button> wwidget = std::static_pointer_cast<kernel::Button>(button->shared_from_this());
+	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Button>(button->shared_from_this());
 	button->bind(inputs::OVER, [wwidget]()
 		{
 			if (const auto widget = wwidget.lock())
@@ -37,7 +40,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 			if (const auto widget = wwidget.lock())
 			{
 				widget->set_state(state::NORMAL);
-				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
@@ -49,7 +52,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 											kernel::Button>(ptr.lock()))
 										{
 											if (button_ptr->get_state() == state::HOVER ||
-												button_ptr->get_state() == state::PRESS)
+											    button_ptr->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -76,7 +79,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 			if (const auto widget = wwidget.lock())
 			{
 				widget->press();
-				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
@@ -88,7 +91,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 											kernel::Button>(ptr.lock()))
 										{
 											if (button_ptr->get_state() == state::HOVER ||
-												button_ptr->get_state() == state::PRESS)
+											    button_ptr->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -115,23 +118,23 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 		float cornerAngularRadius = std::min(std::min(size.width, size.height) * 0.5f, borderRadius);
 		m_buttons[buttonID] = std::make_shared<kernel::Button>(function,
 			ShaderManager::get(HGUI_SHADER_BUTTON), size, position,
-			font ?
-			LabelManager::create(
+			font
+			? LabelManager::create(
 				"HGUI_BUTTON_TEXT_" + buttonID, text, position, font,
-				{ 12, textColor, 1.0f }) :
-			nullptr,
+				{12, textColor, 1.0f})
+			: nullptr,
 			color, angularRotation, cornerAngularRadius, texture);
 		auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
 		widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), m_buttons[buttonID]->weak_from_this());
 		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
-				ButtonManager::get(buttonID)->set_state(state::HOVER);
+				get(buttonID)->set_state(state::HOVER);
 				CursorManager::get(HGUI_CURSOR_HAND)->use();
 			});
 		Widget::bind(m_buttons[buttonID], inputs::NOVER, [buttonID]()
 			{
-				ButtonManager::get(buttonID)->set_state(state::NORMAL);
-				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				get(buttonID)->set_state(state::NORMAL);
+				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
@@ -141,10 +144,10 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 									{
 										if (const auto button = std::dynamic_pointer_cast<
 											kernel::Button>(
-												widget.lock()))
+											widget.lock()))
 										{
 											if (button->get_state() == state::HOVER ||
-												button->get_state() == state::PRESS)
+											    button->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -160,12 +163,12 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			});
 		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonID]()
 			{
-				ButtonManager::get(buttonID)->set_state(state::PRESS);
+				get(buttonID)->set_state(state::PRESS);
 			});
 		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]()
 			{
-				ButtonManager::get(buttonID)->press();
-				hgui::TaskManager::program(std::chrono::milliseconds(0), [&]()
+				get(buttonID)->press();
+				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
@@ -175,10 +178,10 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 									{
 										if (const auto button = std::dynamic_pointer_cast<
 											kernel::Button>(
-												widget.lock()))
+											widget.lock()))
 										{
 											if (button->get_state() == state::HOVER ||
-												button->get_state() == state::PRESS)
+											    button->get_state() == state::PRESS)
 											{
 												return true;
 											}
@@ -194,10 +197,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 			});
 		return m_buttons[buttonID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A BUTTON WITH THE ID : " + buttonID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A BUTTON WITH THE ID : " + buttonID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std::string& buttonID)
@@ -206,10 +206,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::get(const std:
 	{
 		return m_buttons[buttonID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO BUTTON WITH THE ID : " + buttonID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO BUTTON WITH THE ID : " + buttonID).c_str());
 }
 
 void hgui::ButtonManager::destroy(const std::initializer_list<std::string>& buttonsID)

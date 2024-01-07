@@ -1,4 +1,4 @@
-#include <hgui/header/Label.h>
+#include "../include/hgui/header/Label.h"
 
 hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const HGUI_PRECISION scale, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size(glm::vec2(0.0f)), position, color, angularRotation),
@@ -22,9 +22,9 @@ hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shad
 	}
 	for (const char c : m_text)
 	{
-		const Character ch = m_font->get_char(c, m_fontSize);
-		m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-		m_size.width += static_cast<float>(ch.advance >> 6) * m_scale;
+		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
+		m_size.height = std::max(size.height * m_scale, m_size.height);
+		m_size.width += static_cast<float>(advance >> 6) * m_scale;
 	}
 }
 
@@ -49,9 +49,9 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 	m_size = size();
 	for (const char c : m_text)
 	{
-		const Character ch = m_font->get_char(c, m_fontSize);
-		m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-		m_size.width += static_cast<HGUI_PRECISION>(ch.advance >> 6) * m_scale;
+		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
+		m_size.height = std::max(size.height * m_scale, m_size.height);
+		m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 	}
 }
 
@@ -69,9 +69,9 @@ void hgui::kernel::Label::set_width(const unsigned int newWidth)
 		m_size = size();
 		for (const char c : m_text)
 		{
-			const Character ch = m_font->get_char(c, m_fontSize);
-			m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-			m_size.width += static_cast<HGUI_PRECISION>(ch.advance >> 6) * m_scale;
+			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
+			m_size.height = std::max(size.height * m_scale, m_size.height);
+			m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 		}
 		if (m_size.width > static_cast<HGUI_PRECISION>(newWidth))
 		{
@@ -98,9 +98,9 @@ void hgui::kernel::Label::set_height(const unsigned int newHeight)
 		m_size = size();
 		for (const char c : m_text)
 		{
-			const Character ch = m_font->get_char(c, m_fontSize);
-			m_size.height = std::max(ch.size.height * m_scale, m_size.height);
-			m_size.width += static_cast<HGUI_PRECISION>(ch.advance >> 6) * m_scale;
+			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
+			m_size.height = std::max(size.height * m_scale, m_size.height);
+			m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 		}
 		if (m_size.height > static_cast<HGUI_PRECISION>(newHeight))
 		{
@@ -120,9 +120,9 @@ void hgui::kernel::Label::draw() const
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_vec4("textColor", vec4(m_color))
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width),
-			static_cast<float>(height), 0.f))
-		.set_int("text", 0);
+	        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width),
+		        static_cast<float>(height), 0.f))
+	        .set_int("text", 0);
 	glActiveTexture(GL_TEXTURE0);
 	m_VAO->bind();
 	for (const char c : m_text)
@@ -142,7 +142,7 @@ void hgui::kernel::Label::draw() const
 					{pos.x, pos.y + h, 0.0f, 1.0f},
 					{pos.x + w, pos.y + h, 1.0f, 1.0f},
 					{pos.x + w, pos.y, 1.0f, 0.0f}
-		};
+				};
 
 		for (auto& vertex : vertices)
 		{
@@ -164,9 +164,9 @@ bool hgui::kernel::Label::is_inside(const point& point) const
 {
 	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
 	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-		B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-		C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-		D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
+			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
+			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
+			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
 
 	return point::is_in_rectangle(A, B, D, point);
 }

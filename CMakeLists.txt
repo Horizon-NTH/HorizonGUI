@@ -44,8 +44,8 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h DESTINATION ${C
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft/include/AL DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.hh DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/snd)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.hh DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/snd)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/generate_shaders.cmake)
 

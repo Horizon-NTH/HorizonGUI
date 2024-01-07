@@ -2,12 +2,8 @@
 
 #include "Include.h"
 #include "Define.h"
-#include "Widget.h"
 #include "BufferManager.h"
 #include "WindowManager.h"
-#include "KeyBoardManager.h"
-#include "TaskManager.h"
-#include "TagManager.h"
 
 namespace hgui
 {

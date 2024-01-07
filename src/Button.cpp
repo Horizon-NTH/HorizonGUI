@@ -1,6 +1,4 @@
-#include <hgui/header/Button.h>
-
-#include <cmath>
+#include "../include/hgui/header/ButtonManager.h"
 
 hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, const HGUI_PRECISION angularRotation, const HGUI_PRECISION cornerAngularRadius, const std::shared_ptr<Texture>& texture) :
 	Widget(shader, size, position, color, angularRotation),
@@ -37,9 +35,9 @@ void hgui::kernel::Button::draw() const
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_vec4("buttonColor", vec4(m_color)).set_int("focused", static_cast<int>(m_state))
-		.set_int("custom", m_texture ? true : false);
+	        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
+	        .set_vec4("buttonColor", vec4(m_color)).set_int("focused", static_cast<int>(m_state))
+	        .set_int("custom", m_texture ? true : false);
 	m_VAO->bind();
 	if (m_texture)
 	{
@@ -58,34 +56,34 @@ void hgui::kernel::Button::draw() const
 bool hgui::kernel::Button::is_inside(const point& point) const
 {
 	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
-	const auto A = hgui::point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-		B = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-		C = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-		D = hgui::point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation),
-		a = hgui::point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
-		ap = hgui::point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y), center, m_angularRotation),
-		b = hgui::point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
-		bp = hgui::point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y), center, m_angularRotation),
-		c = hgui::point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
-		cp = hgui::point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
-		d = hgui::point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
-		dp = hgui::point::rotate(hgui::point(m_position.x, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation);
+	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
+			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
+			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
+			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation),
+			a = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
+			ap = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y), center, m_angularRotation),
+			b = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
+			bp = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y), center, m_angularRotation),
+			c = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
+			cp = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
+			d = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
+			dp = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation);
 
-	return hgui::point::is_in_rectangle(A, B, D, point) && !((hgui::point::is_in_rectangle(ap, a, A, point) && hgui::kernel::distance(point, a) >= m_cornerAngularRadius)
-		|| (hgui::point::is_in_rectangle(bp, B, b, point) && hgui::kernel::distance(point, b) >= m_cornerAngularRadius)
-		|| (hgui::point::is_in_rectangle(cp, c, C, point) && hgui::kernel::distance(point, c) >= m_cornerAngularRadius)
-		|| (hgui::point::is_in_rectangle(dp, d, D, point) && hgui::kernel::distance(point, d) >= m_cornerAngularRadius));
+	return point::is_in_rectangle(A, B, D, point) && !((point::is_in_rectangle(ap, a, A, point) && distance(point, a) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(bp, B, b, point) && distance(point, b) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(cp, c, C, point) && distance(point, c) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(dp, d, D, point) && distance(point, d) >= m_cornerAngularRadius));
 }
 
 void hgui::kernel::Button::set_position(const point& newPosition)
 {
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(newPosition.x, newPosition.y, 0.0f));
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
+	m_modelMatrix = translate(m_modelMatrix, glm::vec3(newPosition.x, newPosition.y, 0.0f));
+	m_modelMatrix = translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
+	m_modelMatrix = rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
+	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
+	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	if (m_text)
 	{
 		m_text->set_position(point(m_position + (m_size - m_text->get_size()) / 2));
@@ -115,40 +113,40 @@ void hgui::kernel::Button::set_textures(const std::shared_ptr<Texture>& texture)
 void hgui::kernel::Button::init_data()
 {
 	std::vector<glm::vec4> vertices = {
-		//Position																		//Texture Position
-		{m_cornerAngularRadius, 0.0f, m_cornerAngularRadius, 0.0f},
-		{m_cornerAngularRadius, m_cornerAngularRadius, m_cornerAngularRadius, m_cornerAngularRadius},
-		{m_size.width - m_cornerAngularRadius, m_cornerAngularRadius, m_size.width - m_cornerAngularRadius, m_cornerAngularRadius},
+				//Position					//Texture Position
+				{m_cornerAngularRadius, 0.0f, m_cornerAngularRadius, 0.0f},
+				{m_cornerAngularRadius, m_cornerAngularRadius, m_cornerAngularRadius, m_cornerAngularRadius},
+				{m_size.width - m_cornerAngularRadius, m_cornerAngularRadius, m_size.width - m_cornerAngularRadius, m_cornerAngularRadius},
 
-		{m_cornerAngularRadius, 0.0f, m_cornerAngularRadius, 0.0f},
-		{m_size.width - m_cornerAngularRadius, 0.0f, m_size.width - m_cornerAngularRadius, 0.0f},
-		{m_size.width - m_cornerAngularRadius, m_cornerAngularRadius, m_size.width - m_cornerAngularRadius, m_cornerAngularRadius},
+				{m_cornerAngularRadius, 0.0f, m_cornerAngularRadius, 0.0f},
+				{m_size.width - m_cornerAngularRadius, 0.0f, m_size.width - m_cornerAngularRadius, 0.0f},
+				{m_size.width - m_cornerAngularRadius, m_cornerAngularRadius, m_size.width - m_cornerAngularRadius, m_cornerAngularRadius},
 
-		{0.0f, m_cornerAngularRadius, 0.0f, m_cornerAngularRadius},
-		{0.0f, m_size.height - m_cornerAngularRadius, 0.0f, m_size.height - m_cornerAngularRadius},
-		{m_size.width, m_size.height - m_cornerAngularRadius, m_size.width, m_size.height - m_cornerAngularRadius},
+				{0.0f, m_cornerAngularRadius, 0.0f, m_cornerAngularRadius},
+				{0.0f, m_size.height - m_cornerAngularRadius, 0.0f, m_size.height - m_cornerAngularRadius},
+				{m_size.width, m_size.height - m_cornerAngularRadius, m_size.width, m_size.height - m_cornerAngularRadius},
 
-		{0.0f, m_cornerAngularRadius, 0.0f, m_cornerAngularRadius},
-		{m_size.width, m_cornerAngularRadius, m_size.width, m_cornerAngularRadius},
-		{m_size.width, m_size.height - m_cornerAngularRadius, m_size.width, m_size.height - m_cornerAngularRadius},
+				{0.0f, m_cornerAngularRadius, 0.0f, m_cornerAngularRadius},
+				{m_size.width, m_cornerAngularRadius, m_size.width, m_cornerAngularRadius},
+				{m_size.width, m_size.height - m_cornerAngularRadius, m_size.width, m_size.height - m_cornerAngularRadius},
 
-		{
-			m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_cornerAngularRadius,
-			m_size.height - m_cornerAngularRadius
-		},
-		{m_cornerAngularRadius, m_size.height, m_cornerAngularRadius, m_size.height},
-		{m_size.width - m_cornerAngularRadius, m_size.height, m_size.width - m_cornerAngularRadius, m_size.height},
+				{
+					m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_cornerAngularRadius,
+					m_size.height - m_cornerAngularRadius
+				},
+				{m_cornerAngularRadius, m_size.height, m_cornerAngularRadius, m_size.height},
+				{m_size.width - m_cornerAngularRadius, m_size.height, m_size.width - m_cornerAngularRadius, m_size.height},
 
-		{
-			m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_cornerAngularRadius,
-			m_size.height - m_cornerAngularRadius
-		},
-		{
-			m_size.width - m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_size.width - m_cornerAngularRadius,
-			m_size.height - m_cornerAngularRadius
-		},
-		{m_size.width - m_cornerAngularRadius, m_size.height, m_size.width - m_cornerAngularRadius, m_size.height},
-	};
+				{
+					m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_cornerAngularRadius,
+					m_size.height - m_cornerAngularRadius
+				},
+				{
+					m_size.width - m_cornerAngularRadius, m_size.height - m_cornerAngularRadius, m_size.width - m_cornerAngularRadius,
+					m_size.height - m_cornerAngularRadius
+				},
+				{m_size.width - m_cornerAngularRadius, m_size.height, m_size.width - m_cornerAngularRadius, m_size.height},
+			};
 	constexpr int numSegments = 10;
 	float angle;
 	for (int i = 0; i < numSegments; i++)
@@ -216,7 +214,7 @@ void hgui::kernel::Button::init_data()
 				0.0f, 1.0 / m_size.height, 0.0f, 0.0f,
 				0.0f, 0.0f, 1.0f / m_size.width, 0.0f,
 				0.0f, 0.0f, 0.0f, 1.0f / m_size.height
-	};
+			};
 	for (auto& v : vertices)
 	{
 		v = normalize * v;

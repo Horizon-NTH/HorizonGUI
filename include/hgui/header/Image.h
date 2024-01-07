@@ -8,36 +8,41 @@ namespace hgui::kernel
 {
 	struct ImageData
 	{
+		using pointer = std::unique_ptr<unsigned char[], void(*)(unsigned char*)>;
 		unsigned int width;
 		unsigned int height;
-		channels channel;
-		unsigned char* pixels;
+		channels channel = channels::UNKNOW;
+		pointer pixels = {
+					nullptr, [](unsigned char*)
+						{
+						}
+				};
 	};
 
 	class Image
 	{
 	public:
-		explicit Image(std::string  imagePath);
-		Image(std::string  imagePath, const ImageData& data);
-		Image(const Image& image) = default;
-		Image(Image&& image) = default;
+		explicit Image(const std::string& imagePath);
+		explicit Image(ImageData&& data);
+		Image(const Image& image) = delete;
+		Image(Image&& image) noexcept = default;
 
-		~Image();
+		~Image() = default;
 
-		Image& operator=(const Image& image) = default;
-		Image& operator=(Image&& image) = default;
+		Image& operator=(const Image& image) = delete;
+		Image& operator=(Image&& image) noexcept = default;
+		Image& operator=(ImageData&& image) noexcept;
 
 		[[nodiscard]] const ImageData& get_data() const;
 		[[nodiscard]] size get_size() const;
 
-		void set_data(const ImageData& newData);
+		void set_data(ImageData&& newData);
 
-		void load_image();
-		void save_image();
+		void save_image(const std::string& filePath) const;
 
 	private:
-		std::string m_path;
 		ImageData m_data;
-		bool m_autoLoaded;
+
+		void load_image(const std::string& filePath);
 	};
 }

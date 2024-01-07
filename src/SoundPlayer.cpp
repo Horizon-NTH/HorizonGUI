@@ -1,6 +1,6 @@
 #include "../include/hgui/header/SoundPlayer.h"
 
-hgui::kernel::SoundPlayer::SoundPlayer(const std::shared_ptr<hgui::kernel::Audio>& audio) :
+hgui::kernel::SoundPlayer::SoundPlayer(const std::shared_ptr<Audio>& audio) :
 	m_buffer(),
 	m_source(),
 	m_cleared(false)

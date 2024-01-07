@@ -3,8 +3,6 @@
 #include "Include.h"
 #include "Maths.hpp"
 #include "Define.h"
-#include "TagManager.h"
-#include "ShaderManager.h"
 #include "Font.h"
 #include "Label.h"
 
@@ -22,7 +20,7 @@ namespace hgui
 		LabelManager& operator=(const LabelManager& labelManager) = delete;
 		LabelManager& operator=(LabelManager&& labelManager) = delete;
 
-		[[nodiscard]] static std::shared_ptr<kernel::Label> create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = { 12u, HGUI_COLOR_WHITE, 1.0f }, HGUI_PRECISION angularRotation = 0.0f);
+		[[nodiscard]] static std::shared_ptr<kernel::Label> create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = {12u, HGUI_COLOR_WHITE, 1.0f}, HGUI_PRECISION angularRotation = 0.0f);
 
 	private:
 		static std::shared_ptr<kernel::Shader> m_shader;

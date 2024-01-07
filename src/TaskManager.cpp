@@ -1,7 +1,4 @@
-#include <ranges>
-#include <hgui/header/TaskManager.h>
-
-std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<hgui::Timer>>> hgui::TaskManager::m_tasks;
+#include "../include/hgui/header/TaskManager.h"
 
 std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id)
 {
@@ -23,6 +20,11 @@ std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, c
 	}
 	timer->start();
 	return std::move(id);
+}
+
+bool hgui::TaskManager::is_program(const std::string& id)
+{
+	return m_tasks.contains(id);
 }
 
 void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<std::string>>& tasks)

@@ -8,7 +8,7 @@
 
 namespace hgui::kernel
 {
-	class Sprite final : public Widget
+	class Sprite : public Widget
 	{
 	public:
 		Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation);

@@ -1,5 +1,4 @@
-#include <hgui/header/StraightLine.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/StraightLine.h"
 
 std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::StraightLine::m_shader(nullptr);
 
@@ -8,31 +7,38 @@ hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const 
 {
 	if (!m_shader)
 	{
-		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_STRAIGHTLINE, HGUI_GLSL_FRAGMENT_STRAIGHTLINE);
+#if defined(HGUI_DYNAMIC)
+		#include "../include/hgui/header/GLSL.h"
+		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
+#elif defined(HGUI_STATIC)
+		m_shader = ShaderManager::get(HGUI_SHADER_STRAIGHTLINE);
+#endif
 	}
 	float halfThickness = thickness / 2.0f;
 	point v = secondVertex - firstVertex;
-	point n(-v.y, v.x); n.normalize();
+	point n(-v.y, v.x);
+	n.normalize();
 	point corner1 = firstVertex - n * halfThickness,
-		corner2 = firstVertex + n * halfThickness,
-		corner3 = secondVertex + n * halfThickness,
-		corner4 = secondVertex - n * halfThickness;
-	const float vertices[] = {
-		firstVertex.x - halfThickness, firstVertex.y - halfThickness,
-		firstVertex.x + halfThickness, firstVertex.y - halfThickness,
-		firstVertex.x - halfThickness, firstVertex.y + halfThickness,
-		firstVertex.x + halfThickness, firstVertex.y + halfThickness,
+			corner2 = firstVertex + n * halfThickness,
+			corner3 = secondVertex + n * halfThickness,
+			corner4 = secondVertex - n * halfThickness;
+	const float vertices[] =
+			{
+				firstVertex.x - halfThickness, firstVertex.y - halfThickness,
+				firstVertex.x + halfThickness, firstVertex.y - halfThickness,
+				firstVertex.x - halfThickness, firstVertex.y + halfThickness,
+				firstVertex.x + halfThickness, firstVertex.y + halfThickness,
 
-		secondVertex.x - halfThickness, secondVertex.y - halfThickness,
-		secondVertex.x + halfThickness, secondVertex.y - halfThickness,
-		secondVertex.x - halfThickness, secondVertex.y + halfThickness,
-		secondVertex.x + halfThickness, secondVertex.y + halfThickness,
+				secondVertex.x - halfThickness, secondVertex.y - halfThickness,
+				secondVertex.x + halfThickness, secondVertex.y - halfThickness,
+				secondVertex.x - halfThickness, secondVertex.y + halfThickness,
+				secondVertex.x + halfThickness, secondVertex.y + halfThickness,
 
-		corner2.x, corner2.y,
-		corner1.x, corner1.y,
-		corner3.x, corner3.y,
-		corner4.x, corner4.y
-	};
+				corner2.x, corner2.y,
+				corner1.x, corner1.y,
+				corner3.x, corner3.y,
+				corner4.x, corner4.y
+			};
 
 	m_VAO->bind();
 	m_VBO->bind();
@@ -48,11 +54,11 @@ void hgui::kernel::shape::StraightLine::draw(const point& canvasPosition, const 
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	const auto& [P1, P2, thickness] = std::get<std::tuple<point, point, HGUI_PRECISION>>(m_data);
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_vec2("canvasPosition", canvasPosition)
-		.set_vec2("canvasSize", canvasSize)
-		.set_float("canvasRotation", canvasRotation)
-		.set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
-		.set_float("radius", m_thickness / 2.0f);
+	        .set_vec2("canvasPosition", canvasPosition)
+	        .set_vec2("canvasSize", canvasSize)
+	        .set_float("canvasRotation", canvasRotation)
+	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();
 	m_shader->set_int("circle", 1);
 	m_shader->set_vec2("center", P1);

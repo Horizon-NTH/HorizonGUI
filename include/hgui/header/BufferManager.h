@@ -1,12 +1,9 @@
 #pragma once
 
 #include "Include.h"
-#include "Define.h"
 #include "Maths.hpp"
 #include "Buffer.h"
 #include "Shader.h"
-#include "Image.h"
-#include "TextureManager.h"
 
 namespace hgui
 {

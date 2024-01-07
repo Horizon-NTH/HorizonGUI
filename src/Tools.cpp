@@ -1,4 +1,5 @@
-#include <hgui/header/Tools.h>
+#include "../include/hgui/header/Tools.h"
+#include "../include/hgui/header/TaskManager.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
@@ -8,6 +9,11 @@ void hgui::after(const std::chrono::milliseconds& delay, const std::function<voi
 std::shared_ptr<hgui::kernel::Image> hgui::image_loader(const std::string& imagePath)
 {
 	return std::make_shared<kernel::Image>(imagePath);
+}
+
+std::shared_ptr<hgui::kernel::GIF> hgui::gif_loader(const std::string& gifPath)
+{
+	return std::make_shared<kernel::GIF>(gifPath);
 }
 
 std::shared_ptr<hgui::kernel::Audio> hgui::audio_loader(const std::string& audioPath)
@@ -24,10 +30,7 @@ std::string hgui::file_reader(const std::string& filePath)
 		istream.close();
 		return sstream.str();
 	}
-	else
-	{
-		throw std::runtime_error(("ERROR WHILE LOADING FILE :: " + filePath).c_str());
-	}
+	throw std::runtime_error(("ERROR WHILE LOADING FILE :: " + filePath).c_str());
 }
 
 bool hgui::random(const double chances)

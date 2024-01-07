@@ -2,15 +2,7 @@
 
 #include "Include.h"
 #include "Maths.hpp"
-#include "Define.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
 #include "Shape.h"
-#include "Rectangle.h"
-#include "Triangle.h"
-#include "Circle.h"
-#include "StraightLine.h"
-#include "ShaderManager.h"
 
 namespace hgui::kernel
 {

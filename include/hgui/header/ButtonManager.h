@@ -5,11 +5,7 @@
 #include "Define.h"
 #include "Font.h"
 #include "Button.h"
-#include "TagManager.h"
-#include "ShaderManager.h"
-#include "LabelManager.h"
 #include "CursorManager.h"
-#include "TaskManager.h"
 
 namespace hgui
 {

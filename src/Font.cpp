@@ -1,8 +1,6 @@
-#include <hgui/header/Font.h>
+#include "../include/hgui/header/Font.h"
 
-#include <utility>
-
-hgui::kernel::Font::Font(std::string  fontPath) :
+hgui::kernel::Font::Font(std::string fontPath) :
 	m_fontPath(std::move(fontPath))
 {
 }
@@ -10,15 +8,12 @@ hgui::kernel::Font::Font(std::string  fontPath) :
 hgui::kernel::Character hgui::kernel::Font::get_char(const char character, const unsigned int size) const
 {
 	if (m_characters.contains(size) &&
-		m_characters.find(size)->second.contains(character))
+	    m_characters.find(size)->second.contains(character))
 	{
 		return m_characters.find(size)->second.find(character)->second;
 	}
-	else
-	{
-		throw std::runtime_error((std::string("FONT DOESN'T HAVE THE CHARACTER : " + character)
-			+ std::string(" IN THE SIZE : " + std::to_string(size))).c_str());
-	}
+	throw std::runtime_error("FONT DOESN'T HAVE THE CHARACTER : " + character
+	                         + std::string(" IN THE SIZE : " + std::to_string(size)));
 }
 
 void hgui::kernel::Font::load_font(const unsigned int size)
@@ -40,25 +35,27 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 				throw std::runtime_error(std::string("ERROR FAILED TO LOAD GLYPH : " + static_cast<char>(c)).c_str());
 			}
 			ImageData data
-			{
-				.width = face->glyph->bitmap.width,
-				.height = face->glyph->bitmap.rows,
-				.channel = hgui::channels::GREYSCALE,
-				.pixels = face->glyph->bitmap.buffer
-			};
-			const auto texture = std::make_shared<Texture>(std::make_shared<Image>("", data),
+					{
+						.width = face->glyph->bitmap.width,
+						.height = face->glyph->bitmap.rows,
+						.channel = channels::GREYSCALE,
+						.pixels = ImageData::pointer(face->glyph->bitmap.buffer, [](unsigned char* ptr)
+							{
+							})
+					};
+			const auto texture = std::make_shared<Texture>(std::make_shared<Image>(std::move(data)),
 				TextureOption
 				{
 					.wrap_s = GL_CLAMP_TO_BORDER,
 					.wrap_t = GL_CLAMP_TO_BORDER
 				});
 			Character character
-			{
-				.texture = texture,
-				.size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-				.bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				.advance = static_cast<unsigned int>(face->glyph->advance.x)
-			};
+					{
+						.texture = texture,
+						.size = hgui::size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+						.bearing = ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+						.advance = static_cast<unsigned int>(face->glyph->advance.x)
+					};
 			m_characters[size].insert(std::pair<char, Character>(c, character));
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -67,7 +64,7 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 	}
 	else
 	{
-		throw std::runtime_error(("THE FONT ALREADY EXIST IN THE SIZE : " + std::to_string(size)).c_str());
+		throw std::runtime_error("THE FONT ALREADY EXIST IN THE SIZE : " + std::to_string(size));
 	}
 }
 

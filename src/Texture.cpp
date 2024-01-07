@@ -1,4 +1,4 @@
-#include <hgui/header/Texture.h>
+#include "../include/hgui/header/Texture.h"
 
 hgui::kernel::Texture::Texture(const std::shared_ptr<Image>& image, const TextureOption options) :
 	m_id(),
@@ -32,9 +32,9 @@ const std::shared_ptr<hgui::kernel::Image>& hgui::kernel::Texture::get_image() c
 void hgui::kernel::Texture::generate() const
 {
 	bind();
-	auto [width, height, channel, pixels] = m_image->get_data();
+	const auto& [width, height, channel, pixels] = m_image->get_data();
 	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(channel), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLenum>(channel),
-		GL_UNSIGNED_BYTE, pixels);
+		GL_UNSIGNED_BYTE, pixels.get());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_options.wrap_s);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_options.wrap_t);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_options.min_filter);

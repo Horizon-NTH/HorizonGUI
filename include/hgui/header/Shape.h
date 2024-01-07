@@ -4,7 +4,6 @@
 #include "Maths.hpp"
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
-#include "Shader.h"
 #include "ShaderManager.h"
 
 namespace hgui::kernel::shape

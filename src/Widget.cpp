@@ -1,17 +1,18 @@
-#include <ranges>
-#include <hgui/header/Widget.h>
+#include "../include/hgui/header/Widget.h"
+#include "../include/hgui/header/TagManager.h"
 
 std::vector<std::string> hgui::Widget::m_bindedTags;
 std::map<std::weak_ptr<hgui::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::Widget>> hgui::Widget::m_binds;
 std::map<std::string, std::vector<std::weak_ptr<hgui::Widget>>> hgui::Widget::m_widgets;
 
-hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) : m_shader(shader),
-m_VAO(std::make_shared<kernel::VertexArrayObject>()),
-m_VBO(std::make_shared<kernel::VertexBufferObject>()),
-m_size(size),
-m_position(position),
-m_color(color),
-m_angularRotation(angularRotation)
+hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
+	m_shader(shader),
+	m_VAO(std::make_shared<kernel::VertexArrayObject>()),
+	m_VBO(std::make_shared<kernel::VertexBufferObject>()),
+	m_size(size),
+	m_position(position),
+	m_color(color),
+	m_angularRotation(angularRotation)
 {
 }
 
@@ -25,7 +26,7 @@ hgui::Widget::~Widget()
 			});
 	}
 	for (auto it = m_binds.begin(); it != m_binds.end();
-		it->first.expired() ? it = m_binds.erase(it) : it++);
+	     it->first.expired() ? it = m_binds.erase(it) : it++);
 }
 
 const hgui::point& hgui::Widget::get_position() const
@@ -77,7 +78,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 		{
 			throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 		}
-		m_binds[widget].push_back({ action, {std::make_shared<Timer>(), function} });
+		m_binds[widget].push_back({action, {std::make_shared<Timer>(), function}});
 	}
 	else if (widgets.index() == 1)
 	{
@@ -89,7 +90,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 				{
 					throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 				}
-				m_binds[wwidget].push_back({ action, {std::make_shared<Timer>(), function} });
+				m_binds[wwidget].push_back({action, {std::make_shared<Timer>(), function}});
 			}
 		}
 	}
@@ -105,7 +106,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 					{
 						throw std::runtime_error("THERE IS ALREADY A BIND ASSOCIATED TO THIS WIDGET");
 					}
-					m_binds[wwidget].push_back({ action, {std::make_shared<Timer>(), function} });
+					m_binds[wwidget].push_back({action, {std::make_shared<Timer>(), function}});
 				}
 			}
 		}
@@ -173,8 +174,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 void hgui::Widget::active(const std::vector<std::string>& tags)
 {
 	m_bindedTags.clear();
-	const std::vector<std::string>& tagsList = TagManager::get_tags();
-	for (const std::string& tag : !tags.empty() ? tags : tagsList)
+	for (const std::vector<std::string>& tagsList = TagManager::get_tags(); const std::string& tag : !tags.empty() ? tags : tagsList)
 	{
 		if (std::ranges::find(tagsList, tag) != tagsList.end())
 		{
@@ -186,8 +186,7 @@ void hgui::Widget::active(const std::vector<std::string>& tags)
 
 const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
 {
-	const std::vector<std::string>& tagsList = TagManager::get_tags();
-	if (std::ranges::find(tagsList, tag) != tagsList.end())
+	if (const std::vector<std::string>& tagsList = TagManager::get_tags(); std::ranges::find(tagsList, tag) != tagsList.end())
 	{
 		return m_widgets[tag];
 	}

@@ -1,4 +1,4 @@
-#include <hgui/header/CursorManager.h>
+#include "../include/hgui/header/CursorManager.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition)
@@ -30,10 +30,7 @@ const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::create(const s
 		m_cursors[cursorID] = std::make_shared<kernel::Cursor>(customCursor, clickPosition);
 		return m_cursors[cursorID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A CURSOR WITH THE ID : " + cursorID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A CURSOR WITH THE ID : " + cursorID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::get(const std::string& cursorID)
@@ -42,10 +39,7 @@ const std::shared_ptr<hgui::kernel::Cursor>& hgui::CursorManager::get(const std:
 	{
 		return m_cursors[cursorID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO CURSOR WITH THE ID : " + cursorID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO CURSOR WITH THE ID : " + cursorID).c_str());
 }
 
 void hgui::CursorManager::destroy(const std::initializer_list<std::string>& cursorsID)

@@ -1,4 +1,4 @@
-#include <hgui/header/Sprite.h>
+#include "../include/hgui/header/Sprite.h"
 
 hgui::kernel::Sprite::Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size, position, color, angularRotation),
@@ -6,7 +6,7 @@ hgui::kernel::Sprite::Sprite(const std::shared_ptr<Shader>& shader, const std::s
 	m_modelMatrix(1.0)
 {
 	init_data();
-	set_position(position);
+	Sprite::set_position(position);
 }
 
 void hgui::kernel::Sprite::draw() const
@@ -14,9 +14,9 @@ void hgui::kernel::Sprite::draw() const
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
 	m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-		.set_vec4("spriteColor", vec4(m_color))
-		.set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-		.set_int("sprite", 0);
+	        .set_vec4("spriteColor", vec4(m_color))
+	        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
+	        .set_int("sprite", 0);
 	if (m_texture)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -31,9 +31,9 @@ bool hgui::kernel::Sprite::is_inside(const point& point) const
 {
 	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
 	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-		B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-		C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-		D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
+			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
+			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
+			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
 
 	return point::is_in_rectangle(A, B, D, point);
 }
@@ -64,7 +64,7 @@ void hgui::kernel::Sprite::init_data() const
 				0.0f, 1.0f, 0.0f, 1.0f,
 				1.0f, 1.0f, 1.0f, 1.0f,
 				1.0f, 0.0f, 1.0f, 0.0f
-	};
+			};
 	m_VAO->bind();
 	m_VBO->bind();
 	m_VBO->set_data(vertices, sizeof(vertices));

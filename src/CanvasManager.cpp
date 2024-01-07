@@ -1,7 +1,9 @@
-#include <hgui/header/CanvasManager.h>
-#include <hgui/header/GLSL.h>
+#include "../include/hgui/header/CanvasManager.h"
+#include "../include/hgui/header/TagManager.h"
 
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/GLSL.h"
+
 std::shared_ptr<hgui::kernel::Shader> hgui::CanvasManager::m_shader(nullptr);
 
 std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation)
@@ -10,9 +12,7 @@ std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::sha
 	{
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CANVAS, HGUI_GLSL_FRAGMENT_CANVAS);
 	}
-	auto widget = std::make_shared<kernel::Canvas>(shader ?
-		shader :
-		m_shader, size, position, color, angularRotation);
+	auto widget = std::make_shared<kernel::Canvas>(shader ? shader : m_shader, size, position, color, angularRotation);
 	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;
 }
@@ -23,17 +23,12 @@ const std::shared_ptr<hgui::kernel::Canvas>& hgui::CanvasManager::create(const s
 {
 	if (!m_canvas.contains(canvasID))
 	{
-		m_canvas[canvasID] = std::make_shared<kernel::Canvas>(shader ?
-			shader :
-			ShaderManager::get(HGUI_SHADER_CANVAS), size, position, color,
+		m_canvas[canvasID] = std::make_shared<kernel::Canvas>(shader ? shader : ShaderManager::get(HGUI_SHADER_CANVAS), size, position, color,
 			angularRotation);
 		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_canvas[canvasID]->weak_from_this());
 		return m_canvas[canvasID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS ALREADY A CANVAS WITH THE ID : " + canvasID).c_str());
-	}
+	throw std::runtime_error(("THERE IS ALREADY A CANVAS WITH THE ID : " + canvasID).c_str());
 }
 
 const std::shared_ptr<hgui::kernel::Canvas>& hgui::CanvasManager::get(const std::string& canvasID)
@@ -42,10 +37,7 @@ const std::shared_ptr<hgui::kernel::Canvas>& hgui::CanvasManager::get(const std:
 	{
 		return m_canvas[canvasID];
 	}
-	else
-	{
-		throw std::runtime_error(("THERE IS NO CANVAS WITH THE ID : " + canvasID).c_str());
-	}
+	throw std::runtime_error(("THERE IS NO CANVAS WITH THE ID : " + canvasID).c_str());
 }
 
 void hgui::CanvasManager::destroy(const std::initializer_list<std::string>& canvasID)

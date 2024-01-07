@@ -5,9 +5,8 @@
 #include "Define.h"
 #include "Sprite.h"
 #include "Image.h"
-#include "ShaderManager.h"
 #include "TextureManager.h"
-#include "TagManager.h"
+#include "AnimatedSprite.h"
 
 namespace hgui
 {
@@ -24,9 +23,10 @@ namespace hgui
 		SpriteManager& operator=(SpriteManager&& spriteManager) = delete;
 
 		[[nodiscard]] static std::shared_ptr<kernel::Sprite> create(const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, HGUI_PRECISION angularRotation = 0.0f);
+		[[nodiscard]] static std::shared_ptr<kernel::AnimatedSprite> create(const std::shared_ptr<kernel::GIF>& gif, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, HGUI_PRECISION angularRotation = 0.0f);
 
 	private:
-		static std::shared_ptr<kernel::Shader> m_shader;
+		inline static std::shared_ptr<kernel::Shader> m_shader{};
 
 		friend void kernel::resources_cleaner();
 	};
@@ -43,6 +43,7 @@ namespace hgui
 		SpriteManager& operator=(SpriteManager&& bufferManager) = delete;
 
 		static const std::shared_ptr<kernel::Sprite>& create(const std::string& spriteID, const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, HGUI_PRECISION angularRotation = 0.0f);
+		[[nodiscard]] static std::shared_ptr<kernel::AnimatedSprite> create(const std::string& spriteID, const std::shared_ptr<kernel::GIF>& gif, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, HGUI_PRECISION angularRotation = 0.0f);
 		[[nodiscard]] static const std::shared_ptr<kernel::Sprite>& get(const std::string& spriteID);
 		static void destroy(const std::initializer_list<std::string>& spritesID = {});
 

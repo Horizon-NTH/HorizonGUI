@@ -1,4 +1,4 @@
-#include <hgui/header/FrameBuffer.h>
+#include "../include/hgui/header/FrameBuffer.h"
 
 hgui::kernel::FrameBuffer::FrameBuffer() noexcept :
 	m_id()
@@ -39,14 +39,14 @@ bool hgui::kernel::FrameBuffer::is_complete() const noexcept
 	return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
 }
 
-void hgui::kernel::FrameBuffer::attach_texture(const std::shared_ptr<hgui::kernel::Texture>& texture) const noexcept
+void hgui::kernel::FrameBuffer::attach_texture(const std::shared_ptr<Texture>& texture) const noexcept
 {
 	bind();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->get_id(), 0);
 	unbind();
 }
 
-void hgui::kernel::FrameBuffer::attach_render_buffer(const std::shared_ptr<hgui::kernel::RenderBuffer>& renderBuffer) const noexcept
+void hgui::kernel::FrameBuffer::attach_render_buffer(const std::shared_ptr<RenderBuffer>& renderBuffer) const noexcept
 {
 	bind();
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer->get_id());
