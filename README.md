@@ -74,6 +74,8 @@ Please refer to the [wiki](https://github.com/Horizon-NTH/HorizonGUI/wiki).
 - **[Freetype](https://freetype.org/index.html)** is used to load fonts and render text.
 - **[STB](https://github.com/nothings/stb)** is used to load and save images.
 - **[GLM](https://glm.g-truc.net/0.9.9/index.html)** is used for mathematical operations.
+- **[OpenAL-Soft](https://github.com/kcat/openal-soft/tree/master)** is used to play sound.
+- **[Libsndfile](https://github.com/libsndfile/libsndfile)** is used to load audio file.
 
 ## License
 
