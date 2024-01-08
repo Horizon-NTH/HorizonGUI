@@ -19,7 +19,7 @@ namespace hgui::kernel
 	public:
 		explicit Font(std::string fontPath);
 		Font(const Font& font) = delete;
-		Font(Font&& font) = default;
+		Font(Font&& font) noexcept = default;
 
 		~Font() = default;
 

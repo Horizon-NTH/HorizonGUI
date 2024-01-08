@@ -25,11 +25,11 @@ namespace hgui::kernel
 
 		[[nodiscard]] bool is_inside(const point& point) const override;
 
-		[[nodiscard]] const std::shared_ptr<kernel::Drawer>& get_drawer() const;
+		[[nodiscard]] const std::shared_ptr<Drawer>& get_drawer() const;
 
 	private:
 		glm::mat4 m_modelMatrix{};
-		std::shared_ptr<kernel::Drawer> m_drawer;
+		std::shared_ptr<Drawer> m_drawer;
 
 		void init_data() const;
 	};

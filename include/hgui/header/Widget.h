@@ -12,8 +12,6 @@ namespace hgui
 {
 	namespace kernel
 	{
-		void resources_cleaner();
-
 		template<typename T>
 		struct WeakPTRComparator
 		{
@@ -23,18 +21,11 @@ namespace hgui
 				const auto rhsShared = rhs.lock();
 
 				if (!lhsShared && !rhsShared)
-				{
 					return false;
-				}
-				else if (!lhsShared)
-				{
+				if (!lhsShared)
 					return true;
-				}
-				else if (!rhsShared)
-				{
+				if (!rhsShared)
 					return false;
-				}
-
 				return lhsShared < rhsShared;
 			}
 		};
@@ -65,7 +56,7 @@ namespace hgui
 		[[nodiscard]] HGUI_PRECISION get_rotation() const;
 
 		virtual void set_position(const point& newPosition);
-		virtual void set_rotation(const HGUI_PRECISION newAngularRotation);
+		virtual void set_rotation(HGUI_PRECISION newAngularRotation);
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
 		[[nodiscard]] bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
