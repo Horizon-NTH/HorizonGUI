@@ -145,6 +145,7 @@ set(SOURCE_FILES
 	src/Widget.cpp
 	src/Window.cpp
 	src/WindowManager.cpp
+	deps/glad/src/glad.c
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)

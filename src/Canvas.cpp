@@ -2,7 +2,7 @@
 
 hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size, position, color, angularRotation),
-	m_drawer(std::make_shared<Drawer>(position, size))
+	m_drawer(std::make_shared<Drawer>(position, size, m_angularRotation))
 {
 	Canvas::set_position(position);
 	init_data();
@@ -30,6 +30,18 @@ void hgui::kernel::Canvas::set_position(const point& newPosition)
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	m_drawer->m_position = newPosition;
+}
+
+void hgui::kernel::Canvas::set_size(const size& newSize)
+{
+	Widget::set_size(newSize);
+	m_drawer->m_size = m_size;
+}
+
+void hgui::kernel::Canvas::set_rotation(const float newAngularRotation)
+{
+	Widget::set_rotation(newAngularRotation);
+	m_drawer->m_rotation = m_angularRotation;
 }
 
 bool hgui::kernel::Canvas::is_inside(const point& point) const

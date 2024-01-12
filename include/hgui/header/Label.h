@@ -42,6 +42,8 @@ namespace hgui
 			float m_scale;
 			unsigned int m_fontSize;
 			std::shared_ptr<Font> m_font;
+
+			using Widget::set_size;
 		};
 	}
 }

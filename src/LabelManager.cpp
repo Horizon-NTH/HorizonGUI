@@ -16,7 +16,6 @@ std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::strin
 	auto widget = std::make_shared<kernel::Label>(text,
 		m_shader, position, font, std::get<0>(textOptions),
 		std::get<1>(textOptions), std::get<2>(textOptions), angularRotation);
-	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;
 }
 #elif defined(HGUI_STATIC)
@@ -29,7 +28,6 @@ const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::create(const std
 		m_labels[labelID] = std::make_shared<kernel::Label>(text,
 			ShaderManager::get(HGUI_SHADER_LABEL), position, font, std::get<0>(textOptions),
 			std::get<1>(textOptions), std::get<2>(textOptions), angularRotation);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_labels[labelID]->weak_from_this());
 		return m_labels[labelID];
 	}
 	throw std::runtime_error(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());

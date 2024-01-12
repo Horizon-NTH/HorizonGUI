@@ -1,4 +1,5 @@
 #include "../include/hgui/header/Window.h"
+#include "../include/hgui/header/Widget.h"
 
 hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name),
@@ -84,6 +85,7 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 		glViewport(0, 0, width, height);
 	win->m_size = size(width, height);
 	EM<float>::referenceSize = win->m_size;
+	Widget::update();
 }
 
 void hgui::kernel::Window::position_callback(GLFWwindow* window, const int xPosition, const int yPosition)

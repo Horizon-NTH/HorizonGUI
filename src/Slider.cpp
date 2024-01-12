@@ -84,6 +84,14 @@ void hgui::kernel::Slider::set_position(const point& newPosition)
 	set_value(value);
 }
 
+void hgui::kernel::Slider::set_size(const size& newSize)
+{
+	const HGUI_PRECISION value = get_value();
+	Widget::set_size(newSize);
+	set_points();
+	set_value(value);
+}
+
 void hgui::kernel::Slider::set_rotation(const HGUI_PRECISION newAngularRotation)
 {
 	const HGUI_PRECISION old = m_angularRotation;

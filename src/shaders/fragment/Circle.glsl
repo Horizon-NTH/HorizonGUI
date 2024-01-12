@@ -19,34 +19,34 @@ vec2 rotate(const vec2 point, const vec2 center, const float theta);
 void main()
 {
     vec2 pixelCoords = gl_FragCoord.xy,
-			centerCanvas = canvasPosition + canvasSize / 2.0;
+    centerCanvas = canvasPosition + canvasSize / 2.0;
 
-    if (is_in_rectangle(rotate(canvasPosition, centerCanvas, canvasRotation), rotate(canvasPosition + vec2(canvasSize.x, 0.0), centerCanvas, canvasRotation), 
-			rotate(canvasPosition - vec2(0.0, canvasSize.y), centerCanvas, canvasRotation), pixelCoords)  ||
-		(fill && distance(pixelCoords, center) > radius) || 
-		(!fill && (distance(pixelCoords, center) > radius + thickness ||
-		distance(pixelCoords, center) < radius - thickness)))
+    if (is_in_rectangle(rotate(canvasPosition, centerCanvas, canvasRotation), rotate(canvasPosition + vec2(canvasSize.x, 0.0), centerCanvas, canvasRotation),
+    rotate(canvasPosition - vec2(0.0, canvasSize.y), centerCanvas, canvasRotation), pixelCoords)  ||
+    (fill && distance(pixelCoords, center) > radius) ||
+    (!fill && (distance(pixelCoords, center) > radius + thickness ||
+    distance(pixelCoords, center) < radius - thickness)))
     {
         discard;
-    } 
-	fragmentColor = vec4(color, 1.0);
-} 
+    }
+    fragmentColor = vec4(color, 1.0);
+}
 
 bool is_in_rectangle(const vec2 A, const vec2 B, const vec2 D, const vec2 point)
 {
-	float dotAMAB = dot(point - A, B - A), dotAMAD = dot(point - A, D - A);
-	return (0.0 < dotAMAB && dotAMAB < dot(B - A, B - A)) && (0.0 < dotAMAD && dotAMAD < dot(D - A, D - A));
+    float dotAMAB = dot(point - A, B - A), dotAMAD = dot(point - A, D - A);
+    return (0.0 < dotAMAB && dotAMAB < dot(B - A, B - A)) && (0.0 < dotAMAD && dotAMAD < dot(D - A, D - A));
 }
 
 vec2 rotate(const vec2 point, const vec2 center, const float theta)
 {
-	vec2 translated = point - center;
+    vec2 translated = point - center;
 
-	float angleRadians = radians(theta);
-	float cosTheta = cos(angleRadians);
-	float sinTheta = sin(angleRadians);
+    float angleRadians = radians(theta);
+    float cosTheta = cos(angleRadians);
+    float sinTheta = sin(angleRadians);
 
-	vec2 rotated = vec2(translated.x * cosTheta - translated.y * sinTheta, translated.x * sinTheta + translated.y * cosTheta);
+    vec2 rotated = vec2(translated.x * cosTheta - translated.y * sinTheta, translated.x * sinTheta + translated.y * cosTheta);
 
-	return rotated + center;
+    return rotated + center;
 }

@@ -13,7 +13,6 @@ std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::sha
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CANVAS, HGUI_GLSL_FRAGMENT_CANVAS);
 	}
 	auto widget = std::make_shared<kernel::Canvas>(shader ? shader : m_shader, size, position, color, angularRotation);
-	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;
 }
 #elif defined(HGUI_STATIC)
@@ -25,7 +24,6 @@ const std::shared_ptr<hgui::kernel::Canvas>& hgui::CanvasManager::create(const s
 	{
 		m_canvas[canvasID] = std::make_shared<kernel::Canvas>(shader ? shader : ShaderManager::get(HGUI_SHADER_CANVAS), size, position, color,
 			angularRotation);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_canvas[canvasID]->weak_from_this());
 		return m_canvas[canvasID];
 	}
 	throw std::runtime_error(("THERE IS ALREADY A CANVAS WITH THE ID : " + canvasID).c_str());

@@ -11,15 +11,7 @@ hgui::kernel::Button::Button(const std::function<void()>& function, const std::s
 	set_textures(texture);
 	Button::set_position(position);
 	init_data();
-	if (m_text)
-	{
-		m_text->set_width(static_cast<unsigned int>(std::max(m_size.width / 2, m_size.width - 2 * std::max(m_cornerAngularRadius, 5.f))));
-		if (m_text->get_size().height > m_size.height - std::max(m_cornerAngularRadius, 5.f))
-		{
-			m_text->set_height(static_cast<unsigned int>(std::max(m_size.height / 2, m_size.height - 2 * std::max(m_cornerAngularRadius, 5.f))));
-		}
-		m_text->set_position(point(m_position + (m_size - m_text->get_size()) / 2) + (m_cornerAngularRadius <= 1e-6f ? point(2.5f, 0.f) : point(0)));
-	}
+	set_text_size();
 }
 
 void hgui::kernel::Button::press() const
@@ -79,15 +71,18 @@ void hgui::kernel::Button::set_position(const point& newPosition)
 {
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(newPosition.x, newPosition.y, 0.0f));
+	m_modelMatrix = translate(m_modelMatrix, glm::vec3(m_position.x, m_position.y, 0.0f));
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
 	m_modelMatrix = rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
-	if (m_text)
-	{
-		m_text->set_position(point(m_position + (m_size - m_text->get_size()) / 2));
-	}
+	set_text_position();
+}
+
+void hgui::kernel::Button::set_size(const size& newSize)
+{
+	Widget::set_size(newSize);
+	set_text_size();
 }
 
 void hgui::kernel::Button::set_state(const state& state)
@@ -108,6 +103,12 @@ const hgui::state& hgui::kernel::Button::get_state() const
 void hgui::kernel::Button::set_textures(const std::shared_ptr<Texture>& texture)
 {
 	m_texture = texture;
+}
+
+void hgui::kernel::Button::set_text(const std::shared_ptr<Label>& text)
+{
+	m_text = text;
+	set_text_size();
 }
 
 void hgui::kernel::Button::init_data()
@@ -225,4 +226,25 @@ void hgui::kernel::Button::init_data()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), static_cast<void*>(nullptr));
 	m_VAO->unbind();
+}
+
+void hgui::kernel::Button::set_text_size() const
+{
+	if (m_text)
+	{
+		m_text->set_width(static_cast<unsigned int>(std::max(m_size.width / 2, m_size.width - 2 * std::max(m_cornerAngularRadius, 5.f))));
+		if (m_text->get_size().height > m_size.height - std::max(m_cornerAngularRadius, 5.f))
+		{
+			m_text->set_height(static_cast<unsigned int>(std::max(m_size.height / 2, m_size.height - 2 * std::max(m_cornerAngularRadius, 5.f))));
+		}
+		set_text_position();
+	}
+}
+
+void hgui::kernel::Button::set_text_position() const
+{
+	if (m_text)
+	{
+		m_text->set_position(point(m_position + (m_size - m_text->get_size()) / 2) + (m_cornerAngularRadius <= 1e-6f ? point(2.5f, 0.f) : point(0)));
+	}
 }

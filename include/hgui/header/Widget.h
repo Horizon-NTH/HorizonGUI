@@ -10,39 +10,38 @@
 
 namespace hgui
 {
-	namespace kernel
-	{
-		template<typename T>
-		struct WeakPTRComparator
-		{
-			bool operator()(const std::weak_ptr<T>& lhs, const std::weak_ptr<T>& rhs) const
-			{
-				const auto lhsShared = lhs.lock();
-				const auto rhsShared = rhs.lock();
+	class MouseManager;
+}
 
-				if (!lhsShared && !rhsShared)
-					return false;
-				if (!lhsShared)
-					return true;
-				if (!rhsShared)
-					return false;
-				return lhsShared < rhsShared;
-			}
-		};
-	}
+namespace hgui::kernel
+{
+	template<typename T>
+	struct WeakPTRComparator
+	{
+		bool operator()(const std::weak_ptr<T>& lhs, const std::weak_ptr<T>& rhs) const
+		{
+			const auto lhsShared = lhs.lock();
+			const auto rhsShared = rhs.lock();
+
+			if (!lhsShared && !rhsShared)
+				return false;
+			if (!lhsShared)
+				return true;
+			if (!rhsShared)
+				return false;
+			return lhsShared < rhsShared;
+		}
+	};
+
+	class Window;
 
 	class Widget : public std::enable_shared_from_this<Widget>
 	{
-		friend class Renderer;
+		friend class Window;
 		friend class MouseManager;
-		friend class SpriteManager;
-		friend class LabelManager;
-		friend class ButtonManager;
-		friend class CanvasManager;
-		friend class SliderManager;
 
 	public:
-		Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation);
+		Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation);
 		Widget(const Widget& widget) = default;
 		Widget(Widget&& widget) = default;
 
@@ -56,6 +55,7 @@ namespace hgui
 		[[nodiscard]] HGUI_PRECISION get_rotation() const;
 
 		virtual void set_position(const point& newPosition);
+		virtual void set_size(const size& newSize);
 		virtual void set_rotation(HGUI_PRECISION newAngularRotation);
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
@@ -70,11 +70,13 @@ namespace hgui
 		static void unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		static void active(const std::vector<std::string>& tags = {});
+		[[nodiscard]] static const std::vector<std::string>& get_active_tag();
+		[[nodiscard]] static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
 
 	protected:
-		std::shared_ptr<kernel::Shader> m_shader;
-		std::shared_ptr<kernel::VertexArrayObject> m_VAO;
-		std::shared_ptr<kernel::VertexBufferObject> m_VBO;
+		std::shared_ptr<Shader> m_shader;
+		std::shared_ptr<VertexArrayObject> m_VAO;
+		std::shared_ptr<VertexBufferObject> m_VBO;
 		size m_size;
 		point m_position;
 		color m_color;
@@ -82,10 +84,10 @@ namespace hgui
 
 	private:
 		static std::vector<std::string> m_bindedTags;
-		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, kernel::WeakPTRComparator<Widget>> m_binds;
+		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds;
 		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
 
-		[[nodiscard]] static const std::vector<std::weak_ptr<Widget>>& get_widgets(const std::string& tag);
+		static void update();
 
 		friend void kernel::resources_cleaner();
 	};

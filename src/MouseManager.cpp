@@ -154,13 +154,13 @@ void hgui::MouseManager::process()
 		}
 	}
 	//PROCESSING INPUT FOR WIDGET
-	for (const std::string& tag : Widget::m_bindedTags)
+	for (const std::string& tag : kernel::Widget::get_active_tag())
 	{
-		for (auto& wwidget : Widget::get_widgets(tag))
+		for (auto& wwidget : kernel::Widget::get_widgets(tag))
 		{
-			if (Widget::m_binds.contains(wwidget))
+			if (kernel::Widget::m_binds.contains(wwidget))
 			{
-				for (auto& input : Widget::m_binds[wwidget])
+				for (auto& input : kernel::Widget::m_binds[wwidget])
 				{
 					static point lastMousePosition;
 					const auto widget = wwidget.lock();
@@ -371,13 +371,13 @@ void hgui::MouseManager::scroll([[maybe_unused]] GLFWwindow* window, const doubl
 		}
 	}
 	//PROCESSING INPUT FOR WIDGET
-	for (const std::string& tag : Widget::m_bindedTags)
+	for (const std::string& tag : kernel::Widget::get_active_tag())
 	{
-		for (auto& wwidget : Widget::get_widgets(tag))
+		for (auto& wwidget : kernel::Widget::get_widgets(tag))
 		{
-			if (Widget::m_binds.contains(wwidget))
+			if (kernel::Widget::m_binds.contains(wwidget))
 			{
-				for (auto& input : Widget::m_binds[wwidget])
+				for (auto& input : kernel::Widget::m_binds[wwidget])
 				{
 					const auto widget = wwidget.lock();
 					if (!input.second.second || !widget)

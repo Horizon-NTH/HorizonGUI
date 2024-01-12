@@ -13,7 +13,7 @@ namespace hgui::kernel
 		friend class Canvas;
 
 	public:
-		Drawer(const point& position, const size& size);
+		Drawer(const point& position, const size& size, HGUI_PRECISION angularRotation = 0.f);
 		Drawer(const Drawer& drawer) = delete;
 		Drawer(Drawer&& drawer) = default;
 
@@ -33,6 +33,7 @@ namespace hgui::kernel
 	private:
 		point m_position;
 		size m_size;
+		HGUI_PRECISION m_rotation;
 		std::shared_ptr<std::vector<std::shared_ptr<shape::Shape>>> m_shapes;
 	};
 }

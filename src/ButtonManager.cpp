@@ -17,11 +17,12 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);
 	}
 	auto button = std::make_shared<kernel::Button>(function,
-		m_shader, size, position,
-		font ? LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation) : nullptr,
+		m_shader, size, position, nullptr,
 		color, angularRotation, borderRadius, texture);
-	auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
-	widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), button->weak_from_this());
+	if (font)
+	{
+		button->set_text(LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation));
+	}
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Button>(button->shared_from_this());
 	button->bind(inputs::OVER, [wwidget]()
 		{
@@ -44,9 +45,9 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 					{
 						if (auto isHover = []() -> bool
 							{
-								for (auto& tag : Widget::m_bindedTags)
+								for (auto& tag : kernel::Widget::get_active_tag())
 								{
-									for (auto& ptr : Widget::m_widgets[tag])
+									for (auto& ptr : kernel::Widget::get_widgets(tag))
 									{
 										if (const auto button_ptr = std::dynamic_pointer_cast<
 											kernel::Button>(ptr.lock()))
@@ -83,9 +84,9 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 					{
 						if (auto isHover = []() -> bool
 							{
-								for (auto& tag : Widget::m_bindedTags)
+								for (auto& tag : kernel::Widget::get_active_tag())
 								{
-									for (auto& ptr : Widget::m_widgets[tag])
+									for (auto& ptr : kernel::Widget::get_widgets(tag))
 									{
 										if (const auto button_ptr = std::dynamic_pointer_cast<
 											kernel::Button>(ptr.lock()))
@@ -124,8 +125,6 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 				{12, textColor, 1.0f})
 			: nullptr,
 			color, angularRotation, cornerAngularRadius, texture);
-		auto& widgets = Widget::m_widgets[TagManager::get_current_tag()];
-		widgets.insert(!widgets.empty() ? widgets.end() - 1 : widgets.end(), m_buttons[buttonID]->weak_from_this());
 		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
 				get(buttonID)->set_state(state::HOVER);

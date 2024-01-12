@@ -39,6 +39,7 @@ namespace hgui::kernel
 		[[nodiscard]] const Function& get_function() const;
 
 		void set_position(const point& newPosition) override;
+		void set_size(const size& newSize) override;
 		void set_rotation(HGUI_PRECISION newAngularRotation) override;
 		void set_value(HGUI_PRECISION newValue);
 		void set_range(const Ranges& newRange);

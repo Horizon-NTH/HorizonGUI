@@ -1,22 +1,28 @@
 #include "../include/hgui/header/Widget.h"
 #include "../include/hgui/header/TagManager.h"
+#include "../include/hgui/header/TaskManager.h"
 
-std::vector<std::string> hgui::Widget::m_bindedTags;
-std::map<std::weak_ptr<hgui::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::Widget>> hgui::Widget::m_binds;
-std::map<std::string, std::vector<std::weak_ptr<hgui::Widget>>> hgui::Widget::m_widgets;
+std::vector<std::string> hgui::kernel::Widget::m_bindedTags;
+std::map<std::weak_ptr<hgui::kernel::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::kernel::Widget>> hgui::kernel::Widget::m_binds;
+std::map<std::string, std::vector<std::weak_ptr<hgui::kernel::Widget>>> hgui::kernel::Widget::m_widgets;
 
-hgui::Widget::Widget(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
+hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
 	m_shader(shader),
-	m_VAO(std::make_shared<kernel::VertexArrayObject>()),
-	m_VBO(std::make_shared<kernel::VertexBufferObject>()),
+	m_VAO(std::make_shared<VertexArrayObject>()),
+	m_VBO(std::make_shared<VertexBufferObject>()),
 	m_size(size),
 	m_position(position),
 	m_color(color),
 	m_angularRotation(angularRotation)
 {
+	auto tag = TagManager::get_current_tag();
+	TaskManager::program(std::chrono::milliseconds{}, [&, tag]
+		{
+			m_widgets[tag].push_back(weak_from_this());
+		});
 }
 
-hgui::Widget::~Widget()
+hgui::kernel::Widget::~Widget()
 {
 	for (auto& widgets : m_widgets | std::ranges::views::values)
 	{
@@ -29,47 +35,52 @@ hgui::Widget::~Widget()
 	     it->first.expired() ? it = m_binds.erase(it) : it++);
 }
 
-const hgui::point& hgui::Widget::get_position() const
+const hgui::point& hgui::kernel::Widget::get_position() const
 {
 	return m_position;
 }
 
-const hgui::size& hgui::Widget::get_size() const
+const hgui::size& hgui::kernel::Widget::get_size() const
 {
 	return m_size;
 }
 
-HGUI_PRECISION hgui::Widget::get_rotation() const
+HGUI_PRECISION hgui::kernel::Widget::get_rotation() const
 {
 	return m_angularRotation;
 }
 
-void hgui::Widget::set_position(const point& newPosition)
+void hgui::kernel::Widget::set_position(const point& newPosition)
 {
 	m_position = newPosition;
 }
 
-void hgui::Widget::set_rotation(const HGUI_PRECISION newAngularRotation)
+void hgui::kernel::Widget::set_size(const size& newSize)
+{
+	m_size = newSize;
+}
+
+void hgui::kernel::Widget::set_rotation(const HGUI_PRECISION newAngularRotation)
 {
 	m_angularRotation = newAngularRotation;
 }
 
-void hgui::Widget::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
+void hgui::kernel::Widget::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {
 	bind(shared_from_this(), action, function);
 }
 
-bool hgui::Widget::is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
+bool hgui::kernel::Widget::is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
 	return is_bind(shared_from_this(), action);
 }
 
-void hgui::Widget::unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
+void hgui::kernel::Widget::unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
 	unbind(shared_from_this(), action);
 }
 
-void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
+void hgui::kernel::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {
 	if (widgets.index() == 0)
 	{
@@ -113,7 +124,7 @@ void hgui::Widget::bind(const std::variant<std::shared_ptr<Widget>, std::string,
 	}
 }
 
-bool hgui::Widget::is_bind(const std::shared_ptr<Widget>& widget, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
+bool hgui::kernel::Widget::is_bind(const std::shared_ptr<Widget>& widget, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
 	if (!m_binds.contains(widget))
 	{
@@ -126,7 +137,7 @@ bool hgui::Widget::is_bind(const std::shared_ptr<Widget>& widget, const std::var
 		});
 }
 
-void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
+void hgui::kernel::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::string, std::vector<std::string>>& widgets, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action)
 {
 	using type = std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>;
 	if (widgets.index() == 0)
@@ -171,7 +182,7 @@ void hgui::Widget::unbind(const std::variant<std::shared_ptr<Widget>, std::strin
 	}
 }
 
-void hgui::Widget::active(const std::vector<std::string>& tags)
+void hgui::kernel::Widget::active(const std::vector<std::string>& tags)
 {
 	m_bindedTags.clear();
 	for (const std::vector<std::string>& tagsList = TagManager::get_tags(); const std::string& tag : !tags.empty() ? tags : tagsList)
@@ -184,11 +195,33 @@ void hgui::Widget::active(const std::vector<std::string>& tags)
 	glfwSetCursor(glfwGetCurrentContext(), glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
 }
 
-const std::vector<std::weak_ptr<hgui::Widget>>& hgui::Widget::get_widgets(const std::string& tag)
+const std::vector<std::string>& hgui::kernel::Widget::get_active_tag()
+{
+	return m_bindedTags;
+}
+
+const std::vector<std::weak_ptr<hgui::kernel::Widget>>& hgui::kernel::Widget::get_widgets(const std::string& tag)
 {
 	if (const std::vector<std::string>& tagsList = TagManager::get_tags(); std::ranges::find(tagsList, tag) != tagsList.end())
 	{
 		return m_widgets[tag];
 	}
 	throw std::runtime_error(("THERE IS NO TAG WITH THE NAME : " + tag).c_str());
+}
+
+void hgui::kernel::Widget::update()
+{
+	for (const auto& Widgets : m_widgets | std::views::values)
+	{
+		for (const auto& ptr : Widgets)
+		{
+			if (const auto widget = ptr.lock())
+			{
+				widget->m_position.update();
+				widget->m_size.update();
+				widget->set_size(widget->m_size);
+				widget->set_position(widget->m_position);
+			}
+		}
+	}
 }

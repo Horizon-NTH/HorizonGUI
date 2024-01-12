@@ -22,13 +22,15 @@ namespace hgui::kernel
 		void draw() const override;
 
 		void set_position(const point& newPosition) override;
+		void set_size(const size& newSize) override;
+		void set_rotation(float newAngularRotation) override;
 
 		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		[[nodiscard]] const std::shared_ptr<Drawer>& get_drawer() const;
 
 	private:
-		glm::mat4 m_modelMatrix{};
+		glm::mat4 m_modelMatrix;
 		std::shared_ptr<Drawer> m_drawer;
 
 		void init_data() const;

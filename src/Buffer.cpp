@@ -1,6 +1,6 @@
 #include "../include/hgui/header/Buffer.h"
 
-hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<kernel::Texture>& texture) :
+hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) :
 	m_shader(shader),
 	m_frameBuffer(std::make_shared<FrameBuffer>()),
 	m_renderBuffer(std::make_shared<RenderBuffer>()),
@@ -35,6 +35,9 @@ void hgui::kernel::Buffer::bind() const
 void hgui::kernel::Buffer::unbind() const
 {
 	m_frameBuffer->unbind();
+	int width, height;
+	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
+	glViewport(0, 0, width, height);
 }
 
 void hgui::kernel::Buffer::show() const

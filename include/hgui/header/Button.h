@@ -29,9 +29,11 @@ namespace hgui::kernel
 		[[nodiscard]] const state& get_state() const;
 
 		void set_position(const point& newPosition) override;
+		void set_size(const size& newSize) override;
 		void set_state(const state& state);
 		void set_color(const color& newColor);
 		void set_textures(const std::shared_ptr<Texture>& texture);
+		void set_text(const std::shared_ptr<Label>& text);
 
 	protected:
 		state m_state;
@@ -42,5 +44,7 @@ namespace hgui::kernel
 		glm::mat4 m_modelMatrix;
 
 		void init_data();
+		void set_text_size() const;
+		void set_text_position() const;
 	};
 }

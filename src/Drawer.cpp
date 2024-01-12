@@ -4,9 +4,10 @@
 #include "../include/hgui/header/Circle.h"
 #include "../include/hgui/header/StraightLine.h"
 
-hgui::kernel::Drawer::Drawer(const point& position, const size& size) :
+hgui::kernel::Drawer::Drawer(const point& position, const size& size, const HGUI_PRECISION angularRotation) :
 	m_position(position),
 	m_size(size),
+	m_rotation(angularRotation),
 	m_shapes(std::make_shared<std::vector<std::shared_ptr<shape::Shape>>>())
 {
 }
@@ -43,6 +44,6 @@ void hgui::kernel::Drawer::draw() const
 {
 	for (const auto& shape : *m_shapes)
 	{
-		shape->draw(m_position, m_size);
+		shape->draw(m_position, m_size, m_rotation);
 	}
 }

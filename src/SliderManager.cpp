@@ -9,7 +9,6 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 {
 	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, angularRotation);
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Slider>(slider->shared_from_this());
-	Widget::m_widgets[TagManager::get_current_tag()].push_back(wwidget);
 	slider->bind(inputs::OVER, []
 		{
 			if (!m_cursor)
@@ -27,9 +26,9 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 							std::pair<double, double> mousePosition;
 							glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
 							const point click = {mousePosition.first, mousePosition.second};
-							for (auto& tag : Widget::m_bindedTags)
+							for (auto& tag : kernel::Widget::get_active_tag())
 							{
-								for (auto& ptr : Widget::m_widgets[tag])
+								for (auto& ptr : kernel::Widget::get_widgets(tag))
 								{
 									if (const auto slider_ptr = std::dynamic_pointer_cast<
 										kernel::Slider>(ptr.lock()))

@@ -24,7 +24,6 @@ std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::var
 		widget = std::make_shared<kernel::Sprite>(
 			m_shader, *texture_ptr, size, position, color, angularRotation);
 	}
-	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;
 }
 
@@ -35,7 +34,6 @@ std::shared_ptr<hgui::kernel::AnimatedSprite> hgui::SpriteManager::create(const 
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_SPRITE, HGUI_GLSL_FRAGMENT_SPRITE);
 	}
 	auto widget = std::make_shared<kernel::AnimatedSprite>(m_shader, gif, size, position, color, angularRotation);
-	Widget::m_widgets[TagManager::get_current_tag()].push_back(widget->weak_from_this());
 	return widget;
 }
 
@@ -58,7 +56,6 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const s
 				ShaderManager::get(HGUI_SHADER_SPRITE),
 				*texture_ptr, size, position, color, angularRotation);
 		}
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_sprites[spriteID]->weak_from_this());
 		return m_sprites[spriteID];
 	}
 	throw std::runtime_error(("THERE IS ALREADY A SPRITE WITH THE ID : " + spriteID).c_str());
@@ -69,7 +66,6 @@ std::shared_ptr<hgui::kernel::AnimatedSprite> hgui::SpriteManager::create(const 
 	if (!m_sprites.contains(spriteID))
 	{
 		m_sprites[spriteID] = std::make_shared<kernel::AnimatedSprite>(ShaderManager::get(HGUI_SHADER_SPRITE), gif, size, position, color, angularRotation);
-		Widget::m_widgets[TagManager::get_current_tag()].push_back(m_sprites[spriteID]->weak_from_this());
 		return std::dynamic_pointer_cast<kernel::AnimatedSprite>(m_sprites[spriteID]);
 	}
 	throw std::runtime_error(("THERE IS ALREADY A SPRITE WITH THE ID : " + spriteID).c_str());
