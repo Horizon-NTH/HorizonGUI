@@ -23,3 +23,7 @@
 #include "header/KeyBoardManager.h"
 #include "header/MouseManager.h"
 #include "header/SoundPlayerManager.h"
+#include "header/Circle.h"
+#include "header/Rectangle.h"
+#include "header/StraightLine.h"
+#include "header/Triangle.h"
