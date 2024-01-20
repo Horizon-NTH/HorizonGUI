@@ -18,5 +18,6 @@ void hgui::kernel::VertexArrayObject::bind() const noexcept
 
 void hgui::kernel::VertexArrayObject::unbind() const noexcept
 {
+	(void)m_id;
 	glBindVertexArray(0);
 }

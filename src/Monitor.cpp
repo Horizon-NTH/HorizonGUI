@@ -7,8 +7,7 @@ hgui::kernel::Monitor::Monitor(GLFWmonitor* monitorPTR) :
 {
 	int x, y;
 	glfwGetMonitorPos(m_monitorPTR, &x, &y);
-	m_position.x = static_cast<float>(x);
-	m_position.y = static_cast<float>(y);
+	m_position = point(x, y);
 }
 
 GLFWmonitor* hgui::kernel::Monitor::get_monitor_ptr() const noexcept

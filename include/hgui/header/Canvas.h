@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
 #include "Widget.h"
-#include "Drawer.h"
 
 namespace hgui::kernel
 {
+	class Drawer;
+
 	class Canvas final : public Widget
 	{
 	public:

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Include.h"
 #include "Sprite.h"
-#include "GIF.h"
 
 namespace hgui::kernel
 {
+	class GIF;
+
 	class AnimatedSprite final : public Sprite
 	{
 	public:

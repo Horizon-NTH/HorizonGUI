@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Include.h"
 #include "Widget.h"
 
 namespace hgui::kernel

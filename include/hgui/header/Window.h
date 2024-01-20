@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Image.h"
-#include "Monitor.h"
+#include "Coordinate.hpp"
 
 namespace hgui::kernel
 {
+	class Monitor;
+	class Image;
+
 	class Window
 	{
 	public:

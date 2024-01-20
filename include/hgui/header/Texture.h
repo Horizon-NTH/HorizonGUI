@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Include.h"
-#include "Image.h"
 
 namespace hgui::kernel
 {
+	class Image;
+
 	struct TextureOption
 	{
 		GLint wrap_s = GL_CLAMP_TO_EDGE;

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Texture.h"
+#include "Coordinate.hpp"
 
 namespace hgui::kernel
 {
+	class Texture;
+
 	struct Character
 	{
 		std::shared_ptr<Texture> texture;
-		hgui::size size;
+		size size;
 		ivec2 bearing;
 		unsigned int advance;
 	};

@@ -18,6 +18,7 @@ void hgui::kernel::VertexBufferObject::bind() const noexcept
 
 void hgui::kernel::VertexBufferObject::unbind() const noexcept
 {
+	(void)m_id;
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

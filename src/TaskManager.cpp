@@ -1,4 +1,5 @@
 #include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/Timer.h"
 
 std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, const std::function<void()>& function, std::string id)
 {

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
+#include "Coordinate.hpp"
 
 namespace hgui::kernel
 {

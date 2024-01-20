@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Include.h"
-#include "Font.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Font;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class FontManager
 	{

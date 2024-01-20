@@ -1,4 +1,5 @@
 #include "../include/hgui/header/Texture.h"
+#include "../include/hgui/header/Image.h"
 
 hgui::kernel::Texture::Texture(const std::shared_ptr<Image>& image, const TextureOption options) :
 	m_id(),

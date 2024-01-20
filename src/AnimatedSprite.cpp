@@ -1,6 +1,7 @@
 #include "../include/hgui/header/AnimatedSprite.h"
 #include "../include/hgui/header/TextureManager.h"
 #include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/GIF.h"
 
 hgui::kernel::AnimatedSprite::AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, const float angularRotation) :
 	Sprite(shader, nullptr, size, position, color, angularRotation),

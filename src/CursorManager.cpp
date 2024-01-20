@@ -1,4 +1,5 @@
 #include "../include/hgui/header/CursorManager.h"
+#include "../include/hgui/header/Cursor.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Cursor> hgui::CursorManager::create(std::shared_ptr<kernel::Image>& cursor, const point& clickPosition)

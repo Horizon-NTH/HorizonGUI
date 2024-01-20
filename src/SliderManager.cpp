@@ -1,6 +1,8 @@
 #include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/TagManager.h"
 #include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/Cursor.h"
+#include "../include/hgui/header/CursorManager.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Cursor> hgui::SliderManager::m_cursor(nullptr);

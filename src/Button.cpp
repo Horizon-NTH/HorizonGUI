@@ -1,17 +1,25 @@
-#include "../include/hgui/header/ButtonManager.h"
+#include "../include/hgui/header/Button.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/Label.h"
+#include "../include/hgui/header/Texture.h"
 
-hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, const HGUI_PRECISION angularRotation, const HGUI_PRECISION cornerAngularRadius, const std::shared_ptr<Texture>& texture) :
+hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, const HGUI_PRECISION angularRotation, const HGUI_PRECISION cornerRadius, const std::shared_ptr<Texture>& texture) :
 	Widget(shader, size, position, color, angularRotation),
 	m_state(state::NORMAL),
 	m_function(function),
+	m_texture(texture),
 	m_text(text),
-	m_cornerAngularRadius(std::min(std::min(size.width, size.height) * 0.5f, cornerAngularRadius)),
-	m_modelMatrix(1.0)
+	m_cornerRadius(std::clamp(cornerRadius, 0.f, 1.f)),
+	m_cornerAngularRadius(std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius),
+	m_modelMatrix(1.0),
+	m_isTextDrawable(false)
 {
 	set_textures(texture);
 	Button::set_position(position);
 	init_data();
-	set_text_size();
+	set_text_placment();
 }
 
 void hgui::kernel::Button::press() const
@@ -39,7 +47,7 @@ void hgui::kernel::Button::draw() const
 	}
 	glDrawArrays(GL_TRIANGLES, 0, 138);
 	m_VAO->unbind();
-	if (m_text)
+	if (m_isTextDrawable and m_text)
 	{
 		m_text->draw();
 	}
@@ -47,24 +55,24 @@ void hgui::kernel::Button::draw() const
 
 bool hgui::kernel::Button::is_inside(const point& point) const
 {
-	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
+	const hgui::point center = m_position + m_size / 2.f;
 	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation),
 			a = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
 			ap = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y), center, m_angularRotation),
+			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
 			b = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_angularRotation),
 			bp = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y), center, m_angularRotation),
+			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
 			c = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
 			cp = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
+			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation),
 			d = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation),
 			dp = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height - m_cornerAngularRadius), center, m_angularRotation);
 
-	return point::is_in_rectangle(A, B, D, point) && !((point::is_in_rectangle(ap, a, A, point) && distance(point, a) >= m_cornerAngularRadius)
-	                                                   || (point::is_in_rectangle(bp, B, b, point) && distance(point, b) >= m_cornerAngularRadius)
-	                                                   || (point::is_in_rectangle(cp, c, C, point) && distance(point, c) >= m_cornerAngularRadius)
-	                                                   || (point::is_in_rectangle(dp, d, D, point) && distance(point, d) >= m_cornerAngularRadius));
+	return point::is_in_rectangle(A, B, D, point) && !((point::is_in_rectangle(ap, a, A, point) && point::distance(point, a) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(bp, B, b, point) && point::distance(point, b) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(cp, C, c, point) && point::distance(point, c) >= m_cornerAngularRadius)
+	                                                   || (point::is_in_rectangle(dp, d, D, point) && point::distance(point, d) >= m_cornerAngularRadius));
 }
 
 void hgui::kernel::Button::set_position(const point& newPosition)
@@ -76,13 +84,15 @@ void hgui::kernel::Button::set_position(const point& newPosition)
 	m_modelMatrix = rotate(m_modelMatrix, glm::radians(m_angularRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
-	set_text_position();
+	set_text_placment();
 }
 
 void hgui::kernel::Button::set_size(const size& newSize)
 {
 	Widget::set_size(newSize);
-	set_text_size();
+	m_cornerAngularRadius = std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius;
+	init_data();
+	set_text_placment();
 }
 
 void hgui::kernel::Button::set_state(const state& state)
@@ -108,7 +118,7 @@ void hgui::kernel::Button::set_textures(const std::shared_ptr<Texture>& texture)
 void hgui::kernel::Button::set_text(const std::shared_ptr<Label>& text)
 {
 	m_text = text;
-	set_text_size();
+	set_text_placment();
 }
 
 void hgui::kernel::Button::init_data()
@@ -228,23 +238,34 @@ void hgui::kernel::Button::init_data()
 	m_VAO->unbind();
 }
 
-void hgui::kernel::Button::set_text_size() const
+void hgui::kernel::Button::set_text_placment()
 {
 	if (m_text)
 	{
-		m_text->set_width(static_cast<unsigned int>(std::max(m_size.width / 2, m_size.width - 2 * std::max(m_cornerAngularRadius, 5.f))));
-		if (m_text->get_size().height > m_size.height - std::max(m_cornerAngularRadius, 5.f))
+		const point b1 = m_position + point(m_cornerAngularRadius),
+				b2 = m_position + m_size - point(m_cornerAngularRadius);
+		point textPosition(b1);
+		size textSize(b2);
+		if (m_cornerAngularRadius < 5.f)
 		{
-			m_text->set_height(static_cast<unsigned int>(std::max(m_size.height / 2, m_size.height - 2 * std::max(m_cornerAngularRadius, 5.f))));
+			textPosition += point(5.f);
+			textSize -= point(5.f) + textPosition;
 		}
-		set_text_position();
-	}
-}
-
-void hgui::kernel::Button::set_text_position() const
-{
-	if (m_text)
-	{
-		m_text->set_position(point(m_position + (m_size - m_text->get_size()) / 2) + (m_cornerAngularRadius <= 1e-6f ? point(2.5f, 0.f) : point(0)));
+		else
+		{
+			textPosition += point::normalize(m_position - b1) * m_cornerAngularRadius;
+			textSize += point::normalize(m_position + m_size - b2) * m_cornerAngularRadius - textPosition;
+		}
+		m_text->set_width(static_cast<unsigned>(textSize.width));
+		if (m_text->get_size().height > textSize.height)
+		{
+			m_text->set_height(static_cast<unsigned>(textSize.height));
+			if (m_text->get_size().width > textSize.width)
+				m_isTextDrawable = false;
+			else
+				m_isTextDrawable = true;
+		}
+		const point gap = (textSize - m_text->get_size()) / 2.f;
+		m_text->set_position(textPosition + gap);
 	}
 }

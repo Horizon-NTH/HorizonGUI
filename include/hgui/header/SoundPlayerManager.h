@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Include.h"
-#include "SoundPlayer.h"
 
 namespace hgui
 {
@@ -9,8 +8,11 @@ namespace hgui
 
 	namespace kernel
 	{
+		class Audio;
+		class SoundPlayer;
 		void resources_cleaner();
 	}
+
 #if defined(HGUI_DYNAMIC)
 
 	class SoundPlayerManager

@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Define.h"
-#include "BufferManager.h"
-#include "WindowManager.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Shader;
+		class Buffer;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class Renderer
 	{

@@ -1,7 +1,12 @@
 #include "../include/hgui/header/Canvas.h"
+#include "../include/hgui/header/Drawer.h"
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size, position, color, angularRotation),
+	m_modelMatrix(),
 	m_drawer(std::make_shared<Drawer>(position, size, m_angularRotation))
 {
 	Canvas::set_position(position);

@@ -1,5 +1,7 @@
 #include "../include/hgui/header/MouseManager.h"
 #include "../include/hgui/header/Widget.h"
+#include "../include/hgui/header/Timer.h"
+#include "../include/hgui/header/Window.h"
 
 std::map<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>> hgui::MouseManager::m_inputs;
 std::variant<std::function<void()>, std::function<void(hgui::buttons, hgui::actions)>> hgui::MouseManager::m_clickCallback{};
@@ -44,7 +46,7 @@ void hgui::MouseManager::bind_scroll_callback(const std::variant<std::function<v
 	m_scrollCallback = function;
 }
 
-hgui::dvec2 hgui::MouseManager::get_position()
+hgui::kernel::Point<HGUI_PRECISION> hgui::MouseManager::get_position()
 {
 	std::pair<double, double> mousePosition;
 	glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);

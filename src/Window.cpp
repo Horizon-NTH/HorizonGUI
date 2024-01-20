@@ -1,5 +1,7 @@
 #include "../include/hgui/header/Window.h"
 #include "../include/hgui/header/Widget.h"
+#include "../include/hgui/header/Monitor.h"
+#include "../include/hgui/header/Image.h"
 
 hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name),
@@ -84,12 +86,12 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	if (glad_glViewport != nullptr)
 		glViewport(0, 0, width, height);
 	win->m_size = size(width, height);
-	EM<float>::referenceSize = win->m_size;
+	EM<HGUI_PRECISION>::referenceSize = std::make_pair(win->m_size.width, win->m_size.height);
 	Widget::update();
 }
 
 void hgui::kernel::Window::position_callback(GLFWwindow* window, const int xPosition, const int yPosition)
 {
 	const auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	win->m_position = glm::vec2(xPosition, yPosition);
+	win->m_position = point(xPosition, yPosition);
 }

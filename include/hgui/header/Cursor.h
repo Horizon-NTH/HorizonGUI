@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Image.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
@@ -11,6 +8,8 @@ namespace hgui
 
 	namespace kernel
 	{
+		class Image;
+
 		class Cursor
 		{
 			friend class CursorManager;

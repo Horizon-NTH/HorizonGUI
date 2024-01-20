@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Include.h"
-#include "Texture.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Image;
+		class Texture;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class TextureManager
 	{

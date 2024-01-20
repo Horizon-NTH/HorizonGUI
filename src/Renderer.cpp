@@ -1,11 +1,15 @@
 #include "../include/hgui/header/Renderer.h"
 #include "../include/hgui/header/GLSL.h"
 #include "../include/hgui/header/TagManager.h"
+#include "../include/hgui/header/Shader.h"
 #include "../include/hgui/header/ShaderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
 #include "../include/hgui/header/TaskManager.h"
 #include "../include/hgui/header/Widget.h"
+#include "../include/hgui/header/Buffer.h"
+#include "../include/hgui/header/BufferManager.h"
+#include "../include/hgui/header/Window.h"
 
 #if defined(HGUI_DYNAMIC)
 std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Include.h"
-#include "Define.h"
-#include "Maths.hpp"
-#include "Image.h"
+#include "Coordinate.hpp"
 
 namespace hgui::kernel
 {
+	class Image;
+
 	struct GIFData
 	{
 		using pointer = std::unique_ptr<stbi_uc, void(*)(stbi_uc*)>;

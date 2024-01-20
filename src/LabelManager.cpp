@@ -1,6 +1,6 @@
 #include "../include/hgui/header/LabelManager.h"
+#include "../include/hgui/header/Label.h"
 #include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/TagManager.h"
 
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"

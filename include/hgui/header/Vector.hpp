@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Include.h"
 #include "Iterator.hpp"
 
 namespace hgui::kernel
@@ -27,8 +26,8 @@ namespace hgui::kernel
 		Vector() noexcept;
 		virtual ~Vector() noexcept = default;
 		explicit Vector(const T& initializationValue) noexcept;
-		Vector(const Vector<T, dimension>& vector) noexcept = default;
-		Vector(Vector<T, dimension>&& vector) noexcept = default;
+		Vector(const Vector& vector) noexcept = default;
+		Vector(Vector&& vector) noexcept = default;
 		explicit Vector(const std::valarray<T>& vector) noexcept;
 		explicit Vector(const std::valarray<T>&& vector) noexcept;
 
@@ -40,58 +39,58 @@ namespace hgui::kernel
 		const T& operator[](int index) const noexcept;
 		void operator-() noexcept;
 
-		Vector<T, dimension>& operator=(const Vector<T, dimension>& vector) noexcept = default;
-		Vector<T, dimension>& operator=(Vector<T, dimension>&& vector) noexcept = default;
+		Vector& operator=(const Vector& vector) noexcept = default;
+		Vector& operator=(Vector&& vector) noexcept = default;
 
-		friend Vector<T, dimension> operator+(const Vector<T, dimension>& u, const Vector<T, dimension>& v) noexcept
+		friend Vector operator+(const Vector& u, const Vector& v) noexcept
 		{
-			return Vector<T, dimension>(u.m_data + v.m_data);
+			return Vector(u.m_data + v.m_data);
 		}
 
-		Vector<T, dimension>& operator+=(const Vector<T, dimension>& u) noexcept;
+		Vector& operator+=(const Vector& u) noexcept;
 
-		friend Vector<T, dimension> operator-(const Vector<T, dimension>& u, const Vector<T, dimension>& v) noexcept
+		friend Vector operator-(const Vector& u, const Vector& v) noexcept
 		{
-			return Vector<T, dimension>(u.m_data - v.m_data);
+			return Vector(u.m_data - v.m_data);
 		}
 
-		Vector<T, dimension>& operator-=(const Vector<T, dimension>& u) noexcept;
+		Vector& operator-=(const Vector& u) noexcept;
 
-		friend Vector<T, dimension> operator*(const Vector<T, dimension>& u, const T& element) noexcept
+		friend Vector operator*(const Vector& u, const T& element) noexcept
 		{
-			return Vector<T, dimension>(u.m_data * element);
+			return Vector(u.m_data * element);
 		}
 
-		Vector<T, dimension>& operator*=(const T& element) noexcept;
+		Vector& operator*=(const T& element) noexcept;
 
-		friend Vector<T, dimension> operator/(const Vector<T, dimension>& u, const T& element) noexcept
+		friend Vector operator/(const Vector& u, const T& element) noexcept
 		{
-			return Vector<T, dimension>(u.m_data / element);
+			return Vector(u.m_data / element);
 		}
 
-		Vector<T, dimension>& operator/=(const T& element) noexcept;
+		Vector& operator/=(const T& element) noexcept;
 
-		friend Vector<T, dimension> operator*(const T& element, const Vector<T, dimension>& v) noexcept
+		friend Vector operator*(const T& element, const Vector& v) noexcept
 		{
-			return Vector<T, dimension>(v.m_data * element);
+			return Vector(v.m_data * element);
 		}
 
-		friend Vector<T, dimension> operator/(const T& element, const Vector<T, dimension>& v) noexcept
+		friend Vector operator/(const T& element, const Vector& v) noexcept
 		{
-			return Vector<T, dimension>(v.m_data / element);
+			return Vector(v.m_data / element);
 		}
 
-		friend bool operator==(const Vector<T, dimension>& u, const Vector<T, dimension>& v) noexcept
+		friend bool operator==(const Vector& u, const Vector& v) noexcept
 		{
 			return u.m_data == v.m_data;
 		}
 
-		friend bool operator!=(const Vector<T, dimension>& u, const Vector<T, dimension>& v) noexcept
+		friend bool operator!=(const Vector& u, const Vector& v) noexcept
 		{
 			return u.m_data != v.m_data;
 		}
 
-		friend std::ostream& operator<<(std::ostream& stream, const ::hgui::kernel::Vector<T, dimension>& vector)
+		friend std::ostream& operator<<(std::ostream& stream, const Vector<T, dimension>& vector)
 		{
 			std::stringstream sstream;
 			int size = 0;
@@ -139,7 +138,7 @@ T hgui::kernel::dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v
 template<typename T, std::size_t dimension>
 hgui::kernel::Vector<T, 3> hgui::kernel::cross(const Vector<T, 3>& u, const Vector<T, 3>& v)
 {
-	return hgui::kernel::Vector<T, 3>({ u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0] });
+	return kernel::Vector<T, 3>({u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]});
 }
 
 template<typename T, std::size_t dimension>
@@ -149,22 +148,26 @@ T hgui::kernel::distance(const Vector<T, dimension>& u, const Vector<T, dimensio
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector() noexcept : m_data(dimension)
+hgui::kernel::Vector<T, dimension>::Vector() noexcept :
+	m_data(dimension)
 {
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector(const T& initializationValue) noexcept : m_data(initializationValue, dimension)
+hgui::kernel::Vector<T, dimension>::Vector(const T& initializationValue) noexcept :
+	m_data(initializationValue, dimension)
 {
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>& vector) noexcept : m_data(vector)
+hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>& vector) noexcept :
+	m_data(vector)
 {
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>&& vector) noexcept : m_data(std::move(vector))
+hgui::kernel::Vector<T, dimension>::Vector(const std::valarray<T>&& vector) noexcept :
+	m_data(std::move(vector))
 {
 }
 
@@ -178,6 +181,8 @@ template<typename T, std::size_t dimension>
 void hgui::kernel::Vector<T, dimension>::normalize()
 {
 	T length = this->length();
+	if (length < 1e-6f)
+		throw std::invalid_argument("Cannot normalize a zero-length vector.");
 	std::for_each(std::begin(m_data), std::end(m_data), [&](T& element) { element /= length; });
 }
 
@@ -206,14 +211,14 @@ void hgui::kernel::Vector<T, dimension>::operator-() noexcept
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>& hgui::kernel::Vector<T, dimension>::operator+=(const Vector<T, dimension>& u) noexcept
+hgui::kernel::Vector<T, dimension>& hgui::kernel::Vector<T, dimension>::operator+=(const Vector& u) noexcept
 {
 	m_data += u.m_data;
 	return *this;
 }
 
 template<typename T, std::size_t dimension>
-hgui::kernel::Vector<T, dimension>& hgui::kernel::Vector<T, dimension>::operator-=(const Vector<T, dimension>& u) noexcept
+hgui::kernel::Vector<T, dimension>& hgui::kernel::Vector<T, dimension>::operator-=(const Vector& u) noexcept
 {
 	m_data -= u.m_data;
 	return *this;

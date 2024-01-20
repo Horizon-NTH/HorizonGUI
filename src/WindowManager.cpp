@@ -1,4 +1,5 @@
 #include "../include/hgui/header/WindowManager.h"
+#include "../include/hgui/header/Window.h"
 #include "../include/hgui/header/MouseManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/Function.h"

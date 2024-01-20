@@ -1,4 +1,6 @@
 #include "../include/hgui/header/Shape.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::shape::Shape::Shape(const bool fill, const float thickness, const color& color, ShapeData data) :
 	m_VAO(std::make_shared<VertexArrayObject>()),

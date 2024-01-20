@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Include.h"
-#include "Shader.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Shader;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class ShaderManager
 	{

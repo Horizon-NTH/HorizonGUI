@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
 #include "Shape.h"
+
+namespace hgui::kernel
+{
+	class Shader;
+}
 
 namespace hgui::kernel::shape
 {
@@ -21,6 +24,6 @@ namespace hgui::kernel::shape
 		void draw(const point& canvasPosition, const size& canvasSize, float canvasRotation) const override;
 
 	private:
-		static std::shared_ptr<Shader> m_shader;
+		inline static std::shared_ptr<Shader> m_shader{};
 	};
 }

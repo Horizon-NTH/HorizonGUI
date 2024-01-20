@@ -1,10 +1,6 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
 #include "Widget.h"
-#include "Font.h"
-#include "Shader.h"
 
 namespace hgui
 {
@@ -12,6 +8,8 @@ namespace hgui
 
 	namespace kernel
 	{
+		class Font;
+
 		class Label final : public Widget
 		{
 		public:

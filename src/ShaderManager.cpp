@@ -1,4 +1,5 @@
 #include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/Shader.h"
 
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Shader> hgui::ShaderManager::create(const std::string& vertexShaderCode, const std::string& fragmentShaderCode, const std::string& geometryShaderCode)

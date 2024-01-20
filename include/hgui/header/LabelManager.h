@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Font.h"
-#include "Label.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Font;
+		class Shader;
+		class Label;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class LabelManager
 	{

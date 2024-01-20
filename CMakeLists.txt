@@ -45,6 +45,7 @@ set(HEADER_FILES
 	include/hgui/header/Canvas.h
 	include/hgui/header/CanvasManager.h
 	include/hgui/header/Circle.h
+	include/hgui/header/Coordinate.hpp
 	include/hgui/header/Cursor.h
 	include/hgui/header/CursorManager.h
 	include/hgui/header/Define.h

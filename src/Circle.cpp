@@ -1,7 +1,8 @@
 #include "../include/hgui/header/Circle.h"
-#include "../include/hgui/header/GLSL.h"
-
-std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::Circle::m_shader(nullptr);
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float radius, const color& color, const bool fill, float thickness) :
 	Shape(fill, thickness, color, std::make_pair(centerPosition, radius))
@@ -9,6 +10,7 @@ hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float rad
 	if (!m_shader)
 	{
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CIRCLE, HGUI_GLSL_FRAGMENT_CIRCLE);
 #elif defined(HGUI_STATIC)
 		m_shader = ShaderManager::get(HGUI_SHADER_CIRCLE);
@@ -40,7 +42,7 @@ void hgui::kernel::shape::Circle::draw(const point& canvasPosition, const size& 
 	        .set_vec2("canvasSize", canvasSize)
 	        .set_float("canvasRotation", canvasRotation)
 	        .set_vec2("center", center)
-	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_vec3("color", m_color)
 	        .set_float("radius", radius)
 	        .set_float("thickness", m_thickness)
 	        .set_int("fill", m_fill);

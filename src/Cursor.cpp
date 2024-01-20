@@ -1,4 +1,5 @@
 #include "../include/hgui/header/Cursor.h"
+#include "../include/hgui/header/Image.h"
 
 hgui::kernel::Cursor::Cursor(cursors standardCursor) :
 	m_cursorPTR(glfwCreateStandardCursor(static_cast<int>(standardCursor)))

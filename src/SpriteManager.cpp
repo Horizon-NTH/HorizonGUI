@@ -1,6 +1,8 @@
 #include "../include/hgui/header/SpriteManager.h"
+#include "../include/hgui/header/Sprite.h"
+#include "../include/hgui/header/AnimatedSprite.h"
 #include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/TagManager.h"
+#include "../include/hgui/header/TextureManager.h"
 
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"

@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Include.h"
-#include "Image.h"
-#include "Audio.h"
-#include "GIF.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Audio;
+		class GIF;
+		class Image;
+	}
+
 	void after(const std::chrono::milliseconds& delay, const std::function<void()>& function);
 	[[nodiscard]] std::shared_ptr<kernel::Image> image_loader(const std::string& imagePath);
 	[[nodiscard]] std::shared_ptr<kernel::GIF> gif_loader(const std::string& gifPath);

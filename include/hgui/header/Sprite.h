@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
 #include "Widget.h"
-#include "Shader.h"
-#include "Texture.h"
 
 namespace hgui::kernel
 {
+	class Texture;
+
 	class Sprite : public Widget
 	{
 	public:

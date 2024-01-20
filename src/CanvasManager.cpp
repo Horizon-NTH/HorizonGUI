@@ -1,5 +1,7 @@
 #include "../include/hgui/header/CanvasManager.h"
+#include "../include/hgui/header/Canvas.h"
 #include "../include/hgui/header/TagManager.h"
+#include "../include/hgui/header/ShaderManager.h"
 
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"

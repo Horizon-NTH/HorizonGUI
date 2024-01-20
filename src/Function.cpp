@@ -9,6 +9,7 @@
 #include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
+#include "../include/hgui/header/Timer.h"
 
 #if defined(HGUI_DYNAMIC)
 void hgui::init()

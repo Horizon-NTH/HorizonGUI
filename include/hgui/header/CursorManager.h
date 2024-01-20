@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Cursor.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Image;
+		class Cursor;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class CursorManager
 	{

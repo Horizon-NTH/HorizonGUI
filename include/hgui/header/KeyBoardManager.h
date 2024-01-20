@@ -2,10 +2,11 @@
 
 #include "Include.h"
 #include "Define.h"
-#include "Timer.h"
 
 namespace hgui
 {
+	class Timer;
+
 	namespace kernel
 	{
 		struct VariantKeyComparator

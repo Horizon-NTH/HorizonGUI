@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Shape.h"
+#include "Coordinate.hpp"
 
 namespace hgui::kernel
 {
+	namespace shape
+	{
+		class Shape;
+	}
+
 	class Canvas;
 
 	class Drawer
@@ -13,7 +16,7 @@ namespace hgui::kernel
 		friend class Canvas;
 
 	public:
-		Drawer(const point& position, const size& size, HGUI_PRECISION angularRotation = 0.f);
+		Drawer(point  position, size  size, HGUI_PRECISION angularRotation = 0.f);
 		Drawer(const Drawer& drawer) = delete;
 		Drawer(Drawer&& drawer) = default;
 

@@ -1,26 +1,27 @@
 #pragma once
 
 #include "Include.h"
-#include "Texture.h"
-#include "RenderBuffer.h"
 
 namespace hgui::kernel
 {
+	class RenderBuffer;
+	class Texture;
+
 	class FrameBuffer
 	{
 	public:
 		FrameBuffer() noexcept;
 		FrameBuffer(const FrameBuffer& frameBuffer) noexcept = delete;
 		FrameBuffer(FrameBuffer&& frameBuffer) noexcept = delete;
-		
+
 		~FrameBuffer() noexcept;
-		
+
 		FrameBuffer& operator=(const FrameBuffer& frameBuffer) noexcept = delete;
 		FrameBuffer& operator=(FrameBuffer&& frameBuffer) noexcept = delete;
 
 		void bind() const noexcept;
 
-		static void unbind() noexcept;
+		void unbind() const noexcept;
 		void clear() const noexcept;
 		[[nodiscard]] GLuint get_id() const noexcept;
 		[[nodiscard]] bool is_complete() const noexcept;

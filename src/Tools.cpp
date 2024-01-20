@@ -1,5 +1,8 @@
 #include "../include/hgui/header/Tools.h"
 #include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/Image.h"
+#include "../include/hgui/header/Audio.h"
+#include "../include/hgui/header/GIF.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {

@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Include.h"
-#include "FrameBuffer.h"
-#include "RenderBuffer.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
 
 namespace hgui::kernel
 {
+	class VertexBufferObject;
+	class VertexArrayObject;
+	class RenderBuffer;
+	class FrameBuffer;
+	class Shader;
+	class Texture;
+
 	class Buffer
 	{
 	public:

@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Define.h"
-#include "Maths.hpp"
-#include "Window.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Image;
+		class Monitor;
+	}
+
 	typedef std::pair<options, bool> WindowOption;
 #if defined(HGUI_DYNAMIC)
 	class WindowManager

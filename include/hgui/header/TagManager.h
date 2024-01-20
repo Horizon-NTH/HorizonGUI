@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Include.h"
-#include "Define.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		void resources_cleaner();
+	}
+
 	class TagManager
 	{
 	public:

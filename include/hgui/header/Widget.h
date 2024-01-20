@@ -1,20 +1,19 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Shader.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
-#include "Timer.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	class Timer;
 	class MouseManager;
 }
 
 namespace hgui::kernel
 {
+	class VertexBufferObject;
+	class VertexArrayObject;
+	class Shader;
+
 	template<typename T>
 	struct WeakPTRComparator
 	{
@@ -83,6 +82,8 @@ namespace hgui::kernel
 		HGUI_PRECISION m_angularRotation;
 
 	private:
+		std::string m_taskID;
+
 		static std::vector<std::string> m_bindedTags;
 		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds;
 		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Include.h"
-#include "Audio.h"
 
 namespace hgui
 {
@@ -10,9 +9,11 @@ namespace hgui
 
 namespace hgui::kernel
 {
+	class Audio;
+
 	class SoundPlayer
 	{
-		friend class hgui::SoundPlayerManager;
+		friend class SoundPlayerManager;
 
 	public:
 		explicit SoundPlayer(const std::shared_ptr<Audio>& audio);

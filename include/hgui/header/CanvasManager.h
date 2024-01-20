@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Canvas.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Shader;
+		class Canvas;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class CanvasManager
 	{

@@ -1,6 +1,8 @@
 #include "../include/hgui/header/Rectangle.h"
-
-std::shared_ptr<hgui::kernel::Shader> hgui::kernel::shape::Rectangle::m_shader(nullptr);
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill, const float thickness) :
 	Shape(fill, thickness, color, std::make_pair(topLeftVertex, bottomRightVertex))
@@ -8,7 +10,7 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 	if (!m_shader)
 	{
 #if defined(HGUI_DYNAMIC)
-		#include "../include/hgui/header/GLSL.h"
+#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
 #elif defined(HGUI_STATIC)
 		m_shader = ShaderManager::get(HGUI_SHADER_RECTANGLE);
@@ -41,7 +43,7 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 		// First Line
 		point v = secondVertex - firstVertex;
 		point n(-v.y, v.x);
-		n.normalize();
+		n = point::normalize(n);
 		point corner1 = firstVertex - n * halfThickness,
 				corner2 = firstVertex + n * halfThickness,
 				corner3 = secondVertex + n * halfThickness,
@@ -66,7 +68,7 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 		// Second Line
 		v = thirdVertex - secondVertex;
 		n = point(-v.y, v.x);
-		n.normalize();
+		n = point::normalize(n);
 		corner1 = secondVertex - n * halfThickness;
 		corner2 = secondVertex + n * halfThickness;
 		corner3 = thirdVertex + n * halfThickness;
@@ -91,7 +93,7 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 		// Third Line
 		v = fourthVertex - thirdVertex;
 		n = point(-v.y, v.x);
-		n.normalize();
+		n = point::normalize(n);
 		corner1 = thirdVertex - n * halfThickness;
 		corner2 = thirdVertex + n * halfThickness;
 		corner3 = fourthVertex + n * halfThickness;
@@ -116,7 +118,7 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 		// Fourth Line
 		v = firstVertex - fourthVertex;
 		n = point(-v.y, v.x);
-		n.normalize();
+		n = point::normalize(n);
 		corner1 = fourthVertex - n * halfThickness;
 		corner2 = fourthVertex + n * halfThickness;
 		corner3 = firstVertex + n * halfThickness;
@@ -161,7 +163,7 @@ void hgui::kernel::shape::Rectangle::draw(const point& canvasPosition, const siz
 	        .set_vec2("canvasPosition", canvasPosition)
 	        .set_vec2("canvasSize", canvasSize)
 	        .set_float("canvasRotation", canvasRotation)
-	        .set_vec3("color", static_cast<hgui::kernel::Vector<HGUI_PRECISION, 3>>(m_color))
+	        .set_vec3("color", m_color)
 	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();
 	if (m_fill)

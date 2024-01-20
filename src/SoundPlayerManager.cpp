@@ -1,4 +1,5 @@
 #include "../include/hgui/header/SoundPlayerManager.h"
+#include "../include/hgui/header/SoundPlayer.h"
 
 #if defined(HGUI_DYNAMIC)
 ALCdevice* hgui::SoundPlayerManager::m_device(nullptr);

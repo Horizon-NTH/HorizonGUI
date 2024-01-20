@@ -1,19 +1,16 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
 #include "Widget.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "Label.h"
 
 namespace hgui::kernel
 {
+	class Texture;
+	class Label;
+
 	class Button final : public Widget
 	{
 	public:
-		Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, HGUI_PRECISION angularRotation, HGUI_PRECISION cornerAngularRadius, const std::shared_ptr<Texture>& = nullptr);
+		Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, HGUI_PRECISION angularRotation, HGUI_PRECISION cornerRadius, const std::shared_ptr<Texture>& = nullptr);
 		Button(const Button& button) = delete;
 		Button(Button&& button) = default;
 
@@ -40,11 +37,12 @@ namespace hgui::kernel
 		std::function<void()> m_function;
 		std::shared_ptr<Texture> m_texture;
 		std::shared_ptr<Label> m_text;
-		float m_cornerAngularRadius;
+		HGUI_PRECISION m_cornerRadius;
+		HGUI_PRECISION m_cornerAngularRadius;
 		glm::mat4 m_modelMatrix;
+		bool m_isTextDrawable;
 
 		void init_data();
-		void set_text_size() const;
-		void set_text_position() const;
+		void set_text_placment();
 	};
 }

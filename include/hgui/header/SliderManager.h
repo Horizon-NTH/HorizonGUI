@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
+#include "Coordinate.hpp"
 #include "Slider.h"
-#include "CursorManager.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Cursor;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class SliderManager
 	{
@@ -27,7 +29,7 @@ namespace hgui
 			}, HGUI_PRECISION angularRotation = 0.f);
 
 	private:
-		static std::shared_ptr<hgui::kernel::Cursor> m_cursor;
+		static std::shared_ptr<kernel::Cursor> m_cursor;
 
 		friend void kernel::resources_cleaner();
 	};

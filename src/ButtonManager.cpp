@@ -1,8 +1,11 @@
 #include "../include/hgui/header/ButtonManager.h"
+#include "../include/hgui/header/Button.h"
 #include "../include/hgui/header/ShaderManager.h"
+#include "../include/hgui/header/Label.h"
 #include "../include/hgui/header/LabelManager.h"
 #include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/TagManager.h"
+#include "../include/hgui/header/Cursor.h"
+#include "../include/hgui/header/CursorManager.h"
 
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"
@@ -18,7 +21,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 	}
 	auto button = std::make_shared<kernel::Button>(function,
 		m_shader, size, position, nullptr,
-		color, angularRotation, borderRadius, texture);
+		color, angularRotation, borderRadius / 100.f, texture);
 	if (font)
 	{
 		button->set_text(LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation));

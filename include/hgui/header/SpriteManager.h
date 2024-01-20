@@ -1,15 +1,19 @@
 #pragma once
 
-#include "Include.h"
-#include "Maths.hpp"
-#include "Define.h"
-#include "Sprite.h"
-#include "Image.h"
-#include "TextureManager.h"
-#include "AnimatedSprite.h"
+#include "Coordinate.hpp"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Image;
+		class GIF;
+		class Texture;
+		class Shader;
+		class AnimatedSprite;
+		class Sprite;
+	}
+
 #if defined(HGUI_DYNAMIC)
 	class SpriteManager
 	{

@@ -1,6 +1,9 @@
 #include "../include/hgui/header/Widget.h"
 #include "../include/hgui/header/TagManager.h"
 #include "../include/hgui/header/TaskManager.h"
+#include "../include/hgui/header/Timer.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 std::vector<std::string> hgui::kernel::Widget::m_bindedTags;
 std::map<std::weak_ptr<hgui::kernel::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::kernel::Widget>> hgui::kernel::Widget::m_binds;
@@ -15,15 +18,17 @@ hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, const size& 
 	m_color(color),
 	m_angularRotation(angularRotation)
 {
-	auto tag = TagManager::get_current_tag();
-	TaskManager::program(std::chrono::milliseconds{}, [&, tag]
+	m_taskID = TaskManager::program(std::chrono::milliseconds{}, [&, tag = TagManager::get_current_tag()]
 		{
 			m_widgets[tag].push_back(weak_from_this());
+			m_taskID.clear();
 		});
 }
 
 hgui::kernel::Widget::~Widget()
 {
+	if (!m_taskID.empty())
+		TaskManager::deprogram(m_taskID);
 	for (auto& widgets : m_widgets | std::ranges::views::values)
 	{
 		std::erase_if(widgets, [](const std::weak_ptr<Widget>& widget) -> bool

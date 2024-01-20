@@ -1,4 +1,5 @@
 #include "../include/hgui/header/KeyBoardManager.h"
+#include "../include/hgui/header/Timer.h"
 
 bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& leftSide, const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& rightSide) const
 {

@@ -18,6 +18,7 @@ void hgui::kernel::RenderBuffer::bind() const noexcept
 
 void hgui::kernel::RenderBuffer::unbind() const noexcept
 {
+	(void)m_id;
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 

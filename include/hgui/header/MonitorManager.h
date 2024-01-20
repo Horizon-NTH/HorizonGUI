@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Include.h"
-#include "Monitor.h"
 
 namespace hgui
 {
+	namespace kernel
+	{
+		class Monitor;
+		void resources_cleaner();
+	}
+
 	class MonitorManager
 	{
 	public:

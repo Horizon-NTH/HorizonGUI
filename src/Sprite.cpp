@@ -1,4 +1,8 @@
 #include "../include/hgui/header/Sprite.h"
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/Texture.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::Sprite::Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size, position, color, angularRotation),

@@ -1,4 +1,9 @@
 #include "../include/hgui/header/Label.h"
+#include "../include/hgui/header/VertexArrayObject.h"
+#include "../include/hgui/header/VertexBufferObject.h"
+#include "../include/hgui/header/Font.h"
+#include "../include/hgui/header/Shader.h"
+#include "../include/hgui/header/Texture.h"
 
 hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const HGUI_PRECISION scale, const HGUI_PRECISION angularRotation) :
 	Widget(shader, size(glm::vec2(0.0f)), position, color, angularRotation),
@@ -23,9 +28,10 @@ hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shad
 	for (const char c : m_text)
 	{
 		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-		m_size.height = std::max(size.height * m_scale, m_size.height);
-		m_size.width += static_cast<float>(advance >> 6) * m_scale;
+		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
+		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
 	}
+	m_size.update();
 }
 
 std::string hgui::kernel::Label::get_text() const
@@ -50,15 +56,16 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 	for (const char c : m_text)
 	{
 		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-		m_size.height = std::max(size.height * m_scale, m_size.height);
-		m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
+		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
+		m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 	}
+	m_size.update();
 }
 
 void hgui::kernel::Label::set_width(const unsigned int newWidth)
 {
 	int max = 1000, min = 10;
-	while (std::abs(size(m_size).width - static_cast<HGUI_PRECISION>(newWidth)) > size(1_em).width && max != min)
+	while (std::abs(m_size.width - static_cast<HGUI_PRECISION>(newWidth)) > size(1_em).width && max != min)
 	{
 		m_fontSize = (max + min) / 2;
 		m_fontSize++;
@@ -70,9 +77,10 @@ void hgui::kernel::Label::set_width(const unsigned int newWidth)
 		for (const char c : m_text)
 		{
 			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-			m_size.height = std::max(size.height * m_scale, m_size.height);
-			m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
+			m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
+			m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 		}
+		m_size.update();
 		if (m_size.width > static_cast<HGUI_PRECISION>(newWidth))
 		{
 			max = static_cast<int>(m_fontSize);
@@ -87,7 +95,7 @@ void hgui::kernel::Label::set_width(const unsigned int newWidth)
 void hgui::kernel::Label::set_height(const unsigned int newHeight)
 {
 	int max = 1000, min = 10;
-	while (std::abs(size(m_size).height - static_cast<HGUI_PRECISION>(newHeight)) > size(1_em).height && max != min)
+	while (std::abs(m_size.height - static_cast<HGUI_PRECISION>(newHeight)) > size(1_em).height && max != min)
 	{
 		m_fontSize = (max + min) / 2;
 		m_fontSize++;
@@ -99,9 +107,10 @@ void hgui::kernel::Label::set_height(const unsigned int newHeight)
 		for (const char c : m_text)
 		{
 			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-			m_size.height = std::max(size.height * m_scale, m_size.height);
-			m_size.width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
+			m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
+			m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
 		}
+		m_size.update();
 		if (m_size.height > static_cast<HGUI_PRECISION>(newHeight))
 		{
 			max = static_cast<int>(m_fontSize);
@@ -115,7 +124,7 @@ void hgui::kernel::Label::set_height(const unsigned int newHeight)
 
 void hgui::kernel::Label::draw() const
 {
-	const point position(m_position);
+	point position(m_position);
 	const point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
@@ -127,12 +136,12 @@ void hgui::kernel::Label::draw() const
 	m_VAO->bind();
 	for (const char c : m_text)
 	{
-		const Character ch = m_font->get_char(c, m_fontSize);
+		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
 
-		const point pos = point(position.x + static_cast<float>(ch.bearing.x), position.y + (static_cast<float>(m_font->get_char('H', m_fontSize).bearing.y) - static_cast<float>(ch.bearing.y))) * m_scale;
+		const point pos = point(position.x + static_cast<float>(bearing.x), position.y + (static_cast<float>(m_font->get_char('H', m_fontSize).bearing.y) - static_cast<float>(bearing.y))) * m_scale;
 
-		const float w = ch.size.width * m_scale;
-		const float h = ch.size.height * m_scale;
+		const float w = size.width * m_scale;
+		const float h = size.height * m_scale;
 
 		float vertices[6][4] = {
 					{pos.x, pos.y + h, 0.0f, 1.0f},
@@ -150,11 +159,12 @@ void hgui::kernel::Label::draw() const
 			vertex[0] = pt.x;
 			vertex[1] = pt.y;
 		}
-		ch.texture->bind();
+		texture->bind();
 		m_VBO->bind();
 		m_VBO->set_sub_data(vertices, sizeof(vertices), 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		position.x += static_cast<HGUI_PRECISION>(ch.advance >> 6) * m_scale;
+		position.em_x += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
+		position.update();
 	}
 	m_VAO->unbind();
 	glBindTexture(GL_TEXTURE_2D, 0);

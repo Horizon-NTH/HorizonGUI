@@ -1,4 +1,6 @@
 #include "../include/hgui/header/FrameBuffer.h"
+#include "../include/hgui/header/Texture.h"
+#include "../include/hgui/header/RenderBuffer.h"
 
 hgui::kernel::FrameBuffer::FrameBuffer() noexcept :
 	m_id()
@@ -16,8 +18,9 @@ void hgui::kernel::FrameBuffer::bind() const noexcept
 	glBindFramebuffer(GL_FRAMEBUFFER, m_id);
 }
 
-void hgui::kernel::FrameBuffer::unbind() noexcept
+void hgui::kernel::FrameBuffer::unbind() const noexcept
 {
+	(void)m_id;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

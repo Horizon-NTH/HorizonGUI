@@ -1,20 +1,17 @@
 #pragma once
 
-#include "Include.h"
+#include "Coordinate.hpp"
 #include "Define.h"
-#include "Timer.h"
-#include "Window.h"
 
 namespace hgui
 {
+	class Timer;
+
 	typedef std::pair<buttons, actions> MouseAction;
-
-	bool operator==(const MouseAction& lhs, const MouseAction& rhs);
-
 	typedef std::tuple<inputs, buttons, actions> MouseCombinationAction;
 
+	bool operator==(const MouseAction& lhs, const MouseAction& rhs);
 	bool operator==(const MouseCombinationAction& lhs, const MouseCombinationAction& rhs);
-
 	bool operator==(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& lhs, const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& rhs);
 
 	class MouseManager
@@ -38,7 +35,7 @@ namespace hgui
 		static void bind_click_callback(const std::variant<std::function<void()>, std::function<void(buttons, actions)>>& function);
 		static void bind_scroll_callback(const std::variant<std::function<void()>, std::function<void(double, double)>>& function);
 
-		[[nodiscard]] static dvec2 get_position();
+		[[nodiscard]] static kernel::Point<HGUI_PRECISION> get_position();
 
 	private:
 		static void process();
