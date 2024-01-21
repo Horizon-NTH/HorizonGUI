@@ -9,6 +9,7 @@ include/KHR
 include/stb  
 include/AL
 include/snd
+include/hgui/header/GLSL.h
 .vs
 .gitignore  
 lib

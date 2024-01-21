@@ -490,7 +490,11 @@ namespace hgui::kernel
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		explicit operator Coordinate<U>() const noexcept;
 		explicit operator Vector<T, 2>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator Vector<U, 2>() const noexcept;
 		explicit operator glm::vec<2, T>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator glm::vec<2, U>() const noexcept;
 
 		virtual void update();
 
@@ -597,7 +601,11 @@ namespace hgui::kernel
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		explicit operator Point<U>() const noexcept;
 		explicit operator Vector<T, 2>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator Vector<U, 2>() const noexcept;
 		explicit operator glm::vec<2, T>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator glm::vec<2, U>() const noexcept;
 
 		const T& x;
 		const T& y;
@@ -700,7 +708,11 @@ namespace hgui::kernel
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		explicit operator Size<U>() const noexcept;
 		explicit operator Vector<T, 2>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator Vector<U, 2>() const noexcept;
 		explicit operator glm::vec<2, T>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator glm::vec<2, U>() const noexcept;
 
 		const T& width;
 		const T& height;
@@ -1466,9 +1478,23 @@ hgui::kernel::Coordinate<T>::operator hgui::kernel::Vector<T, 2>() const noexcep
 }
 
 template<typename T>
+template<typename U, typename>
+hgui::kernel::Coordinate<T>::operator hgui::kernel::Vector<U, 2>() const noexcept
+{
+	return Vector<U, 2>(std::valarray<U>{static_cast<U>(this->m_coords.first.get_width_value()), static_cast<U>(this->m_coords.second.get_height_value())});
+}
+
+template<typename T>
 hgui::kernel::Coordinate<T>::operator glm::vec<2, T>() const noexcept
 {
 	return glm::vec<2, T>(m_coords.first.get_width_value(), m_coords.second.get_height_value());
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Coordinate<T>::operator glm::vec<2, U>() const noexcept
+{
+	return glm::vec<2, U>(static_cast<U>(this->m_coords.first.get_width_value()), static_cast<U>(this->m_coords.second.get_height_value()));
 }
 
 template<typename T>
@@ -1951,9 +1977,23 @@ hgui::kernel::Point<T>::operator hgui::kernel::Vector<T, 2>() const noexcept
 }
 
 template<typename T>
+template<typename U, typename>
+hgui::kernel::Point<T>::operator hgui::kernel::Vector<U, 2>() const noexcept
+{
+	return Vector<U, 2>(std::valarray<U>{static_cast<U>(this->x), static_cast<U>(this->y)});
+}
+
+template<typename T>
 hgui::kernel::Point<T>::operator glm::vec<2, T>() const noexcept
 {
 	return glm::vec<2, T>(x, y);
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Point<T>::operator glm::vec<2, U>() const noexcept
+{
+	return glm::vec<2, U>(static_cast<U>(this->x), static_cast<U>(this->y));
 }
 
 template<typename T>
@@ -2383,9 +2423,23 @@ hgui::kernel::Size<T>::operator hgui::kernel::Vector<T, 2>() const noexcept
 }
 
 template<typename T>
+template<typename U, typename>
+hgui::kernel::Size<T>::operator hgui::kernel::Vector<U, 2>() const noexcept
+{
+	return Vector<U, 2>(std::valarray<U>{static_cast<U>(this->x), static_cast<U>(this->y)});
+}
+
+template<typename T>
 hgui::kernel::Size<T>::operator glm::vec<2, T>() const noexcept
 {
 	return glm::vec<2, T>(width, height);
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Size<T>::operator glm::vec<2, U>() const noexcept
+{
+	return glm::vec<2, U>(tatic_cast<U>(this->x), static_cast<U>(this->y));
 }
 
 template<typename T>

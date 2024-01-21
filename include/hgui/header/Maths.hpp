@@ -121,8 +121,8 @@ namespace hgui
 			template<typename U>
 			Color(U r, U g, U b, U a = static_cast<U>(1)) noexcept;
 			Color(const Color& color) noexcept;
-			explicit Color(const Vector<T, 3>& color) noexcept;
-			explicit Color(const Vector<T, 4>& color) noexcept;
+			Color(const Vector<T, 3>& color) noexcept;
+			Color(const Vector<T, 4>& color) noexcept;
 			explicit Color(const glm::vec3& color) noexcept;
 			explicit Color(const glm::vec4& color) noexcept;
 
