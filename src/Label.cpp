@@ -25,13 +25,7 @@ hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shad
 	{
 		m_font->load_font(m_fontSize);
 	}
-	for (const char c : m_text)
-	{
-		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
-		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
-	}
-	m_size.update();
+	calcul_size();
 }
 
 std::string hgui::kernel::Label::get_text() const
@@ -52,36 +46,21 @@ void hgui::kernel::Label::set_font_size(const unsigned int fontSize)
 void hgui::kernel::Label::set_text(const std::string& newText)
 {
 	m_text = newText;
-	m_size = size();
-	for (const char c : m_text)
-	{
-		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
-		m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
-	}
-	m_size.update();
+	calcul_size();
 }
 
 void hgui::kernel::Label::set_width(const unsigned int newWidth)
 {
 	int max = 1000, min = 10;
-	while (std::abs(m_size.width - static_cast<HGUI_PRECISION>(newWidth)) > size(1_em).width && max != min)
+	while (std::abs(m_size.width - static_cast<HGUI_PRECISION>(newWidth)) > 1.f && max != min)
 	{
-		m_fontSize = (max + min) / 2;
-		m_fontSize++;
+		m_fontSize = static_cast<unsigned>(ceil(static_cast<float>((min + max)) / 2.f));
 		if (!m_font->is_load(m_fontSize))
 		{
 			m_font->load_font(m_fontSize);
 		}
-		m_size = size();
-		for (const char c : m_text)
-		{
-			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-			m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
-			m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
-		}
-		m_size.update();
-		if (m_size.width > static_cast<HGUI_PRECISION>(newWidth))
+		calcul_size();
+		if (m_size.width >= static_cast<HGUI_PRECISION>(newWidth) && max != m_fontSize)
 		{
 			max = static_cast<int>(m_fontSize);
 		}
@@ -95,23 +74,15 @@ void hgui::kernel::Label::set_width(const unsigned int newWidth)
 void hgui::kernel::Label::set_height(const unsigned int newHeight)
 {
 	int max = 1000, min = 10;
-	while (std::abs(m_size.height - static_cast<HGUI_PRECISION>(newHeight)) > size(1_em).height && max != min)
+	while (std::abs(m_size.height - static_cast<HGUI_PRECISION>(newHeight)) > 1.f && max != min)
 	{
-		m_fontSize = (max + min) / 2;
-		m_fontSize++;
+		m_fontSize = static_cast<unsigned>(ceil(static_cast<float>((min + max)) / 2.f));
 		if (!m_font->is_load(m_fontSize))
 		{
 			m_font->load_font(m_fontSize);
 		}
-		m_size = size();
-		for (const char c : m_text)
-		{
-			const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
-			m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
-			m_size.em_width += static_cast<HGUI_PRECISION>(advance >> 6) * m_scale;
-		}
-		m_size.update();
-		if (m_size.height > static_cast<HGUI_PRECISION>(newHeight))
+		calcul_size();
+		if (m_size.height >= static_cast<HGUI_PRECISION>(newHeight) && max != m_fontSize)
 		{
 			max = static_cast<int>(m_fontSize);
 		}
@@ -179,4 +150,16 @@ bool hgui::kernel::Label::is_inside(const point& point) const
 			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
 
 	return point::is_in_rectangle(A, B, D, point);
+}
+
+void hgui::kernel::Label::calcul_size()
+{
+	m_size = size();
+	for (const char c : m_text)
+	{
+		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
+		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
+		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
+	}
+	m_size.update();
 }

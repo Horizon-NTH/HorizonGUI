@@ -42,6 +42,7 @@ namespace hgui
 			std::shared_ptr<Font> m_font;
 
 			using Widget::set_size;
+			void calcul_size();
 		};
 	}
 }
