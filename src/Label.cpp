@@ -160,6 +160,6 @@ void hgui::kernel::Label::calcul_size()
 		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
 		m_size.em_height = EM<float>{} + std::max(size.height * m_scale, m_size.height);
 		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
+		m_size.update();
 	}
-	m_size.update();
 }

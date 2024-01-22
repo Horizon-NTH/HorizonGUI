@@ -41,7 +41,7 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 						.width = face->glyph->bitmap.width,
 						.height = face->glyph->bitmap.rows,
 						.channel = channels::GREYSCALE,
-						.pixels = ImageData::pointer(face->glyph->bitmap.buffer, [](unsigned char* ptr)
+						.pixels = ImageData::pointer(face->glyph->bitmap.buffer, [](unsigned char*)
 							{
 							})
 					};
