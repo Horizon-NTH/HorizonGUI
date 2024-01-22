@@ -43,6 +43,7 @@ namespace hgui
 
 			using Widget::set_size;
 			void calcul_size();
+			int get_max_bearing_y() const;
 		};
 	}
 }

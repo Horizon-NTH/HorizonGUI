@@ -105,11 +105,12 @@ void hgui::kernel::Label::draw() const
 	        .set_int("text", 0);
 	glActiveTexture(GL_TEXTURE0);
 	m_VAO->bind();
+	const auto maxBearing = static_cast<float>(get_max_bearing_y());
 	for (const char c : m_text)
 	{
 		const auto [texture, size, bearing, advance] = m_font->get_char(c, m_fontSize);
 
-		const point pos = point(position.x + static_cast<float>(bearing.x), position.y + (static_cast<float>(m_font->get_char('H', m_fontSize).bearing.y) - static_cast<float>(bearing.y))) * m_scale;
+		const point pos = point(position.x + static_cast<float>(bearing.x), position.y + (maxBearing - static_cast<float>(bearing.y))) * m_scale;
 
 		const float w = size.width * m_scale;
 		const float h = size.height * m_scale;
@@ -162,4 +163,18 @@ void hgui::kernel::Label::calcul_size()
 		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
 		m_size.update();
 	}
+}
+
+int hgui::kernel::Label::get_max_bearing_y() const
+{
+	if (m_text.empty())
+		return 0;
+	return std::accumulate(
+		std::next(m_text.begin()), m_text.end(),
+		m_font->get_char(m_text[0], m_fontSize).bearing.y,
+		[this](const int max, const char c)
+			{
+				return std::max(max, m_font->get_char(c, m_fontSize).bearing.y);
+			}
+	);
 }
