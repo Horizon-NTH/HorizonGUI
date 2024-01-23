@@ -248,12 +248,16 @@ namespace hgui::kernel
 		[[nodiscard]] T get_width_value() const;
 		[[nodiscard]] T get_height_value() const;
 
+		void set_reference(const reference& ref) noexcept;
+		const reference& get_reference() const noexcept;
+
 	private:
 		T m_value;
+		reference m_reference{reference::BOTH};
 		std::vector<std::pair<operations, std::variant<T, EM>>> m_operations;
 		inline static std::pair<T, T> referenceSize{};
 
-		static T calcul(T sum, std::pair<operations, std::variant<T, EM>> element, T referenceSize) noexcept;
+		[[nodiscard]] static T calcul(T sum, std::pair<operations, std::variant<T, EM>> element, T referenceSize) noexcept;
 	};
 
 	template<typename T>
@@ -498,6 +502,8 @@ namespace hgui::kernel
 
 		virtual void update();
 
+		Coordinate& set_reference(const reference& newReference) noexcept;
+
 	protected:
 		std::pair<EM<T>, EM<T>> m_coords;
 	};
@@ -733,7 +739,7 @@ namespace hgui
 
 inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(const unsigned long long value) noexcept
 {
-	return hgui::kernel::EM(static_cast<HGUI_PRECISION>(value / 100.f));
+	return hgui::kernel::EM(static_cast<HGUI_PRECISION>(value / 100.));
 }
 
 inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(const long double value) noexcept
@@ -918,6 +924,7 @@ template<typename U, typename>
 hgui::kernel::EM<T>::operator EM<U>() const noexcept
 {
 	EM<U> em(static_cast<U>(this->m_value));
+	em.m_reference = this->m_reference;
 	for (const auto& operation : this->m_operations)
 	{
 		if (operation.second.index() == 0)
@@ -931,15 +938,53 @@ hgui::kernel::EM<T>::operator EM<U>() const noexcept
 template<typename T>
 T hgui::kernel::EM<T>::get_width_value() const
 {
+	T ref;
+	switch (m_reference)
+	{
+		case reference::WIDTH:
+			ref = referenceSize.first;
+			break;
+		case reference::HEIGHT:
+			ref = referenceSize.second;
+			break;
+		case reference::BOTH:
+			ref = referenceSize.first;
+			break;
+	}
 	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, referenceSize.first); };
-	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * referenceSize.first, function));
+	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * ref, function));
 }
 
 template<typename T>
 T hgui::kernel::EM<T>::get_height_value() const
 {
+	T ref;
+	switch (m_reference)
+	{
+		case reference::WIDTH:
+			ref = referenceSize.first;
+			break;
+		case reference::HEIGHT:
+			ref = referenceSize.second;
+			break;
+		case reference::BOTH:
+			ref = referenceSize.second;
+			break;
+	}
 	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, referenceSize.second); };
-	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * referenceSize.second, function));
+	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * ref, function));
+}
+
+template<typename T>
+void hgui::kernel::EM<T>::set_reference(const reference& ref) noexcept
+{
+	m_reference = ref;
+}
+
+template<typename T>
+const hgui::reference& hgui::kernel::EM<T>::get_reference() const noexcept
+{
+	return m_reference;
 }
 
 template<typename T>
@@ -963,17 +1008,32 @@ T hgui::kernel::EM<T>::calcul(T sum, std::pair<operations, std::variant<T, EM>> 
 	}
 	if (auto em = std::get_if<EM>(&element.second))
 	{
+		T ref;
+		switch (em->m_reference)
+		{
+			case reference::WIDTH:
+				ref = em->referenceSize.first;
+				break;
+			case reference::HEIGHT:
+				ref = em->referenceSize.second;
+				break;
+			case reference::BOTH:
+				ref = referenceSize;
+				break;
+			default:
+				ref = referenceSize;;
+		}
 		auto function = [&](T s, std::pair<operations, std::variant<T, EM>> el) { return calcul(s, el, referenceSize); };
 		switch (element.first)
 		{
 			case operations::ADDITION:
-				return sum + std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * referenceSize, function);
+				return sum + std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * ref, function);
 			case operations::SUBTRACTION:
-				return sum - std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * referenceSize, function);
+				return sum - std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * ref, function);
 			case operations::MULTIPLICATION:
-				return sum * std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * referenceSize, function);
+				return sum * std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * ref, function);
 			case operations::DIVISION:
-				return sum / std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * referenceSize, function);
+				return sum / std::accumulate(em->m_operations.begin(), em->m_operations.end(), em->m_value * ref, function);
 			default:
 				return {};
 		}
@@ -1510,6 +1570,15 @@ void hgui::kernel::Coordinate<T>::update()
 }
 
 template<typename T>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::set_reference(const reference& newReference) noexcept
+{
+	m_coords.first.set_reference(newReference);
+	m_coords.second.set_reference(newReference);
+	update();
+	return *this;
+}
+
+template<typename T>
 hgui::kernel::Point<T>::Point() noexcept :
 	Coordinate<T>(),
 	m_x(),
@@ -1524,7 +1593,7 @@ hgui::kernel::Point<T>::Point() noexcept :
 
 template<typename T>
 hgui::kernel::Point<T>::Point(const Point& point) noexcept :
-	Coordinate<T>(point.m_coords),
+	Coordinate<T>(point),
 	m_x(),
 	m_y(),
 	x(m_x),
@@ -1537,7 +1606,7 @@ hgui::kernel::Point<T>::Point(const Point& point) noexcept :
 
 template<typename T>
 hgui::kernel::Point<T>::Point(Point&& point) noexcept :
-	Coordinate<T>(std::move(point.m_coords)),
+	Coordinate<T>(std::move(point)),
 	m_x(),
 	m_y(),
 	x(m_x),
@@ -1694,14 +1763,14 @@ hgui::kernel::Point<T>::Point(const glm::vec<2, T>& point) noexcept :
 template<typename T>
 hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Point& point) noexcept
 {
-	Coordinate<T>::operator=(point.m_coords);
+	Coordinate<T>::operator=(point);
 	return *this;
 }
 
 template<typename T>
 hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(Point&& point) noexcept
 {
-	Coordinate<T>::operator=(std::move(point.m_coords));
+	Coordinate<T>::operator=(std::move(point));
 	return *this;
 }
 
@@ -2018,7 +2087,7 @@ hgui::kernel::Size<T>::Size() noexcept :
 
 template<typename T>
 hgui::kernel::Size<T>::Size(const Size& size) noexcept :
-	Coordinate<T>(size.m_coords),
+	Coordinate<T>(size),
 	m_width(),
 	m_height(),
 	width(m_width),
@@ -2031,7 +2100,7 @@ hgui::kernel::Size<T>::Size(const Size& size) noexcept :
 
 template<typename T>
 hgui::kernel::Size<T>::Size(Size&& size) noexcept :
-	Coordinate<T>(std::move(size.m_coords)),
+	Coordinate<T>(std::move(size)),
 	m_width(),
 	m_height(),
 	width(m_width),
@@ -2188,14 +2257,14 @@ hgui::kernel::Size<T>::Size(const glm::vec<2, T>& size) noexcept :
 template<typename T>
 hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Size& size) noexcept
 {
-	Coordinate<T>::operator=(size.m_coords);
+	Coordinate<T>::operator=(size);
 	return *this;
 }
 
 template<typename T>
 hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(Size&& size) noexcept
 {
-	Coordinate<T>::operator=(std::move(size.m_coords));
+	Coordinate<T>::operator=(std::move(size));
 	return *this;
 }
 

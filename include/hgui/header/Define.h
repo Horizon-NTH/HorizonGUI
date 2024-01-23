@@ -222,6 +222,13 @@ namespace hgui
 		VRESIZE   = 0x00036006
 	};
 
+	enum class reference
+	{
+		WIDTH,
+		HEIGHT,
+		BOTH
+	};
+
 	namespace kernel
 	{
 		void resources_cleaner();
