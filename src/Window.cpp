@@ -80,6 +80,16 @@ GLFWwindow* hgui::kernel::Window::get_window_ptr() const
 	return m_windowPTR;
 }
 
+void hgui::kernel::Window::set_size_callback(const std::variant<std::function<void()>, SizeCallback>& function)
+{
+	m_sizeCallback = function;
+}
+
+void hgui::kernel::Window::set_position_callback(const std::variant<std::function<void()>, PositionCallback>& function)
+{
+	m_positionCallback = function;
+}
+
 void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, const int height)
 {
 	auto* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -88,10 +98,38 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	win->m_size = size(width, height);
 	EM<HGUI_PRECISION>::referenceSize = std::make_pair(win->m_size.width, win->m_size.height);
 	Widget::update();
+	if (const auto function = std::get_if<std::function<void()>>(&win->m_sizeCallback))
+	{
+		if (*function)
+		{
+			(*function)();
+		}
+	}
+	else if (const auto functionWithParameter = std::get_if<SizeCallback>(&win->m_sizeCallback))
+	{
+		if (*functionWithParameter)
+		{
+			(*functionWithParameter)(window, width, height);
+		}
+	}
 }
 
 void hgui::kernel::Window::position_callback(GLFWwindow* window, const int xPosition, const int yPosition)
 {
 	const auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 	win->m_position = point(xPosition, yPosition);
+	if (const auto function = std::get_if<std::function<void()>>(&win->m_positionCallback))
+	{
+		if (*function)
+		{
+			(*function)();
+		}
+	}
+	else if (const auto functionWithParameter = std::get_if<PositionCallback>(&win->m_positionCallback))
+	{
+		if (*functionWithParameter)
+		{
+			(*functionWithParameter)(window, xPosition, yPosition);
+		}
+	}
 }
