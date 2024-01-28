@@ -18,7 +18,8 @@ hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, const size& 
 	m_color(color),
 	m_angularRotation(angularRotation)
 {
-	m_taskID = TaskManager::program(std::chrono::milliseconds{}, [&, tag = TagManager::get_current_tag()]
+	auto tag = TagManager::get_current_tag();
+	m_taskID = TaskManager::program(std::chrono::milliseconds{}, [&, tag]
 		{
 			m_widgets[tag].push_back(weak_from_this());
 			m_taskID.clear();
