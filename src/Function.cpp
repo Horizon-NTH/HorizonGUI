@@ -237,7 +237,7 @@ void hgui::kernel::init_resources()
 	ShaderManager::create(HGUI_SHADER_FRAMEBUFFER, HGUI_GLSL_VERTEX_BUFFER, HGUI_GLSL_FRAGMENT_BUFFER);
 	const auto* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
-		ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), window->get_size());
+		ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), size(100_em));
 	ShaderManager::create(HGUI_SHADER_BUTTON, HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);
 	ShaderManager::create(HGUI_SHADER_LABEL, HGUI_GLSL_VERTEX_LABEL, HGUI_GLSL_FRAGMENT_LABEL);
 	ShaderManager::create(HGUI_SHADER_SPRITE, HGUI_GLSL_VERTEX_SPRITE, HGUI_GLSL_FRAGMENT_SPRITE);

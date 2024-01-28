@@ -2,6 +2,7 @@
 #include "../include/hgui/header/Widget.h"
 #include "../include/hgui/header/Monitor.h"
 #include "../include/hgui/header/Image.h"
+#include "../include/hgui/header/Renderer.h"
 
 hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
 	m_name(name),
@@ -31,11 +32,11 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 	glfwSetWindowPosCallback(m_windowPTR, position_callback);
 	if (icon)
 	{
-		const auto& [width, height, channel, pixels] = icon->get_data();
+		const auto& [size, channel, pixels] = icon->get_data();
 		const GLFWimage ico
 				{
-					.width = static_cast<int>(width),
-					.height = static_cast<int>(height),
+					.width = static_cast<int>(size.width),
+					.height = static_cast<int>(size.height),
 					.pixels = pixels.get()
 				};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
@@ -98,6 +99,7 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	win->m_size = size(width, height);
 	EM<HGUI_PRECISION>::referenceSize = std::make_pair(win->m_size.width, win->m_size.height);
 	Widget::update();
+	Renderer::buffer_update();
 	if (const auto function = std::get_if<std::function<void()>>(&win->m_sizeCallback))
 	{
 		if (*function)

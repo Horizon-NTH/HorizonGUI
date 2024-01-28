@@ -35,8 +35,8 @@ hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::s
 void hgui::kernel::Buffer::bind() const
 {
 	m_frameBuffer->bind();
-	const auto& [width, height, channel, pixels] = m_texture->get_image()->get_data();
-	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	const auto& [size, channel, pixels] = m_texture->get_image()->get_data();
+	glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
 }
 
 void hgui::kernel::Buffer::unbind() const

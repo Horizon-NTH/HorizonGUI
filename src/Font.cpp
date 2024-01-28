@@ -38,8 +38,7 @@ void hgui::kernel::Font::load_font(const unsigned int size)
 			}
 			ImageData data
 					{
-						.width = face->glyph->bitmap.width,
-						.height = face->glyph->bitmap.rows,
+						.size = Size(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 						.channel = channels::GREYSCALE,
 						.pixels = ImageData::pointer(face->glyph->bitmap.buffer, [](unsigned char*)
 							{

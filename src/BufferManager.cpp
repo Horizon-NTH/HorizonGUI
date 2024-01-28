@@ -8,8 +8,7 @@ std::shared_ptr<hgui::kernel::Buffer> hgui::BufferManager::create(const std::sha
 {
 	kernel::ImageData bufferData
 			{
-				.width = static_cast<unsigned int>(bufferSize.width),
-				.height = static_cast<unsigned int>(bufferSize.height),
+				.size = static_cast<kernel::Size<unsigned>>(bufferSize),
 				.channel = channels::RGBA,
 				.pixels = kernel::ImageData::pointer(nullptr, nullptr)
 			};
@@ -25,8 +24,7 @@ const std::shared_ptr<hgui::kernel::Buffer>& hgui::BufferManager::create(const s
 	{
 		kernel::ImageData bufferData
 				{
-					.width = static_cast<unsigned>(bufferSize.width),
-					.height = static_cast<unsigned>(bufferSize.height),
+					.size = static_cast<kernel::Size<unsigned>>(bufferSize),
 					.channel = channels::RGBA,
 					.pixels = kernel::ImageData::pointer(nullptr, [](unsigned char*)
 						{

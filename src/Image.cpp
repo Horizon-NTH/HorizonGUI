@@ -28,14 +28,15 @@ void hgui::kernel::Image::set_data(ImageData&& newData)
 
 void hgui::kernel::Image::load_image(const std::string& filePath)
 {
-	int channel;
+	int channel, width, height;
 	m_data.pixels = ImageData::pointer(
-		stbi_load(filePath.c_str(), reinterpret_cast<int*>(&m_data.width), reinterpret_cast<int*>(&m_data.height), &channel, 0),
+		stbi_load(filePath.c_str(), &width, &height, &channel, 0),
 		[](unsigned char* data)
 			{
 				stbi_image_free(data);
 			}
 	);
+	m_data.size = Size<unsigned>(width, height);
 	switch (channel)
 	{
 		case 1:
@@ -62,7 +63,7 @@ void hgui::kernel::Image::load_image(const std::string& filePath)
 
 hgui::size hgui::kernel::Image::get_size() const
 {
-	return {m_data.width, m_data.height};
+	return static_cast<size>(m_data.size);
 }
 
 void hgui::kernel::Image::save_image(const std::string& filePath) const
@@ -85,7 +86,7 @@ void hgui::kernel::Image::save_image(const std::string& filePath) const
 		default:
 			break;
 	}
-	if (!stbi_write_png(filePath.c_str(), static_cast<int>(m_data.width), static_cast<int>(m_data.height), channel, m_data.pixels.get(), static_cast<int>(m_data.width) * channel))
+	if (!stbi_write_png(filePath.c_str(), static_cast<int>(m_data.size.width), static_cast<int>(m_data.size.height), channel, m_data.pixels.get(), static_cast<int>(m_data.size.width) * channel))
 	{
 		throw std::runtime_error("ERROR WHILE SAVING IMAGE : " + filePath);
 	}

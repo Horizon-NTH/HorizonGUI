@@ -9,7 +9,6 @@
 #include "../include/hgui/header/Widget.h"
 #include "../include/hgui/header/Buffer.h"
 #include "../include/hgui/header/BufferManager.h"
-#include "../include/hgui/header/Window.h"
 
 #if defined(HGUI_DYNAMIC)
 std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
@@ -57,10 +56,7 @@ void hgui::Renderer::loop()
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		m_frameBufferShader = ShaderManager::create(HGUI_GLSL_VERTEX_BUFFER, HGUI_GLSL_FRAGMENT_BUFFER);
-		{
-			const kernel::Window* window = static_cast<kernel::Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
-			m_frameBuffer = BufferManager::create(m_frameBufferShader, window->get_size());
-		}
+		buffer_update();
 		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -129,6 +125,15 @@ void hgui::Renderer::render()
 		}
 	}
 }
+
+void hgui::Renderer::buffer_update()
+{
+	if (m_frameBufferShader)
+	{
+		m_frameBuffer = BufferManager::create(m_frameBufferShader, size(100_em));
+	}
+}
+
 #elif defined(HGUI_STATIC)
 std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
 hgui::color hgui::Renderer::m_backGroundColor;
@@ -240,4 +245,15 @@ void hgui::Renderer::render()
 		}
 	}
 }
+
+void hgui::Renderer::buffer_update()
+{
+	if (m_frameBufferShader)
+	{
+		BufferManager::destroy(HGUI_FRAMEBUFFER_POST_PROCESSING);
+		BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
+			ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), size(100_em));
+	}
+}
+
 #endif

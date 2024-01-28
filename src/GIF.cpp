@@ -25,7 +25,7 @@ hgui::kernel::GIFData& hgui::kernel::GIF::get_data()
 
 hgui::size hgui::kernel::GIF::get_size() const
 {
-	return {m_data.width, m_data.height};
+	return static_cast<size>(m_data.size);
 }
 
 hgui::kernel::GIF::Frame hgui::kernel::GIF::get_frame(unsigned frameNumber) const
@@ -34,8 +34,7 @@ hgui::kernel::GIF::Frame hgui::kernel::GIF::get_frame(unsigned frameNumber) cons
 	const auto& [pixels, delay] = m_data.pixels.at(frameNumber);
 	ImageData data =
 			{
-				.width = m_data.width,
-				.height = m_data.height,
+				.size = m_data.size,
 				.channel = m_data.channel,
 				.pixels = ImageData::pointer(pixels, [](unsigned char*)
 					{
@@ -72,9 +71,9 @@ void hgui::kernel::GIF::load_gif(const std::string& gifPath)
 	const auto buffer = read_binary_file(gifPath);
 
 	int* delays = nullptr;
-	int channel = 0;
+	int channel = 0, width, height;
 	m_data.ptr = GIFData::pointer(stbi_load_gif_from_memory(buffer.data(), static_cast<int>(buffer.size()), &delays,
-			reinterpret_cast<int*>(&m_data.width), reinterpret_cast<int*>(&m_data.height), reinterpret_cast<int*>(&m_data.framesCount), &channel, 0), [](stbi_uc* data)
+			&width, &height, reinterpret_cast<int*>(&m_data.framesCount), &channel, 0), [](stbi_uc* data)
 			{
 				stbi_image_free(data);
 			});
@@ -100,7 +99,7 @@ void hgui::kernel::GIF::load_gif(const std::string& gifPath)
 			m_data.channel = channels::UNKNOW;
 			break;
 	}
-	const int stride = static_cast<int>(m_data.width) * static_cast<int>(m_data.height) * channel;
+	const int stride = static_cast<int>(m_data.size.width) * static_cast<int>(m_data.size.height) * channel;
 	for (int i = 0; i < static_cast<int>(m_data.framesCount); i++)
 	{
 		m_data.pixels.emplace_back(m_data.ptr.get() + i * stride, GIFData::delay(delays[i]));

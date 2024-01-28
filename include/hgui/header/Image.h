@@ -7,8 +7,7 @@ namespace hgui::kernel
 	struct ImageData
 	{
 		using pointer = std::unique_ptr<unsigned char[], void(*)(unsigned char*)>;
-		unsigned int width;
-		unsigned int height;
+		Size<unsigned> size;
 		channels channel = channels::UNKNOW;
 		pointer pixels = {
 					nullptr, [](unsigned char*)

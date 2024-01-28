@@ -8,11 +8,14 @@ namespace hgui
 	{
 		class Shader;
 		class Buffer;
+		class Window;
 	}
 
 #if defined(HGUI_DYNAMIC)
 	class Renderer
 	{
+		friend class kernel::Window;
+
 	public:
 		Renderer() = delete;
 		~Renderer() = delete;
@@ -36,6 +39,8 @@ namespace hgui
 		static std::shared_ptr<kernel::Buffer> m_frameBuffer;
 		static std::shared_ptr<kernel::Shader> m_frameBufferShader;
 		static std::function<void()> m_drawCallBack;
+
+		static void buffer_update();
 	};
 #elif defined(HGUI_STATIC)
 	class Renderer
@@ -61,6 +66,8 @@ namespace hgui
 		static std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, effects>> m_draws;
 		static color m_backGroundColor;
 		static std::function<void()> m_drawCallBack;
+
+		static void buffer_update();
 	};
 #endif
 }

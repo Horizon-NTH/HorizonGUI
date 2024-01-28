@@ -33,8 +33,8 @@ const std::shared_ptr<hgui::kernel::Image>& hgui::kernel::Texture::get_image() c
 void hgui::kernel::Texture::generate() const
 {
 	bind();
-	const auto& [width, height, channel, pixels] = m_image->get_data();
-	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(channel), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLenum>(channel),
+	const auto& [size, channel, pixels] = m_image->get_data();
+	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(channel), static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height), 0, static_cast<GLenum>(channel),
 		GL_UNSIGNED_BYTE, pixels.get());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_options.wrap_s);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_options.wrap_t);

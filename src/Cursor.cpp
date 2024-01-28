@@ -11,8 +11,8 @@ hgui::kernel::Cursor::Cursor(const std::shared_ptr<Image>& customCursor, const p
 {
 	const GLFWimage cursor
 			{
-				.width = static_cast<int>(customCursor->get_data().width),
-				.height = static_cast<int>(customCursor->get_data().height),
+				.width = static_cast<int>(customCursor->get_size().width),
+				.height = static_cast<int>(customCursor->get_size().height),
 				.pixels = customCursor->get_data().pixels.get()
 			};
 	if (cursor.pixels)

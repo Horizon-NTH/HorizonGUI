@@ -20,6 +20,8 @@ namespace hgui::kernel
 	class EM
 	{
 		friend class Window;
+		template<typename U>
+		friend class EM;
 
 	public:
 		// Basic constructor
@@ -772,14 +774,14 @@ hgui::kernel::EM<T>::EM(U value) noexcept :
 template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>::EM(const EM<U>& em) noexcept :
-	EM(static_cast<EM>(em))
+	EM(em.operator EM())
 {
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>::EM(EM<U>&& em) noexcept :
-	EM(std::move(static_cast<EM>(em)))
+	EM(std::move(em.operator EM()))
 {
 }
 
@@ -787,7 +789,7 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator=(const EM<U>& em) noexcept
 {
-	operator=(static_cast<EM>(em));
+	operator=(em.operator EM());
 	return *this;
 }
 
@@ -795,7 +797,7 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator=(EM<U>&& em) noexcept
 {
-	operator=(std::move(static_cast<EM>(em)));
+	operator=(std::move(em.operator EM()));
 	return *this;
 }
 
@@ -895,28 +897,28 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator+=(const EM<U>& em) noexcept
 {
-	return operator+=(static_cast<EM>(em));
+	return operator+=(em.operator EM());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator-=(const EM<U>& em) noexcept
 {
-	return operator-=(static_cast<EM>(em));
+	return operator-=(em.operator EM());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator*=(const EM<U>& em) noexcept
 {
-	return operator*=(static_cast<EM>(em));
+	return operator*=(em.operator EM());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::EM<T>& hgui::kernel::EM<T>::operator/=(const EM<U>& em) noexcept
 {
-	return operator/=(static_cast<EM>(em));
+	return operator/=(em.operator EM());
 }
 
 template<typename T>
@@ -942,16 +944,16 @@ T hgui::kernel::EM<T>::get_width_value() const
 	switch (m_reference)
 	{
 		case reference::WIDTH:
-			ref = referenceSize.first;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.first);
 			break;
 		case reference::HEIGHT:
-			ref = referenceSize.second;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.second);
 			break;
 		case reference::BOTH:
-			ref = referenceSize.first;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.first);
 			break;
 	}
-	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, referenceSize.first); };
+	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, static_cast<T>(EM<HGUI_PRECISION>::referenceSize.first)); };
 	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * ref, function));
 }
 
@@ -962,16 +964,16 @@ T hgui::kernel::EM<T>::get_height_value() const
 	switch (m_reference)
 	{
 		case reference::WIDTH:
-			ref = referenceSize.first;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.first);
 			break;
 		case reference::HEIGHT:
-			ref = referenceSize.second;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.second);
 			break;
 		case reference::BOTH:
-			ref = referenceSize.second;
+			ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.second);
 			break;
 	}
-	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, referenceSize.second); };
+	auto function = [&](T sum, std::pair<operations, std::variant<T, EM>> element) { return calcul(sum, element, static_cast<T>(EM<HGUI_PRECISION>::referenceSize.second)); };
 	return static_cast<T>(std::accumulate(m_operations.begin(), m_operations.end(), m_value * ref, function));
 }
 
@@ -1012,10 +1014,10 @@ T hgui::kernel::EM<T>::calcul(T sum, std::pair<operations, std::variant<T, EM>> 
 		switch (em->m_reference)
 		{
 			case reference::WIDTH:
-				ref = em->referenceSize.first;
+				ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.first);
 				break;
 			case reference::HEIGHT:
-				ref = em->referenceSize.second;
+				ref = static_cast<T>(EM<HGUI_PRECISION>::referenceSize.second);
 				break;
 			case reference::BOTH:
 				ref = referenceSize;
@@ -1140,14 +1142,14 @@ hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator=(Coordinate&&
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>::Coordinate(const Coordinate<U>& coords) noexcept :
-	Coordinate(static_cast<Coordinate>(coords))
+	Coordinate(coords.operator Coordinate())
 {
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>::Coordinate(Coordinate<U>&& coords) noexcept :
-	Coordinate(std::move(static_cast<Coordinate>(coords)))
+	Coordinate(std::move(coords.operator Coordinate()))
 {
 }
 
@@ -1372,14 +1374,14 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator=(const Coordinate<U>& coords) noexcept
 {
-	return operator=(static_cast<Coordinate>(coords));
+	return operator=(coords.operator Coordinate());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator=(Coordinate<U>&& coords) noexcept
 {
-	return operator=(std::move(static_cast<Coordinate>(coords)));
+	return operator=(std::move(coords.operator Coordinate()));
 }
 
 template<typename T>
@@ -1507,14 +1509,14 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator+=(const Coordinate<U>& coords) noexcept
 {
-	return operator+=(static_cast<Coordinate>(coords));
+	return operator+=(coords.operator Coordinate());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator-=(const Coordinate<U>& coords) noexcept
 {
-	return operator-=(static_cast<Coordinate>(coords));
+	return operator-=(coords.operator Coordinate());
 }
 
 template<typename T>
@@ -1777,14 +1779,14 @@ hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(Point&& point) noexcep
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Point<T>::Point(const Point<U>& coords) noexcept :
-	Point(static_cast<Point>(coords))
+	Point(coords.operator Point())
 {
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Point<T>::Point(Point<U>&& coords) noexcept :
-	Point(std::move(static_cast<Point>(coords)))
+	Point(std::move(coords.operator Point()))
 {
 }
 
@@ -1974,14 +1976,14 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(const Point<U>& coords) noexcept
 {
-	return operator=(static_cast<Point>(coords));
+	return operator=(coords.operator Point());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Point<T>& hgui::kernel::Point<T>::operator=(Point<U>&& coords) noexcept
 {
-	return operator=(std::move(static_cast<Point>(coords)));
+	return operator=(std::move(coords.operator Point()));
 }
 
 template<typename T>
@@ -2271,14 +2273,14 @@ hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(Size&& size) noexcept
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Size<T>::Size(const Size<U>& size) noexcept :
-	Size(static_cast<Size>(size))
+	Size(size.operator Size())
 {
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Size<T>::Size(Size<U>&& size) noexcept :
-	Size(std::move(static_cast<Size>(size)))
+	Size(std::move(size.operator Size()))
 {
 }
 
@@ -2468,14 +2470,14 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(const Size<U>& size) noexcept
 {
-	return operator=(static_cast<Size>(size));
+	return operator=(size.operator Size());
 }
 
 template<typename T>
 template<typename U, typename>
 hgui::kernel::Size<T>& hgui::kernel::Size<T>::operator=(Size<U>&& size) noexcept
 {
-	return operator=(std::move(static_cast<Size>(size)));
+	return operator=(std::move(size.operator Size()));
 }
 
 template<typename T>

@@ -13,8 +13,7 @@ namespace hgui::kernel
 		using frame = std::pair<stbi_uc*, delay>;
 		using data = std::vector<frame>;
 
-		unsigned int width;
-		unsigned int height;
+		Size<unsigned> size;
 		unsigned int framesCount;
 		channels channel = channels::UNKNOW;
 		data pixels;

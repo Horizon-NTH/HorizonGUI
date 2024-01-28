@@ -66,7 +66,7 @@ bool hgui::kernel::AnimatedSprite::is_looping() const
 
 void hgui::kernel::AnimatedSprite::display()
 {
-	const auto& [width, height, framesCount, channel, pixels, ptr] = m_gif->get_data();
+	const auto& [size, framesCount, channel, pixels, ptr] = m_gif->get_data();
 	const auto [image, delay] = m_gif->get_frame(m_frameRendered++);
 #if defined(HGUI_DYNAMIC)
 	Sprite::set_texture(TextureManager::create(image));
