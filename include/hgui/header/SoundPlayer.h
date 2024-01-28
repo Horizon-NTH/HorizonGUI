@@ -13,7 +13,7 @@ namespace hgui::kernel
 
 	class SoundPlayer
 	{
-		friend class SoundPlayerManager;
+		friend class hgui::SoundPlayerManager;
 
 	public:
 		explicit SoundPlayer(const std::shared_ptr<Audio>& audio);

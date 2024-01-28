@@ -37,7 +37,7 @@ namespace hgui::kernel
 	class Widget : public std::enable_shared_from_this<Widget>
 	{
 		friend class Window;
-		friend class MouseManager;
+		friend class hgui::MouseManager;
 
 	public:
 		Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation);
