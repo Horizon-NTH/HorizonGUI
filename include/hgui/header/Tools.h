@@ -18,4 +18,5 @@ namespace hgui
 	[[nodiscard]] std::string file_reader(const std::string& filePath);
 	[[nodiscard]] bool random(double chances);
 	[[nodiscard]] std::string get_unique_id();
+	[[nodiscard]] double get_delta_time();
 }

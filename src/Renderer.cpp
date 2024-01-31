@@ -9,6 +9,7 @@
 #include "../include/hgui/header/Widget.h"
 #include "../include/hgui/header/Buffer.h"
 #include "../include/hgui/header/BufferManager.h"
+#include "../include/hgui/header/Timer.h"
 
 #if defined(HGUI_DYNAMIC)
 std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
@@ -16,6 +17,8 @@ hgui::color hgui::Renderer::m_backGroundColor;
 std::shared_ptr<hgui::kernel::Buffer> hgui::Renderer::m_frameBuffer(nullptr);
 std::shared_ptr<hgui::kernel::Shader> hgui::Renderer::m_frameBufferShader(nullptr);
 std::function<void()> hgui::Renderer::m_drawCallBack(nullptr);
+std::shared_ptr<hgui::Timer> hgui::Renderer::m_timer(std::make_shared<Timer>());
+double hgui::Renderer::m_deltaTime{};
 
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
@@ -59,6 +62,10 @@ void hgui::Renderer::loop()
 		buffer_update();
 		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
 		{
+			// Delta time calculation
+			m_deltaTime = m_timer->get_time();
+			m_timer->restart();
+
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_frameBuffer->clear();
 

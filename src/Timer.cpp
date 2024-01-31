@@ -8,20 +8,32 @@ hgui::Timer::Timer() noexcept :
 
 void hgui::Timer::start() noexcept
 {
-	m_startTime = std::chrono::high_resolution_clock::now();
-	m_counting = true;
+	if (!m_counting)
+	{
+		m_startTime = std::chrono::high_resolution_clock::now();
+		m_counting = true;
+	}
 }
 
 void hgui::Timer::stop() noexcept
 {
-	m_times = std::chrono::high_resolution_clock::now() - m_startTime;
-	m_counting = false;
+	if (m_counting)
+	{
+		m_times = std::chrono::high_resolution_clock::now() - m_startTime;
+		m_counting = false;
+	}
 }
 
 void hgui::Timer::reset() noexcept
 {
-	m_times = m_startTime - m_startTime;
+	m_times = std::chrono::duration<double>::zero();
 	m_counting = false;
+}
+
+void hgui::Timer::restart() noexcept
+{
+	reset();
+	start();
 }
 
 double hgui::Timer::get_time() const noexcept

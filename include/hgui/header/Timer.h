@@ -19,6 +19,7 @@ namespace hgui
 		void start() noexcept;
 		void stop() noexcept;
 		void reset() noexcept;
+		void restart() noexcept;
 
 		[[nodiscard]] double get_time() const noexcept;
 		[[nodiscard]] bool is_counting() const noexcept;

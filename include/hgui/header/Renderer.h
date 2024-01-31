@@ -11,6 +11,9 @@ namespace hgui
 		class Window;
 	}
 
+	class Timer;
+	double get_delta_time();
+
 #if defined(HGUI_DYNAMIC)
 	class Renderer
 	{
@@ -39,8 +42,13 @@ namespace hgui
 		static std::shared_ptr<kernel::Buffer> m_frameBuffer;
 		static std::shared_ptr<kernel::Shader> m_frameBufferShader;
 		static std::function<void()> m_drawCallBack;
+		static std::shared_ptr<Timer> m_timer;
+		static double m_deltaTime;
 
-		static void buffer_update();
+		static
+		void buffer_update();
+
+		friend double get_delta_time();
 	};
 #elif defined(HGUI_STATIC)
 	class Renderer

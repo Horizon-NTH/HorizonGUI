@@ -614,6 +614,9 @@ namespace hgui::kernel
 		explicit operator glm::vec<2, T>() const noexcept;
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		explicit operator glm::vec<2, U>() const noexcept;
+		explicit operator GLSLvec2<T>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator GLSLvec2<U>() const noexcept;
 
 		const T& x;
 		const T& y;
@@ -721,6 +724,9 @@ namespace hgui::kernel
 		explicit operator glm::vec<2, T>() const noexcept;
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		explicit operator glm::vec<2, U>() const noexcept;
+		explicit operator GLSLvec2<T>() const noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		explicit operator GLSLvec2<U>() const noexcept;
 
 		const T& width;
 		const T& height;
@@ -2068,6 +2074,19 @@ hgui::kernel::Point<T>::operator glm::vec<2, U>() const noexcept
 }
 
 template<typename T>
+hgui::kernel::Point<T>::operator hgui::kernel::GLSLvec2<T>() const noexcept
+{
+	return glm::vec<2, T>(x, y);
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Point<T>::operator hgui::kernel::GLSLvec2<U>() const noexcept
+{
+	return glm::vec<2, T>(x, y);
+}
+
+template<typename T>
 void hgui::kernel::Point<T>::update()
 {
 	m_x = this->m_coords.first.get_width_value();
@@ -2510,7 +2529,20 @@ template<typename T>
 template<typename U, typename>
 hgui::kernel::Size<T>::operator glm::vec<2, U>() const noexcept
 {
-	return glm::vec<2, U>(tatic_cast<U>(this->x), static_cast<U>(this->y));
+	return glm::vec<2, U>(static_cast<U>(this->x), static_cast<U>(this->y));
+}
+
+template<typename T>
+hgui::kernel::Size<T>::operator hgui::kernel::GLSLvec2<T>() const noexcept
+{
+	return glm::vec<2, T>(width, height);
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Size<T>::operator hgui::kernel::GLSLvec2<U>() const noexcept
+{
+	return glm::vec<2, U>(static_cast<U>(this->x), static_cast<U>(this->y));
 }
 
 template<typename T>

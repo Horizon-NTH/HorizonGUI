@@ -3,6 +3,7 @@
 #include "../include/hgui/header/Image.h"
 #include "../include/hgui/header/Audio.h"
 #include "../include/hgui/header/GIF.h"
+#include "hgui/header/Renderer.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {
@@ -51,4 +52,9 @@ std::string hgui::get_unique_id()
 	std::stringstream newID;
 	newID << "HGUI_UNIQUE_ID_" << id++;
 	return newID.str();
+}
+
+double hgui::get_delta_time()
+{
+	return Renderer::m_deltaTime;
 }
