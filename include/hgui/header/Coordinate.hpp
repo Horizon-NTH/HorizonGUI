@@ -375,6 +375,8 @@ namespace hgui::kernel
 
 		Coordinate& operator+=(const Coordinate& coords) noexcept;
 		Coordinate& operator-=(const Coordinate& coords) noexcept;
+		Coordinate& operator+=(const GLSLvec2<T>& coords) noexcept;
+		Coordinate& operator-=(const GLSLvec2<T>& coords) noexcept;
 		Coordinate& operator*=(T value) noexcept;
 		Coordinate& operator/=(T value) noexcept;
 
@@ -400,6 +402,10 @@ namespace hgui::kernel
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		Coordinate& operator-=(const Coordinate<U>& coords) noexcept;
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		Coordinate& operator+=(const GLSLvec2<U>& coords) noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		Coordinate& operator-=(const GLSLvec2<U>& coords) noexcept;
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		Coordinate& operator*=(U value) noexcept;
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		Coordinate& operator/=(U value) noexcept;
@@ -412,7 +418,31 @@ namespace hgui::kernel
 			return coords += coords2;
 		}
 
+		friend Coordinate operator+(const GLSLvec2<T>& coords1, const Coordinate& coords2)
+		{
+			auto coords = coords2;
+			return coords += coords1;
+		}
+
+		friend Coordinate operator+(const Coordinate& coords1, const GLSLvec2<T>& coords2)
+		{
+			auto coords = coords1;
+			return coords += coords2;
+		}
+
 		friend Coordinate operator-(const Coordinate& coords1, const Coordinate& coords2)
+		{
+			auto coords = coords1;
+			return coords -= coords2;
+		}
+
+		friend Coordinate operator-(const GLSLvec2<T>& coords1, const Coordinate& coords2)
+		{
+			auto coords = coords2;
+			return coords -= coords1;
+		}
+
+		friend Coordinate operator-(const Coordinate& coords1, const GLSLvec2<T>& coords2)
 		{
 			auto coords = coords1;
 			return coords -= coords2;
@@ -453,6 +483,20 @@ namespace hgui::kernel
 		}
 
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		friend Coordinate operator+(const GLSLvec2<U>& coords1, const Coordinate& coords2)
+		{
+			Coordinate coords = coords2;
+			return coords += coords1;
+		}
+
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		friend Coordinate operator+(const Coordinate& coords1, const GLSLvec2<U>& coords2)
+		{
+			Coordinate coords = coords1;
+			return coords += coords2;
+		}
+
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		friend Coordinate operator-(const Coordinate<U>& coords1, const Coordinate& coords2)
 		{
 			Coordinate coords = coords1;
@@ -461,6 +505,20 @@ namespace hgui::kernel
 
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		friend Coordinate operator-(const Coordinate& coords1, const Coordinate<U>& coords2)
+		{
+			Coordinate coords = coords1;
+			return coords -= coords2;
+		}
+
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		friend Coordinate operator-(const GLSLvec2<U>& coords1, const Coordinate& coords2)
+		{
+			Coordinate coords = coords2;
+			return coords -= coords1;
+		}
+
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		friend Coordinate operator-(const Coordinate& coords1, const GLSLvec2<U>& coords2)
 		{
 			Coordinate coords = coords1;
 			return coords -= coords2;
@@ -1446,6 +1504,24 @@ hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator-=(const Coord
 }
 
 template<typename T>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator+=(const GLSLvec2<T>& coords) noexcept
+{
+	m_coords.first += coords.x;
+	m_coords.second += coords.y;
+	update();
+	return *this;
+}
+
+template<typename T>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator-=(const GLSLvec2<T>& coords) noexcept
+{
+	m_coords.first -= coords.x;
+	m_coords.second -= coords.y;
+	update();
+	return *this;
+}
+
+template<typename T>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator*=(T value) noexcept
 {
 	m_coords.first *= value;
@@ -1524,6 +1600,20 @@ template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator-=(const Coordinate<U>& coords) noexcept
 {
 	return operator-=(coords.operator Coordinate());
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator+=(const GLSLvec2<U>& coords) noexcept
+{
+	return operator+=(GLSLvec2<T>(coords));
+}
+
+template<typename T>
+template<typename U, typename>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator-=(const GLSLvec2<U>& coords) noexcept
+{
+	return operator-=(GLSLvec2<T>(coords));
 }
 
 template<typename T>
