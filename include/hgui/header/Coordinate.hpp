@@ -251,7 +251,7 @@ namespace hgui::kernel
 		[[nodiscard]] T get_height_value() const;
 
 		void set_reference(const reference& ref) noexcept;
-		const reference& get_reference() const noexcept;
+		[[nodiscard]] const reference& get_reference() const noexcept;
 
 	private:
 		T m_value;
@@ -505,6 +505,7 @@ namespace hgui::kernel
 		virtual void update();
 
 		Coordinate& set_reference(const reference& newReference) noexcept;
+		Coordinate& undo_responsivness() noexcept;
 
 	protected:
 		std::pair<EM<T>, EM<T>> m_coords;
@@ -747,7 +748,7 @@ namespace hgui
 
 inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(const unsigned long long value) noexcept
 {
-	return hgui::kernel::EM(static_cast<HGUI_PRECISION>(value / 100.));
+	return hgui::kernel::EM(static_cast<HGUI_PRECISION>(static_cast<double>(value) / 100.));
 }
 
 inline hgui::kernel::EM<HGUI_PRECISION> operator""_em(const long double value) noexcept
@@ -1583,6 +1584,13 @@ hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::set_reference(const re
 	m_coords.first.set_reference(newReference);
 	m_coords.second.set_reference(newReference);
 	update();
+	return *this;
+}
+
+template<typename T>
+hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::undo_responsivness() noexcept
+{
+	m_coords = std::pair(EM<T>{} + m_coords.first.get_width_value(), EM<T>{} + m_coords.second.get_height_value());
 	return *this;
 }
 

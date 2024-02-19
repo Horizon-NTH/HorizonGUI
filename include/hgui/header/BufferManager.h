@@ -36,8 +36,7 @@ namespace hgui
 		BufferManager& operator=(const BufferManager& bufferManager) = delete;
 		BufferManager& operator=(BufferManager&& bufferManager) = delete;
 
-		static const std::shared_ptr<kernel::Buffer>& create(const std::string& bufferID, const std::shared_ptr<kernel::Shader>& shader,
-		                                                     const size& bufferSize);
+		static const std::shared_ptr<kernel::Buffer>& create(const std::string& bufferID, const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize);
 		[[nodiscard]] static const std::shared_ptr<kernel::Buffer>& get(const std::string& bufferID);
 		static void destroy(const std::initializer_list<std::string>& buffersID = {});
 

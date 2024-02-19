@@ -163,6 +163,7 @@ void hgui::kernel::Label::calcul_size()
 		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
 		m_size.update();
 	}
+	m_size.undo_responsivness();
 }
 
 int hgui::kernel::Label::get_max_bearing_y() const
