@@ -121,6 +121,11 @@ void hgui::kernel::Button::set_text(const std::shared_ptr<Label>& text)
 	set_text_placment();
 }
 
+void hgui::kernel::Button::set_function(const std::function<void()>& function)
+{
+	m_function = function;
+}
+
 void hgui::kernel::Button::init_data()
 {
 	std::vector<glm::vec4> vertices = {

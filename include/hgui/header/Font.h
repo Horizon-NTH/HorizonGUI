@@ -9,7 +9,7 @@ namespace hgui::kernel
 	struct Character
 	{
 		std::shared_ptr<Texture> texture;
-		size size;
+		hgui::size size;
 		ivec2 bearing;
 		unsigned int advance;
 	};

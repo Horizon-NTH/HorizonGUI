@@ -30,10 +30,10 @@ set(BUILD_PROGRAMS OFF)
 set(BUILD_EXAMPLES OFF)
 set(BUILD_TESTING OFF)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile)
 
 set(HEADER_FILES
 	include/hgui/header/AnimatedSprite.h

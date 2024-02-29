@@ -31,6 +31,7 @@ namespace hgui::kernel
 		void set_color(const color& newColor);
 		void set_textures(const std::shared_ptr<Texture>& texture);
 		void set_text(const std::shared_ptr<Label>& text);
+		void set_function(const std::function<void()>& function);
 
 	protected:
 		state m_state;
