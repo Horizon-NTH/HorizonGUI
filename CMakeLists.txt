@@ -171,8 +171,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype OpenAL sndfile)
 
 function(set_common_target_properties target_name)
 	set_target_properties(${target_name} PROPERTIES
-		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib
-		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib
+		ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
+		LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
 	)
 	if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 		set_target_properties(${target_name} PROPERTIES
