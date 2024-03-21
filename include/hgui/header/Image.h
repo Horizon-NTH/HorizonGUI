@@ -9,11 +9,7 @@ namespace hgui::kernel
 		using pointer = std::unique_ptr<unsigned char[], void(*)(unsigned char*)>;
 		Size<unsigned> size;
 		channels channel = channels::UNKNOW;
-		pointer pixels = {
-					nullptr, [](unsigned char*)
-						{
-						}
-				};
+		pointer pixels = {nullptr, [](unsigned char*) {}};
 	};
 
 	class Image

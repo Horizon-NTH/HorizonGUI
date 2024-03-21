@@ -16,7 +16,7 @@ namespace hgui::kernel
 		friend class Canvas;
 
 	public:
-		Drawer(point  position, size  size, HGUI_PRECISION angularRotation = 0.f);
+		Drawer(point position, size size, HGUI_PRECISION rotation = 0.f);
 		Drawer(const Drawer& drawer) = delete;
 		Drawer(Drawer&& drawer) = default;
 

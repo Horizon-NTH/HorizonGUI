@@ -8,13 +8,18 @@
 
 ## Introduction
 
-**HorizonGUI** is a Graphic User Interface library made in C++ with OpenGL.
+**HorizonGUI** is a Graphic User Interface library made in C++ with OpenGL. There are also Python bindings available.
 
 ## Installation Instructions
 
+* [C++ library](#c-library)
+* [Python binding](#python-binding)
+
+### C++ library
+
 > You can also simply install a pre-built version [here](https://github.com/Horizon-NTH/HorizonGUI/releases).
 
-### Get Source Code
+#### Get Source Code
 
 You first need to clone the repository. Make sure to use [git](https://git-scm.com) and don't forget to
 include `--recurse-submodules` when cloning.
@@ -25,24 +30,24 @@ git clone https://github.com/Horizon-NTH/HorizonGUI.git --recurse-submodules
 
 You will now able to choose between [script](#script-installation) or [manual](#manual-installation) installation
 
-- ### Script Installation
+#### Script Installation
 
-  Use the [`install.sh`](https://github.com/Horizon-NTH/HorizonGUI/blob/master/install.sh) script to compile the
-  library. You can choose the API type you want to build by passing an argument to the script:
-  `-d` / `--dynamic` for dynamic or `-s` / `--static` for static. You can also erase build files by
-  adding `-e` / `--erase`.
+Use the [`install.sh`](https://github.com/Horizon-NTH/HorizonGUI/blob/master/install.sh) script to compile the
+library. You can choose the API type you want to build by passing an argument to the script:
+`-d` / `--dynamic` for dynamic or `-s` / `--static` for static. You can also erase build files by
+adding `-e` / `--erase`.
 
   ```bash
   ./install.sh --dynamic -e
   ```
 
-- ### Manual Installation
+#### Manual Installation
 
-  #### Create Build Environment
+##### Create Build Environment
 
-  Ensure you have [CMake](https://cmake.org/) installed. Generate the build environment using CMake. You can choose the
-  API type to **STATIC** (default is **DYNAMIC**) by setting the `API_TYPE` variable to
-  `ON`:
+Ensure you have [CMake](https://cmake.org/) installed. Generate the build environment using CMake. You can choose the
+API type to **STATIC** (default is **DYNAMIC**) by setting the `API_TYPE` variable to
+`ON`:
 
   ```bash
   cd HorizonGUI
@@ -50,22 +55,36 @@ You will now able to choose between [script](#script-installation) or [manual](#
   cmake .. [-DAPI_TYPE=ON]
   ```
 
-  #### Build
+##### Build
 
-    - ##### CMake
+###### CMake
 
-      Build directly using CMake:
+Build directly using CMake:
 
-      ```bash
-      cmake --build .
-      ```
+```bash
+cmake --build .
+```
 
-      This command will create all the lib files you need in `HorizonGUI/lib`.
+This command will create all the lib files you need in `HorizonGUI/lib`.
 
-    - ##### Microsoft Visual Studio
+###### Microsoft Visual Studio
 
-      Alternatively, you can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/) to launch the project
-      and build it. Open the `horizongui.sln` file with Microsoft Visual Studio.
+Alternatively, you can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/) to launch the project
+and build it. Open the `horizongui.sln` file with Microsoft Visual Studio.
+
+### Python binding
+
+To install the Python bindings, you can execute the following command:
+
+```bash
+pip install ./python
+```
+
+Once the installation is complete, you can import the module into your Python script using the following statement:
+
+```python
+import hgui
+```
 
 ## Documentation
 

@@ -92,7 +92,7 @@ void hgui::Renderer::loop()
 void hgui::Renderer::set_background_color(const color& newColor)
 {
 	m_backGroundColor = newColor;
-	glClearColor(newColor.r, newColor.g, newColor.b, newColor.a);
+	glClearColor(newColor.r, newColor.g, newColor.b, 0.5f);
 }
 
 void hgui::Renderer::set_draw_callback(const std::function<void()>& function)

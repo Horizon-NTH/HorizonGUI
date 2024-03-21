@@ -7,9 +7,9 @@
 #if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::Cursor> hgui::SliderManager::m_cursor(nullptr);
 
-std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function, HGUI_PRECISION angularRotation)
+std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function, HGUI_PRECISION rotation)
 {
-	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, angularRotation);
+	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, rotation);
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Slider>(slider->shared_from_this());
 	slider->bind(inputs::OVER, []
 		{

@@ -18,9 +18,7 @@ namespace hgui::kernel
 		channels channel = channels::UNKNOW;
 		data pixels;
 
-		pointer ptr = {nullptr, [](unsigned char*)
-			               {
-			               }};
+		pointer ptr = {nullptr, [](unsigned char*) {}};
 	};
 
 	class GIF
@@ -42,6 +40,7 @@ namespace hgui::kernel
 		[[nodiscard]] GIFData& get_data();
 		[[nodiscard]] size get_size() const;
 		[[nodiscard]] Frame get_frame(unsigned int frameNumber) const;
+		[[nodiscard]] unsigned int get_frames_count() const;
 
 		void set_data(GIFData&& newData);
 		void set_delay(const GIFData::delay& delay, unsigned int frameNumber);

@@ -7,7 +7,7 @@
 
 std::shared_ptr<hgui::kernel::Shader> hgui::LabelManager::m_shader(nullptr);
 
-std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION angularRotation)
+std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION rotation)
 {
 	if (!m_shader)
 	{
@@ -15,7 +15,7 @@ std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::strin
 	}
 	auto widget = std::make_shared<kernel::Label>(text,
 		m_shader, position, font, std::get<0>(textOptions),
-		std::get<1>(textOptions), std::get<2>(textOptions), angularRotation);
+		std::get<1>(textOptions), std::get<2>(textOptions), rotation);
 	return widget;
 }
 #elif defined(HGUI_STATIC)

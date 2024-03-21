@@ -13,18 +13,23 @@
 std::shared_ptr<hgui::kernel::Shader> hgui::ButtonManager::m_shader(nullptr);
 std::shared_ptr<hgui::kernel::Cursor> hgui::ButtonManager::m_cursor(nullptr);
 
-std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, const float borderRadius, const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor, HGUI_PRECISION angularRotation)
+std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const std::variant<color, std::tuple<color, color, color>>& colors, const float borderRadius, const bool blurrOnHover, const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor, HGUI_PRECISION rotation)
 {
 	if (!m_shader)
 	{
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);
 	}
+	std::tuple<color, color, color> tuple;
+	if (!colors.index())
+		tuple = {std::get<color>(colors), std::get<color>(colors), std::get<color>(colors)};
+	else
+		tuple = std::get<std::tuple<color, color, color>>(colors);
 	auto button = std::make_shared<kernel::Button>(function,
 		m_shader, size, position, nullptr,
-		color, angularRotation, borderRadius / 100.f, texture);
+		tuple, rotation, borderRadius / 100.f, blurrOnHover, texture);
 	if (font)
 	{
-		button->set_text(LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), angularRotation));
+		button->set_text(LabelManager::create(text, position, font, TextOption(12u, textColor, 1.0f), rotation));
 	}
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Button>(button->shared_from_this());
 	button->bind(inputs::OVER, [wwidget]()
@@ -115,11 +120,16 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const color& color, float borderRadius, const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor, HGUI_PRECISION angularRotation)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture = nullptr, const std::variant<std::tuple<color, color, color>, color>& colors = HGUI_COLOR_WHITE, float borderRadius = 100.f, bool blurrOnHover = true, const std::string& text = "", const std::shared_ptr<kernel::Font>& font = nullptr, const color& textColor = HGUI_COLOR_BLACK, HGUI_PRECISION rotation = 0.0f)
 {
 	if (!m_buttons.contains(buttonID))
 	{
 		float cornerAngularRadius = std::min(std::min(size.width, size.height) * 0.5f, borderRadius);
+		std::tuple<color, color, color> tuple;
+		if (colors.index() == 1)
+			tuple = {std::get<color>(colors), std::get<color>(colors), std::get<color>(colors)};
+		else
+			tuple = std::get<std::tuple<color, color, color>>(colors);
 		m_buttons[buttonID] = std::make_shared<kernel::Button>(function,
 			ShaderManager::get(HGUI_SHADER_BUTTON), size, position,
 			font
@@ -127,7 +137,7 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 				"HGUI_BUTTON_TEXT_" + buttonID, text, position, font,
 				{12, textColor, 1.0f})
 			: nullptr,
-			color, angularRotation, cornerAngularRadius, texture);
+			tuple, angularRotation, cornerAngularRadius, blurrOnHover, texture);
 		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
 				get(buttonID)->set_state(state::HOVER);

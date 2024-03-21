@@ -40,7 +40,7 @@ namespace hgui::kernel
 		friend class hgui::MouseManager;
 
 	public:
-		Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation);
+		Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, HGUI_PRECISION rotation);
 		Widget(const Widget& widget) = default;
 		Widget(Widget&& widget) = default;
 
@@ -55,7 +55,7 @@ namespace hgui::kernel
 
 		virtual void set_position(const point& newPosition);
 		virtual void set_size(const size& newSize);
-		virtual void set_rotation(HGUI_PRECISION newAngularRotation);
+		virtual void set_rotation(HGUI_PRECISION newRotation);
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
 		[[nodiscard]] bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
@@ -78,8 +78,7 @@ namespace hgui::kernel
 		std::shared_ptr<VertexBufferObject> m_VBO;
 		size m_size;
 		point m_position;
-		color m_color;
-		HGUI_PRECISION m_angularRotation;
+		HGUI_PRECISION m_rotation;
 
 	private:
 		std::string m_taskID;

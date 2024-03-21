@@ -20,3 +20,6 @@
 [submodule "deps/libsndfile"]
 	path = deps/libsndfile
 	url = https://github.com/libsndfile/libsndfile.git
+[submodule "deps/pybind11"]
+	path = deps/pybind11
+	url = https://github.com/pybind/pybind11.git

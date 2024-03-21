@@ -4,7 +4,7 @@
 #include "../include/hgui/header/Image.h"
 #include "../include/hgui/header/Renderer.h"
 
-hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::initializer_list<std::pair<options, bool>>& options) :
+hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::map<options, bool>& options) :
 	m_name(name),
 	m_size(size),
 	m_position(position)

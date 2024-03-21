@@ -9,7 +9,7 @@ namespace hgui::kernel
 	class AnimatedSprite final : public Sprite
 	{
 	public:
-		AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, float angularRotation);
+		AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, float rotation);
 		explicit AnimatedSprite(const Sprite& animatedSprite) = delete;
 		AnimatedSprite(AnimatedSprite&& animatedSprite) = delete;
 

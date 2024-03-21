@@ -9,7 +9,7 @@ namespace hgui::kernel
 	class Canvas final : public Widget
 	{
 	public:
-		Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation);
+		Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION rotation);
 		Canvas(const Canvas& canvas) = delete;
 		Canvas(Canvas&& canvas) = default;
 
@@ -31,6 +31,7 @@ namespace hgui::kernel
 	private:
 		glm::mat4 m_modelMatrix;
 		std::shared_ptr<Drawer> m_drawer;
+		color m_color;
 
 		void init_data() const;
 	};

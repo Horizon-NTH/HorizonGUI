@@ -102,8 +102,8 @@ namespace hgui::kernel
 
 		friend EM operator-(T value, const EM& em)
 		{
-			EM copy = em;
-			return copy -= value;
+			EM copy = -em;
+			return copy += value;
 		}
 
 		friend EM operator-(const EM& em, T value)
@@ -130,6 +130,12 @@ namespace hgui::kernel
 			return copy /= value;
 		}
 
+		friend EM operator/(T value, const EM& em)
+		{
+			EM copy = EM{} + value;
+			return copy /= em;
+		}
+
 		/// Between EM and scalar with conversion
 
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
@@ -149,8 +155,8 @@ namespace hgui::kernel
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
 		friend EM operator-(U value, const EM& em)
 		{
-			EM copy = em;
-			return copy -= value;
+			EM copy = -em;
+			return copy += value;
 		}
 
 		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
@@ -179,6 +185,13 @@ namespace hgui::kernel
 		{
 			EM copy = em;
 			return copy /= value;
+		}
+
+		template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+		friend EM operator/(U value, const EM& em)
+		{
+			EM copy = EM{} + value;
+			return copy /= em;
 		}
 
 		/// Between EMs
@@ -252,6 +265,9 @@ namespace hgui::kernel
 
 		void set_reference(const reference& ref) noexcept;
 		[[nodiscard]] const reference& get_reference() const noexcept;
+
+		void set_base_value(T baseValue) noexcept;
+		[[nodiscard]] T get_base_value() const noexcept;
 
 	private:
 		T m_value;
@@ -379,6 +395,8 @@ namespace hgui::kernel
 		Coordinate& operator-=(const GLSLvec2<T>& coords) noexcept;
 		Coordinate& operator*=(T value) noexcept;
 		Coordinate& operator/=(T value) noexcept;
+
+		Coordinate operator-() const noexcept;
 
 		// Basic operator with conversion
 
@@ -564,6 +582,12 @@ namespace hgui::kernel
 
 		Coordinate& set_reference(const reference& newReference) noexcept;
 		Coordinate& undo_responsivness() noexcept;
+
+		[[nodiscard]] const EM<T>& get_first_coord() const noexcept;
+		void set_first_coord(const EM<T>& em) noexcept;
+
+		[[nodiscard]] const EM<T>& get_second_coord() const noexcept;
+		void set_second_coord(const EM<T>& em) noexcept;
 
 	protected:
 		std::pair<EM<T>, EM<T>> m_coords;
@@ -1055,6 +1079,18 @@ const hgui::reference& hgui::kernel::EM<T>::get_reference() const noexcept
 }
 
 template<typename T>
+void hgui::kernel::EM<T>::set_base_value(T baseValue) noexcept
+{
+	m_value = baseValue;
+}
+
+template<typename T>
+T hgui::kernel::EM<T>::get_base_value() const noexcept
+{
+	return m_value;
+}
+
+template<typename T>
 T hgui::kernel::EM<T>::calcul(T sum, std::pair<operations, std::variant<T, EM>> element, T referenceSize) noexcept
 {
 	if (auto value = std::get_if<T>(&element.second))
@@ -1540,6 +1576,12 @@ hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator/=(T value) no
 }
 
 template<typename T>
+hgui::kernel::Coordinate<T> hgui::kernel::Coordinate<T>::operator-() const noexcept
+{
+	return Coordinate(std::make_pair(-m_coords.first, -m_coords.second));
+}
+
+template<typename T>
 template<typename U, typename>
 hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::operator=(const Vector<U, 2>& coords) noexcept
 {
@@ -1682,6 +1724,30 @@ hgui::kernel::Coordinate<T>& hgui::kernel::Coordinate<T>::undo_responsivness() n
 {
 	m_coords = std::pair(EM<T>{} + m_coords.first.get_width_value(), EM<T>{} + m_coords.second.get_height_value());
 	return *this;
+}
+
+template<typename T>
+const hgui::kernel::EM<T>& hgui::kernel::Coordinate<T>::get_first_coord() const noexcept
+{
+	return m_coords.first;
+}
+
+template<typename T>
+void hgui::kernel::Coordinate<T>::set_first_coord(const EM<T>& em) noexcept
+{
+	m_coords.first = em;
+}
+
+template<typename T>
+const hgui::kernel::EM<T>& hgui::kernel::Coordinate<T>::get_second_coord() const noexcept
+{
+	return m_coords.second;
+}
+
+template<typename T>
+void hgui::kernel::Coordinate<T>::set_second_coord(const EM<T>& em) noexcept
+{
+	m_coords.second = em;
 }
 
 template<typename T>

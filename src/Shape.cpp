@@ -31,3 +31,8 @@ const hgui::kernel::shape::ShapeData& hgui::kernel::shape::Shape::get_data() con
 {
 	return m_data;
 }
+
+void hgui::kernel::shape::Shape::set_color(const color& newColor)
+{
+	m_color = newColor;
+}

@@ -36,6 +36,8 @@ namespace hgui::kernel::shape
 		[[nodiscard]] const color& get_color() const;
 		[[nodiscard]] const ShapeData& get_data() const;
 
+		void set_color(const color& newColor);
+
 	protected:
 		std::shared_ptr<VertexArrayObject> m_VAO;
 		std::shared_ptr<VertexBufferObject> m_VBO;

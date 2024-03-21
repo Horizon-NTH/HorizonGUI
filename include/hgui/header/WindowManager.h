@@ -23,7 +23,7 @@ namespace hgui
 		WindowManager& operator=(const WindowManager& windowManager) = delete;
 		WindowManager& operator=(WindowManager&& windowManager) = delete;
 
-		[[nodiscard]] static std::shared_ptr<kernel::Window> create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr, const std::shared_ptr<kernel::Monitor>& monitor = nullptr, const std::initializer_list<WindowOption>& options = {});
+		[[nodiscard]] static std::shared_ptr<kernel::Window> create(const std::string& windowName, const size& size, const point& position, const std::shared_ptr<kernel::Image>& icon = nullptr, const std::shared_ptr<kernel::Monitor>& monitor = nullptr, const std::map<options, bool>& options = {});
 	};
 #elif defined(HGUI_STATIC)
 	class WindowManager

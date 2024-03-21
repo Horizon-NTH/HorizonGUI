@@ -3,8 +3,8 @@
 #include "../include/hgui/header/TaskManager.h"
 #include "../include/hgui/header/GIF.h"
 
-hgui::kernel::AnimatedSprite::AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, const float angularRotation) :
-	Sprite(shader, nullptr, size, position, color, angularRotation),
+hgui::kernel::AnimatedSprite::AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, const float rotation) :
+	Sprite(shader, nullptr, size, position, color, rotation),
 	m_gif(gif),
 	m_frameRendered(1u),
 	m_loop(false)

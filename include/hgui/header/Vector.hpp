@@ -9,7 +9,7 @@ namespace hgui::kernel
 
 	template<typename T, std::size_t dimension>
 	T dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
-	template<typename T, std::size_t dimension>
+	template<typename T>
 	Vector<T, 3> cross(const Vector<T, 3>& u, const Vector<T, 3>& v);
 	template<typename T, std::size_t dimension>
 	T distance(const Vector<T, dimension>& u, const Vector<T, dimension>& v);
@@ -37,7 +37,11 @@ namespace hgui::kernel
 
 		T& operator[](int index) noexcept;
 		const T& operator[](int index) const noexcept;
-		void operator-() noexcept;
+		template<typename U = T, typename = std::enable_if_t<std::is_signed_v<U>>>
+		Vector operator-() const noexcept;
+
+		const std::valarray<T>& get_data() const noexcept;
+		void set_data(const std::valarray<T>& valarray) noexcept;
 
 		Vector& operator=(const Vector& vector) noexcept = default;
 		Vector& operator=(Vector&& vector) noexcept = default;
@@ -75,19 +79,19 @@ namespace hgui::kernel
 			return Vector(v.m_data * element);
 		}
 
-		friend Vector operator/(const T& element, const Vector& v) noexcept
-		{
-			return Vector(v.m_data / element);
-		}
-
 		friend bool operator==(const Vector& u, const Vector& v) noexcept
 		{
-			return u.m_data == v.m_data;
+			for (std::size_t i = 0; i < u.m_data.size(); ++i)
+			{
+				if (u.m_data[i] != v.m_data[i])
+					return false;
+			}
+			return true;
 		}
 
 		friend bool operator!=(const Vector& u, const Vector& v) noexcept
 		{
-			return u.m_data != v.m_data;
+			return !(u == v);
 		}
 
 		friend std::ostream& operator<<(std::ostream& stream, const Vector<T, dimension>& vector)
@@ -135,7 +139,7 @@ T hgui::kernel::dot(const Vector<T, dimension>& u, const Vector<T, dimension>& v
 	return std::inner_product(u.cbegin(), u.cend(), v.cbegin(), T{});
 }
 
-template<typename T, std::size_t dimension>
+template<typename T>
 hgui::kernel::Vector<T, 3> hgui::kernel::cross(const Vector<T, 3>& u, const Vector<T, 3>& v)
 {
 	return kernel::Vector<T, 3>({u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]});
@@ -205,9 +209,22 @@ const T& hgui::kernel::Vector<T, dimension>::operator[](int index) const noexcep
 }
 
 template<typename T, std::size_t dimension>
-void hgui::kernel::Vector<T, dimension>::operator-() noexcept
+template<typename U, typename>
+hgui::kernel::Vector<T, dimension> hgui::kernel::Vector<T, dimension>::operator-() const noexcept
 {
-	m_data = -m_data;
+	return Vector(-m_data);
+}
+
+template<typename T, std::size_t dimension>
+const std::valarray<T>& hgui::kernel::Vector<T, dimension>::get_data() const noexcept
+{
+	return m_data;
+}
+
+template<typename T, std::size_t dimension>
+void hgui::kernel::Vector<T, dimension>::set_data(const std::valarray<T>& valarray) noexcept
+{
+	m_data = valarray;
 }
 
 template<typename T, std::size_t dimension>

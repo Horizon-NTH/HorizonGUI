@@ -36,11 +36,14 @@ hgui::kernel::GIF::Frame hgui::kernel::GIF::get_frame(unsigned frameNumber) cons
 			{
 				.size = m_data.size,
 				.channel = m_data.channel,
-				.pixels = ImageData::pointer(pixels, [](unsigned char*)
-					{
-					})
+				.pixels = ImageData::pointer(pixels, [](unsigned char*) {})
 			};
 	return {std::make_shared<Image>(std::move(data)), delay};
+}
+
+unsigned int hgui::kernel::GIF::get_frames_count() const
+{
+	return m_data.framesCount;
 }
 
 void hgui::kernel::GIF::set_data(GIFData&& newData)
@@ -77,6 +80,7 @@ void hgui::kernel::GIF::load_gif(const std::string& gifPath)
 			{
 				stbi_image_free(data);
 			});
+	m_data.size = Size<unsigned>(width, height);
 	if (!m_data.ptr)
 	{
 		throw std::runtime_error("FAILED TO LOAD FILE : " + gifPath);

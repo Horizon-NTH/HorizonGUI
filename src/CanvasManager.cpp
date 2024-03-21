@@ -8,13 +8,13 @@
 
 std::shared_ptr<hgui::kernel::Shader> hgui::CanvasManager::m_shader(nullptr);
 
-std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION angularRotation)
+std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION rotation)
 {
 	if (!m_shader)
 	{
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CANVAS, HGUI_GLSL_FRAGMENT_CANVAS);
 	}
-	auto widget = std::make_shared<kernel::Canvas>(shader ? shader : m_shader, size, position, color, angularRotation);
+	auto widget = std::make_shared<kernel::Canvas>(shader ? shader : m_shader, size, position, color, rotation);
 	return widget;
 }
 #elif defined(HGUI_STATIC)

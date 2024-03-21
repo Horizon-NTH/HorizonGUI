@@ -10,7 +10,7 @@ namespace hgui::kernel
 	class Button final : public Widget
 	{
 	public:
-		Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const color& color, HGUI_PRECISION angularRotation, HGUI_PRECISION cornerRadius, const std::shared_ptr<Texture>& = nullptr);
+		Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::tuple<color, color, color>& colors, HGUI_PRECISION rotation, HGUI_PRECISION cornerRadius, bool blurrOnHover, const std::shared_ptr<Texture>& = nullptr);
 		Button(const Button& button) = delete;
 		Button(Button&& button) = default;
 
@@ -24,14 +24,20 @@ namespace hgui::kernel
 		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		[[nodiscard]] const state& get_state() const;
+		[[nodiscard]] const std::tuple<color, color, color>& get_color() const;
+		[[nodiscard]] const std::shared_ptr<Texture>& get_texture() const;
+		[[nodiscard]] const std::shared_ptr<Label>& get_text() const;
+		[[nodiscard]] const std::function<void()>& get_function() const;
+		[[nodiscard]] bool get_blurr_on_hover() const;
 
 		void set_position(const point& newPosition) override;
 		void set_size(const size& newSize) override;
 		void set_state(const state& state);
-		void set_color(const color& newColor);
-		void set_textures(const std::shared_ptr<Texture>& texture);
+		void set_color(const std::tuple<color, color, color>& newColors);
+		void set_texture(const std::shared_ptr<Texture>& texture);
 		void set_text(const std::shared_ptr<Label>& text);
 		void set_function(const std::function<void()>& function);
+		void set_blurr_on_hover(bool blurrOnHover);
 
 	protected:
 		state m_state;
@@ -42,6 +48,8 @@ namespace hgui::kernel
 		HGUI_PRECISION m_cornerAngularRadius;
 		glm::mat4 m_modelMatrix;
 		bool m_isTextDrawable;
+		std::tuple<color, color, color> m_colors;
+		bool m_blurrOnHover;
 
 		void init_data();
 		void set_text_placment();

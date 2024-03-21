@@ -29,7 +29,7 @@ namespace hgui
 			GLSLvec2& operator=(const GLSLvec2<U>& vector) noexcept;
 			GLSLvec2& operator=(const glm::vec2& vector) noexcept;
 
-			friend std::ostream& operator<<(std::ostream& stream, const GLSLvec2<T>& vec2)
+			friend std::ostream& operator<<(std::ostream& stream, const GLSLvec2& vec2)
 			{
 				return stream << '(' << vec2.x << ", " << vec2.y << ')';
 			}
@@ -49,7 +49,6 @@ namespace hgui
 			GLSLvec3(const Vector<T, 3>& vector) noexcept;
 			GLSLvec3(const glm::vec<2, T>& vector, T z = {}) noexcept;
 			GLSLvec3(const glm::vec<3, T>& vector) noexcept;
-
 
 			template<typename U, typename V, typename W>
 			GLSLvec3(U x, V y, W z) noexcept;
@@ -124,6 +123,7 @@ namespace hgui
 		public:
 			Color() noexcept;
 			explicit Color(T rgb, T a = static_cast<T>(1)) noexcept;
+			explicit Color(const std::string& hexColor, T a = static_cast<T>(1)) noexcept;
 			Color(T r, T g, T b, T a = static_cast<T>(1)) noexcept;
 			template<typename U>
 			Color(U r, U g, U b, U a = static_cast<U>(1)) noexcept;
@@ -321,8 +321,8 @@ hgui::kernel::GLSLvec3<T>::GLSLvec3(const Vector<T, 3>& vector) noexcept :
 {
 }
 
-template <typename T>
-inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const glm::vec<2, T> &vector, T z) noexcept :
+template<typename T>
+inline hgui::kernel::GLSLvec3<T>::GLSLvec3(const glm::vec<2, T>& vector, T z) noexcept :
 	Vector<T, 3>({vector.x, vector.y, z}),
 	x((*this)[0]),
 	y((*this)[1]),
@@ -469,8 +469,8 @@ hgui::kernel::GLSLvec4<T>::GLSLvec4(const Vector<T, 4>& vector) noexcept :
 {
 }
 
-template <typename T>
-inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<2, T> &vector, T z, T w) noexcept :
+template<typename T>
+inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<2, T>& vector, T z, T w) noexcept :
 	Vector<T, 4>({
 			vector.x, vector.y, z, w
 		}),
@@ -481,8 +481,8 @@ inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<2, T> &vector, T z, T 
 {
 }
 
-template <typename T>
-inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<3, T> &vector, T w) noexcept  :
+template<typename T>
+inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<3, T>& vector, T w) noexcept :
 	Vector<T, 4>({
 			vector.x, vector.y, vector.z, w
 		}),
@@ -493,8 +493,8 @@ inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<3, T> &vector, T w) no
 {
 }
 
-template <typename T>
-inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<4, T> &vector) noexcept  :
+template<typename T>
+inline hgui::kernel::GLSLvec4<T>::GLSLvec4(const glm::vec<4, T>& vector) noexcept :
 	Vector<T, 4>({
 			vector.x, vector.y, vector.z, vector.w
 		}),
@@ -644,6 +644,24 @@ hgui::kernel::Color<T>::Color(T rgb, T a) noexcept :
 	a((*this)[3])
 {
 	this->a = a;
+}
+
+template<typename T>
+hgui::kernel::Color<T>::Color(const std::string& hexColor, T a) noexcept :
+	Vector<T, 4>({T(), T(), T(), a}),
+	r((*this)[0]),
+	g((*this)[1]),
+	b((*this)[2]),
+	a((*this)[3])
+{
+	const std::string hex = hexColor[0] == '#' ? hexColor.substr(1) : hexColor;
+	std::stringstream ss;
+	ss << std::hex << hex;
+	int rgbValue;
+	ss >> rgbValue;
+	r = static_cast<T>((rgbValue >> 16 & 0xFF) / 255.);
+	g = static_cast<T>((rgbValue >> 8 & 0xFF) / 255.);
+	b = static_cast<T>((rgbValue & 0xFF) / 255.);
 }
 
 template<typename T>

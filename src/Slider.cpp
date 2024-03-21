@@ -2,14 +2,14 @@
 #include "../include/hgui/header/StraightLine.h"
 #include "../include/hgui/header/Circle.h"
 
-hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function, const HGUI_PRECISION angularRotation) :
-	Widget(nullptr, size, position, color, angularRotation),
-	m_modelMatrix(1.0f),
+hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function, const HGUI_PRECISION rotation) :
+	Widget(nullptr, size, position, rotation),
 	m_range(range),
 	m_inactiveBarColor(inactiveBarColor),
 	m_activeBarColor(activeBarColor),
 	m_slider(0.f),
-	m_function(std::move(function))
+	m_function(std::move(function)),
+	m_color(color)
 {
 	m_range.sort();
 	set_points();
@@ -21,9 +21,9 @@ void hgui::kernel::Slider::draw() const
 	const auto activeBar = std::make_shared<shape::StraightLine>(std::get<1>(m_points), m_slider, m_activeBarColor, m_size.height / 4.f);
 	const auto inactiveBar = std::make_shared<shape::StraightLine>(m_slider, std::get<2>(m_points), m_inactiveBarColor, m_size.height / 4.f);
 	const auto slider = std::make_shared<shape::Circle>(m_slider, m_size.height / 2.f, m_color, true, 0.f);
-	activeBar->draw(m_position, m_size, m_angularRotation);
-	inactiveBar->draw(m_position, m_size, m_angularRotation);
-	slider->draw(m_position, m_size, m_angularRotation);
+	activeBar->draw(m_position, m_size, m_rotation);
+	inactiveBar->draw(m_position, m_size, m_rotation);
+	slider->draw(m_position, m_size, m_rotation);
 }
 
 bool hgui::kernel::Slider::is_inside(const point& point) const
@@ -94,7 +94,7 @@ void hgui::kernel::Slider::set_size(const size& newSize)
 
 void hgui::kernel::Slider::set_rotation(const HGUI_PRECISION newAngularRotation)
 {
-	const HGUI_PRECISION old = m_angularRotation;
+	const HGUI_PRECISION old = m_rotation;
 	Widget::set_rotation(newAngularRotation);
 	set_points();
 	m_slider = clamp(point::rotate(point::rotate(m_slider, std::get<0>(m_points), -old), std::get<0>(m_points), newAngularRotation));
@@ -190,8 +190,8 @@ void hgui::kernel::Slider::set_points()
 {
 	point center = m_position + m_size / 2.f;
 	m_points = std::make_tuple(center,
-		point::rotate(m_position + point(m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation),
-		point::rotate(m_position + point(m_size.width - m_size.height / 8.f, m_size.height / 2.f), center, m_angularRotation));
+		point::rotate(m_position + point(m_size.height / 8.f, m_size.height / 2.f), center, m_rotation),
+		point::rotate(m_position + point(m_size.width - m_size.height / 8.f, m_size.height / 2.f), center, m_rotation));
 }
 
 HGUI_PRECISION hgui::kernel::Ranges::round(const HGUI_PRECISION value) const

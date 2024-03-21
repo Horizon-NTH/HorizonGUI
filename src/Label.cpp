@@ -5,12 +5,13 @@
 #include "../include/hgui/header/Shader.h"
 #include "../include/hgui/header/Texture.h"
 
-hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const HGUI_PRECISION scale, const HGUI_PRECISION angularRotation) :
-	Widget(shader, size(glm::vec2(0.0f)), position, color, angularRotation),
+hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const HGUI_PRECISION scale, const HGUI_PRECISION rotation) :
+	Widget(shader, size(glm::vec2(0.0f)), position, rotation),
 	m_text(std::move(text)),
 	m_scale(scale),
 	m_fontSize(fontSize),
-	m_font(font)
+	m_font(font),
+	m_color(color)
 {
 	m_VAO->bind();
 	m_VBO->set_data(nullptr, 24 * sizeof(float), true);
@@ -33,6 +34,11 @@ std::string hgui::kernel::Label::get_text() const
 	return m_text;
 }
 
+const hgui::color& hgui::kernel::Label::get_color() const
+{
+	return m_color;
+}
+
 unsigned int hgui::kernel::Label::get_font_size() const
 {
 	return m_fontSize;
@@ -47,6 +53,11 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 {
 	m_text = newText;
 	calcul_size();
+}
+
+void hgui::kernel::Label::set_color(const color& newColor)
+{
+	m_color = newColor;
 }
 
 void hgui::kernel::Label::set_width(const unsigned int newWidth)
@@ -127,7 +138,7 @@ void hgui::kernel::Label::draw() const
 
 		for (auto& vertex : vertices)
 		{
-			const point pt = point::rotate(point(vertex[0], vertex[1]), center, m_angularRotation);
+			const point pt = point::rotate(point(vertex[0], vertex[1]), center, m_rotation);
 			vertex[0] = pt.x;
 			vertex[1] = pt.y;
 		}
@@ -145,10 +156,10 @@ void hgui::kernel::Label::draw() const
 bool hgui::kernel::Label::is_inside(const point& point) const
 {
 	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
-	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_angularRotation),
-			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_angularRotation),
-			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_angularRotation),
-			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_angularRotation);
+	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_rotation),
+			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_rotation),
+			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_rotation),
+			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_rotation);
 
 	return point::is_in_rectangle(A, B, D, point);
 }
