@@ -100,6 +100,7 @@ Please refer to the [wiki](https://github.com/Horizon-NTH/HorizonGUI/wiki).
 - **[GLM](https://glm.g-truc.net/0.9.9/index.html)** is used for mathematical operations.
 - **[OpenAL-Soft](https://github.com/kcat/openal-soft/tree/master)** is used to play sound.
 - **[Libsndfile](http://www.mega-nerd.com/libsndfile/)** is used to load audio file.
+- **[Pybind11](https://github.com/pybind/pybind11)** is used to create python binding.
 
 ## License
 
