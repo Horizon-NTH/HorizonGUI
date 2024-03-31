@@ -17,4 +17,7 @@ CMakeSettings.json
 .vscode  
 .idea 
 cmake-build-debug
-HorizonGUI.wiki  
+cmake-build-release
+cmake-build-relwithdebinfo
+cmake-build-minsizerel
+HorizonGUI.wiki

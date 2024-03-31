@@ -8,7 +8,7 @@ uniform vec4 spriteColor;
 
 void main()
 {
-    fragmentColor = vec4(spriteColor) * texture(sprite, texturePosition);
+    fragmentColor = spriteColor * texture(sprite, texturePosition);
     if (fragmentColor.w < 1)
-        discard;
+    discard;
 }

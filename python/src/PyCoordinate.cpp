@@ -370,7 +370,7 @@ void init_coordinate(const py::module& hgui)
 				"Return the height (type: float) of the size.")
 			.def_property("em_width", py::cpp_function([](const size& self) { return self.em_width; }, py::return_value_policy::reference_internal), py::cpp_function([](const size& self, const em& em_width) { self.em_width = em_width; }),
 				"Property to access the width (type: em) of the size.")
-			.def_property("em_y", py::cpp_function([](const size& self) { return self.em_height; }, py::return_value_policy::reference_internal), py::cpp_function([](const size& self, const em& em_height) { self.em_height = em_height; }),
+			.def_property("em_height", py::cpp_function([](const size& self) { return self.em_height; }, py::return_value_policy::reference_internal), py::cpp_function([](const size& self, const em& em_height) { self.em_height = em_height; }),
 				"Property to access the height (type: em) of the size.");
 	py::implicitly_convertible<coordinate, size>();
 }

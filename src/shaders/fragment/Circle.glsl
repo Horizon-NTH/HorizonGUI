@@ -8,7 +8,7 @@ uniform vec2 canvasPosition;
 uniform vec2 canvasSize;
 uniform float canvasRotation;
 uniform vec2 center;
-uniform vec3 color;
+uniform vec4 color;
 uniform float radius;
 uniform float thickness;
 uniform bool fill;
@@ -29,7 +29,7 @@ void main()
     {
         discard;
     }
-    fragmentColor = vec4(color, 1.0);
+    fragmentColor = color;
 }
 
 bool is_in_rectangle(const vec2 A, const vec2 B, const vec2 D, const vec2 point)

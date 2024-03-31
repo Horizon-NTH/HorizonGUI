@@ -60,8 +60,11 @@ void init_shapes(const py::module& kernel)
 				"Draws a circle with the specified center, radius, color, fill mode, and line thickness.")
 			.def("draw_line", &drawer::draw_line, "firstVertex"_a, "secondVertex"_a, "color"_a, "thickness"_a = 10.f,
 				"Draws a line between two specified vertices with the given color and thickness.")
-			.def("get_shapes", [](const drawer& self) { return *self.get_shapes(); }, py::return_value_policy::reference_internal,
-				"Retrieves a collection of shapes drawn with the Drawer.")
+			.def_property("shapes", py::cpp_function([](const drawer& self) { return *self.get_shapes(); }, py::return_value_policy::reference_internal), py::cpp_function([](drawer& self, const std::vector<std::shared_ptr<shape>>& shapes)
+					{
+						*self.get_shapes() = shapes;
+					}),
+				"Property to access the collection of shapes drawn with the Drawer.")
 			.def("draw", &drawer::draw,
 				"Renders all the shapes created with the Drawer.");
 }

@@ -34,7 +34,8 @@ void hgui::kernel::Texture::generate() const
 {
 	bind();
 	const auto& [size, channel, pixels] = m_image->get_data();
-	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(channel), static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height), 0, static_cast<GLenum>(channel),
+	const auto format = (channel == channels::GREYSCALE_ALPHA) ? channels::RGBA : channel;
+	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height), 0, static_cast<GLenum>(format),
 		GL_UNSIGNED_BYTE, pixels.get());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_options.wrap_s);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_options.wrap_t);

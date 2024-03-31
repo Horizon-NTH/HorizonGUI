@@ -2,7 +2,7 @@
 
 void init_enum(const py::module& hgui)
 {
-	py::enum_<hgui::keys>(hgui, "hgui::keys",
+	py::enum_<hgui::keys>(hgui, "keys",
 				"The keys enumeration defines constants for keyboard keys and their corresponding keycodes.")
 			.value("UNKNOWN", hgui::keys::UNKNOWN)
 			.value("ESCAPE", hgui::keys::ESCAPE)

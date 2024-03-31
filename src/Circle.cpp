@@ -42,7 +42,7 @@ void hgui::kernel::shape::Circle::draw(const point& canvasPosition, const size& 
 	        .set_vec2("canvasSize", canvasSize)
 	        .set_float("canvasRotation", canvasRotation)
 	        .set_vec2("center", center)
-	        .set_vec3("color", m_color)
+	        .set_vec4("color", m_color)
 	        .set_float("radius", radius)
 	        .set_float("thickness", m_thickness)
 	        .set_int("fill", m_fill);

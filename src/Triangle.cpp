@@ -129,7 +129,7 @@ void hgui::kernel::shape::Triangle::draw(const point& canvasPosition, const size
 	        .set_vec2("canvasPosition", canvasPosition)
 	        .set_vec2("canvasSize", canvasSize)
 	        .set_float("canvasRotation", canvasRotation)
-	        .set_vec3("color", m_color)
+	        .set_vec4("color", m_color)
 	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();
 	if (m_fill)

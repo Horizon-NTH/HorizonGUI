@@ -78,6 +78,25 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 			.def_static("get_widgets", &widget::get_widgets, py::return_value_policy::reference_internal, "tag"_a,
 				"Return all widgets as std::weak_ptr that are associated to the given tag.");
 
+	using label = hgui::kernel::Label;
+	py::class_<label, widget, std::shared_ptr<label>>(hgui, "Label", py::is_final(),
+				"The Label class is designed to display labels within your graphical application. Labels can be used to present information, titles, or any textual content.")
+			.def(py::init([](const std::string& text, const hgui::point& position, const std::shared_ptr<hgui::kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, const float rotation)
+					{
+						return hgui::LabelManager::create(text, position, font, textOptions, rotation);
+					}), "text"_a, "position"_a, "font"_a, "textOptions"_a = std::tuple{12u, HGUI_COLOR_WHITE, 1.0f}, "rotation"_a = 0.f,
+				"Constructs a Label object with the specified text, position, font, font size, color, scale and a rotation.")
+			.def_property("text", py::cpp_function(&label::get_text, py::return_value_policy::copy), py::cpp_function(&label::set_text),
+				"Property to access the label's text.")
+			.def_property("font_size", py::cpp_function(&label::get_font_size, py::return_value_policy::copy), py::cpp_function(&label::set_font_size),
+				"Property to access the label's font_size.")
+			.def_property("width", py::cpp_function([](const label& self) { return self.get_size().width; }, py::return_value_policy::reference_internal), py::cpp_function(&label::set_width),
+				"Property to access the label's width.")
+			.def_property("height", py::cpp_function([](const label& self) { return self.get_size().height; }, py::return_value_policy::reference_internal), py::cpp_function(&label::set_height),
+				"Property to access the label's height.")
+			.def_property("color", py::cpp_function(&label::get_color, py::return_value_policy::reference_internal), py::cpp_function(&label::set_color),
+				"Property to access the text's color.");
+
 	using button = hgui::kernel::Button;
 	py::class_<button, widget, std::shared_ptr<button>>(hgui, "Button", py::is_final(),
 				"The Button class, is a user interface element designed to respond to user interactions. Buttons are commonly used to trigger actions when clicked, providing interactivity within your graphical application.")
@@ -114,25 +133,6 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 				"Constructs a Canvas object with the specified shader, size, position, color, and a rotation.")
 			.def("get_drawer", &canvas::get_drawer, py::return_value_policy::reference_internal,
 				"Retrieves the associated Drawer object, allowing you to draw various shapes on the Canvas.");
-
-	using label = hgui::kernel::Label;
-	py::class_<label, widget, std::shared_ptr<label>>(hgui, "Label", py::is_final(),
-				"The Label class is designed to display labels within your graphical application. Labels can be used to present information, titles, or any textual content.")
-			.def(py::init([](const std::string& text, const hgui::point& position, const std::shared_ptr<hgui::kernel::Font>& font, const std::tuple<unsigned int, hgui::color, float>& textOptions, const float rotation)
-					{
-						return hgui::LabelManager::create(text, position, font, textOptions, rotation);
-					}), "text"_a, "position"_a, "font"_a, "textOptions"_a = std::tuple{12u, HGUI_COLOR_WHITE, 1.0f}, "rotation"_a = 0.f,
-				"Constructs a Label object with the specified text, position, font, font size, color, scale and a rotation.")
-			.def_property("text", py::cpp_function(&label::get_text, py::return_value_policy::copy), py::cpp_function(&label::set_text),
-				"Property to access the label's text.")
-			.def_property("font_size", py::cpp_function(&label::get_font_size, py::return_value_policy::copy), py::cpp_function(&label::set_font_size),
-				"Property to access the label's font_size.")
-			.def_property("width", py::cpp_function([](const label& self) { return self.get_size().width; }, py::return_value_policy::reference_internal), py::cpp_function(&label::set_width),
-				"Property to access the label's width.")
-			.def_property("height", py::cpp_function([](const label& self) { return self.get_size().height; }, py::return_value_policy::reference_internal), py::cpp_function(&label::set_height),
-				"Property to access the label's height.")
-			.def_property("color", py::cpp_function(&label::get_color, py::return_value_policy::reference_internal), py::cpp_function(&label::set_color),
-				"Property to access the text's color.");
 
 	using ranges = hgui::kernel::Ranges;
 	py::class_<ranges>(kernel, "Ranges",
