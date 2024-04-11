@@ -17,7 +17,7 @@ std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, c
 	}
 	else
 	{
-		throw std::runtime_error(("THERE IS ALREADY A TASK WITH THE ID : " + id).c_str());
+		throw std::runtime_error("THERE IS ALREADY A TASK WITH THE ID : " + id);
 	}
 	timer->start();
 	return std::move(id);

@@ -52,15 +52,29 @@ void init_shapes(const py::module& kernel)
 				"The Drawer class provides a versatile tool for drawing shapes and lines in a graphical application.")
 			.def(py::init<hgui::point, hgui::size, float>(), "position"_a, "size"_a, "rotation"_a = 0.f,
 				"Constructs a Drawer object with the position, size and rotation of the drawing area.")
-			.def("draw_rectangle", &drawer::draw_rectangle, "topLeftVertex"_a, "rightBottomVertex"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f,
-				"Draws a rectangle with the specified vertices, color, fill mode, and line thickness.")
-			.def("draw_triangle", &drawer::draw_triangle, "firstVertex"_a, "secondVertex"_a, "thirdVertex"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f,
-				"Draws a triangle with the specified vertices, color, fill mode, and line thickness.")
-			.def("draw_circle", &drawer::draw_circle, "centerPosition"_a, "radius"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f,
-				"Draws a circle with the specified center, radius, color, fill mode, and line thickness.")
-			.def("draw_line", &drawer::draw_line, "firstVertex"_a, "secondVertex"_a, "color"_a, "thickness"_a = 10.f,
-				"Draws a line between two specified vertices with the given color and thickness.")
-			.def_property("shapes", py::cpp_function([](const drawer& self) { return *self.get_shapes(); }, py::return_value_policy::reference_internal), py::cpp_function([](drawer& self, const std::vector<std::shared_ptr<shape>>& shapes)
+			.def("draw_rectangle", [](const drawer& self, const hgui::point& topLeftVertex, const hgui::point& rightBottomVertex, const hgui::color& color, const bool fill, const float thickness, const std::string& id)
+					{
+						return self.draw_rectangle(topLeftVertex, rightBottomVertex, color, fill, thickness, id.empty() ? hgui::get_unique_id() : id);
+					}, "topLeftVertex"_a, "rightBottomVertex"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f, "id"_a = "",
+				"Draws a rectangle with the specified vertices, color, fill mode, line thickness, and an optianal id.")
+			.def("draw_triangle", [](const drawer& self, const hgui::point& firstVertex, const hgui::point& secondVertex, const hgui::point& thirdVertex, const hgui::color& color, const bool fill, const float thickness, const std::string& id)
+					{
+						return self.draw_triangle(firstVertex, secondVertex, thirdVertex, color, fill, thickness, id.empty() ? hgui::get_unique_id() : id);
+					}, "firstVertex"_a, "secondVertex"_a, "thirdVertex"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f, "id"_a = "",
+				"Draws a triangle with the specified vertices, color, fill mode, line thickness, and an optianal id.")
+			.def("draw_circle", [](const drawer& self, const hgui::point& center, const float radius, const hgui::color& color, const bool fill, const float thickness, const std::string& id)
+					{
+						return self.draw_circle(center, radius, color, fill, thickness, id.empty() ? hgui::get_unique_id() : id);
+					}, "centerPosition"_a, "radius"_a, "color"_a, "fill"_a = true, "thickness"_a = 10.f, "id"_a = "",
+				"Draws a circle with the specified center, radius, color, fill mode, line thickness, and an optianal id.")
+			.def("draw_line", [](const drawer& self, const hgui::point& firstVertex, const hgui::point& secondVertex, const hgui::color& color, const float thickness, const std::string& id)
+					{
+						return self.draw_line(firstVertex, secondVertex, color, thickness, id.empty() ? hgui::get_unique_id() : id);
+					},
+				"firstVertex"_a, "secondVertex"_a, "color"_a, "thickness"_a = 10.f, "id"_a = "",
+				"Draws a line between two specified vertices with the given color, thickness, and an optianal id."
+			)
+			.def_property("shapes", py::cpp_function([](const drawer& self) -> std::map<std::string, std::shared_ptr<shape::Shape>>& { return *self.get_shapes(); }, py::return_value_policy::reference_internal), py::cpp_function([](drawer& self, const std::map<std::string, std::shared_ptr<shape>>& shapes)
 					{
 						*self.get_shapes() = shapes;
 					}),
