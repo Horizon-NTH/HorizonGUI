@@ -478,14 +478,14 @@ typename hgui::kernel::ConstReverseIterator<T>::reference hgui::kernel::ConstRev
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator& hgui::kernel::ConstReverseIterator<T>::operator++() noexcept
+hgui::kernel::ConstReverseIterator<T>& hgui::kernel::ConstReverseIterator<T>::operator++() noexcept
 {
 	--m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator hgui::kernel::ConstReverseIterator<T>::operator++(int) noexcept
+hgui::kernel::ConstReverseIterator<T> hgui::kernel::ConstReverseIterator<T>::operator++(int) noexcept
 {
 	ConstReverseIterator tmp = *this;
 	--m_ptr;
@@ -493,14 +493,14 @@ typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator hgui::kerne
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator& hgui::kernel::ConstReverseIterator<T>::operator--() noexcept
+hgui::kernel::ConstReverseIterator<T>& hgui::kernel::ConstReverseIterator<T>::operator--() noexcept
 {
 	++m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator hgui::kernel::ConstReverseIterator<T>::operator--(int) noexcept
+hgui::kernel::ConstReverseIterator<T> hgui::kernel::ConstReverseIterator<T>::operator--(int) noexcept
 {
 	ConstReverseIterator tmp = *this;
 	++m_ptr;
@@ -508,14 +508,14 @@ typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator hgui::kerne
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator& hgui::kernel::ConstReverseIterator<T>::operator+=(const difference_type offset) noexcept
+hgui::kernel::ConstReverseIterator<T>& hgui::kernel::ConstReverseIterator<T>::operator+=(const difference_type offset) noexcept
 {
 	m_ptr -= offset;
 	return m_ptr;
 }
 
 template<typename T>
-typename hgui::kernel::ConstReverseIterator<T>::ConstReverseIterator& hgui::kernel::ConstReverseIterator<T>::operator-=(const difference_type offset) noexcept
+hgui::kernel::ConstReverseIterator<T>& hgui::kernel::ConstReverseIterator<T>::operator-=(const difference_type offset) noexcept
 {
 	m_ptr += offset;
 	return *this;
@@ -552,14 +552,14 @@ typename hgui::kernel::Iterator<T>::reference hgui::kernel::Iterator<T>::operato
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator& hgui::kernel::Iterator<T>::operator++() noexcept
+hgui::kernel::Iterator<T>& hgui::kernel::Iterator<T>::operator++() noexcept
 {
 	++m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator hgui::kernel::Iterator<T>::operator++(int) noexcept
+hgui::kernel::Iterator<T> hgui::kernel::Iterator<T>::operator++(int) noexcept
 {
 	Iterator tmp = *this;
 	++m_ptr;
@@ -567,14 +567,14 @@ typename hgui::kernel::Iterator<T>::Iterator hgui::kernel::Iterator<T>::operator
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator& hgui::kernel::Iterator<T>::operator--() noexcept
+hgui::kernel::Iterator<T>& hgui::kernel::Iterator<T>::operator--() noexcept
 {
 	--m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator hgui::kernel::Iterator<T>::operator--(int) noexcept
+hgui::kernel::Iterator<T> hgui::kernel::Iterator<T>::operator--(int) noexcept
 {
 	Iterator tmp = *this;
 	--m_ptr;
@@ -582,14 +582,14 @@ typename hgui::kernel::Iterator<T>::Iterator hgui::kernel::Iterator<T>::operator
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator& hgui::kernel::Iterator<T>::operator+=(const difference_type offset) noexcept
+hgui::kernel::Iterator<T>& hgui::kernel::Iterator<T>::operator+=(const difference_type offset) noexcept
 {
 	m_ptr += offset;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::Iterator<T>::Iterator& hgui::kernel::Iterator<T>::operator-=(const difference_type offset) noexcept
+hgui::kernel::Iterator<T>& hgui::kernel::Iterator<T>::operator-=(const difference_type offset) noexcept
 {
 	m_ptr -= offset;
 	return *this;
@@ -626,14 +626,14 @@ typename hgui::kernel::ReverseIterator<T>::reference hgui::kernel::ReverseIterat
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator& hgui::kernel::ReverseIterator<T>::operator++() noexcept
+hgui::kernel::ReverseIterator<T>& hgui::kernel::ReverseIterator<T>::operator++() noexcept
 {
 	--m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator hgui::kernel::ReverseIterator<T>::operator++(int) noexcept
+hgui::kernel::ReverseIterator<T> hgui::kernel::ReverseIterator<T>::operator++(int) noexcept
 {
 	ReverseIterator tmp = *this;
 	--m_ptr;
@@ -641,14 +641,14 @@ typename hgui::kernel::ReverseIterator<T>::ReverseIterator hgui::kernel::Reverse
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator& hgui::kernel::ReverseIterator<T>::operator--() noexcept
+hgui::kernel::ReverseIterator<T>& hgui::kernel::ReverseIterator<T>::operator--() noexcept
 {
 	++m_ptr;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator hgui::kernel::ReverseIterator<T>::operator--(int) noexcept
+hgui::kernel::ReverseIterator<T> hgui::kernel::ReverseIterator<T>::operator--(int) noexcept
 {
 	ReverseIterator tmp = *this;
 	++m_ptr;
@@ -656,14 +656,14 @@ typename hgui::kernel::ReverseIterator<T>::ReverseIterator hgui::kernel::Reverse
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator& hgui::kernel::ReverseIterator<T>::operator+=(const difference_type offset) noexcept
+hgui::kernel::ReverseIterator<T>& hgui::kernel::ReverseIterator<T>::operator+=(const difference_type offset) noexcept
 {
 	m_ptr -= offset;
 	return *this;
 }
 
 template<typename T>
-typename hgui::kernel::ReverseIterator<T>::ReverseIterator& hgui::kernel::ReverseIterator<T>::operator-=(const difference_type offset) noexcept
+hgui::kernel::ReverseIterator<T>& hgui::kernel::ReverseIterator<T>::operator-=(const difference_type offset) noexcept
 {
 	m_ptr += offset;
 	return *this;
