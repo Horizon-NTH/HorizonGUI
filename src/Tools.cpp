@@ -3,7 +3,7 @@
 #include "../include/hgui/header/Image.h"
 #include "../include/hgui/header/Audio.h"
 #include "../include/hgui/header/GIF.h"
-#include "hgui/header/Renderer.h"
+#include "../include/hgui/header/Renderer.h"
 
 void hgui::after(const std::chrono::milliseconds& delay, const std::function<void()>& function)
 {

@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.12+)
+cmake_policy(SET CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
 
@@ -29,6 +31,8 @@ set(ALSOFT_BACKEND_WINMM OFF)
 set(BUILD_PROGRAMS OFF)
 set(BUILD_EXAMPLES OFF)
 set(BUILD_TESTING OFF)
+set(ENABLE_EXTERNAL_LIBS OFF)
+set(ENABLE_MPEG OFF)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
