@@ -55,6 +55,10 @@ namespace hgui
 
 		static void hide();
 		static void reveal();
+		static void disable();
+		static void enable();
+		static void use(const std::shared_ptr<kernel::Cursor>& cursor);
+		static std::shared_ptr<kernel::Cursor> get_cursor_used();
 
 	private:
 		static void init();

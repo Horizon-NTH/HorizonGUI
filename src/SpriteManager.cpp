@@ -52,7 +52,7 @@ const std::shared_ptr<hgui::kernel::Sprite>& hgui::SpriteManager::create(const s
 			m_sprites[spriteID] = std::make_shared<kernel::Sprite>(
 				ShaderManager::get(HGUI_SHADER_SPRITE), texture_ptr, size, position, color, angularRotation);
 		}
-		else if (auto texture_ptr = std::get_if<std::shared_ptr<kernel::Texture>>(&texture_ptr))
+		else if (const auto texture_ptr = std::get_if<std::shared_ptr<kernel::Texture>>(&texture))
 		{
 			m_sprites[spriteID] = std::make_shared<kernel::Sprite>(
 				ShaderManager::get(HGUI_SHADER_SPRITE),

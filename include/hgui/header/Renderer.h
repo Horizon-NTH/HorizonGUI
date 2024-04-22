@@ -53,6 +53,8 @@ namespace hgui
 #elif defined(HGUI_STATIC)
 	class Renderer
 	{
+		friend class kernel::Window;
+
 	public:
 		Renderer() = delete;
 		~Renderer() = delete;
@@ -74,8 +76,12 @@ namespace hgui
 		static std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, effects>> m_draws;
 		static color m_backGroundColor;
 		static std::function<void()> m_drawCallBack;
+		static std::shared_ptr<Timer> m_timer;
+		static double m_deltaTime;
 
 		static void buffer_update();
+
+		friend double get_delta_time();
 	};
 #endif
 }

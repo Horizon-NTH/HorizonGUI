@@ -156,11 +156,11 @@ void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& p
 	{
 		m_draws.second.first.clear();
 	}
-	for (const auto& tag : tags.size() ? tags : TagManager::get_tags())
+	for (const auto& tag : !tags.empty() ? tags : TagManager::get_tags())
 	{
 		if (postProcessingOption == effects::CLASSIC)
 		{
-			if (std::find(m_draws.first.begin(), m_draws.first.end(), tag) == m_draws.first.end())
+			if (std::ranges::find(m_draws.first, tag) == m_draws.first.end())
 			{
 				m_draws.first.push_back(tag);
 			}
@@ -168,7 +168,7 @@ void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& p
 		else
 		{
 			m_draws.second.second = postProcessingOption;
-			if (std::find(m_draws.second.first.begin(), m_draws.second.first.end(), tag) == m_draws.second.first.end())
+			if (std::ranges::find(m_draws.second.first, tag) == m_draws.second.first.end())
 			{
 				m_draws.second.first.push_back(tag);
 			}
@@ -184,8 +184,13 @@ void hgui::Renderer::loop()
 		alreadyInLoop = true;
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		buffer_update();
 		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
 		{
+			// Delta time calculation
+			m_deltaTime = m_timer->get_time();
+			m_timer->restart();
+
 			glClear(GL_COLOR_BUFFER_BIT);
 			BufferManager::get(HGUI_FRAMEBUFFER_POST_PROCESSING)->clear();
 
@@ -255,12 +260,11 @@ void hgui::Renderer::render()
 
 void hgui::Renderer::buffer_update()
 {
-	if (m_frameBufferShader)
+	if (ShaderManager::get(HGUI_SHADER_FRAMEBUFFER))
 	{
-		BufferManager::destroy(HGUI_FRAMEBUFFER_POST_PROCESSING);
+		BufferManager::destroy({HGUI_FRAMEBUFFER_POST_PROCESSING});
 		BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
 			ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), size(100_em));
 	}
 }
-
 #endif

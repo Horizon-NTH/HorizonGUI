@@ -9,7 +9,6 @@
 #include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
-#include "../include/hgui/header/Timer.h"
 
 #if defined(HGUI_DYNAMIC)
 void hgui::init()
@@ -183,6 +182,8 @@ bool hgui::kernel::init_glfw()
 #include "../include/hgui/header/BufferManager.h"
 #include "../include/hgui/header/WindowManager.h"
 #include "../include/hgui/header/FontManager.h"
+#include "../include/hgui/header/CursorManager.h"
+#include "../include/hgui/header/ShaderManager.h"
 
 void hgui::init()
 {
@@ -233,7 +234,6 @@ void hgui::kernel::init_glad()
 void hgui::kernel::init_resources()
 {
 	ShaderManager::create(HGUI_SHADER_FRAMEBUFFER, HGUI_GLSL_VERTEX_BUFFER, HGUI_GLSL_FRAGMENT_BUFFER);
-	const auto* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
 		ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), size(100_em));
 	ShaderManager::create(HGUI_SHADER_BUTTON, HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);

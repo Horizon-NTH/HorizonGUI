@@ -89,6 +89,16 @@ void hgui::CursorManager::reveal()
 	glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
+void hgui::CursorManager::disable()
+{
+	glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void hgui::CursorManager::enable()
+{
+	reveal();
+}
+
 void hgui::CursorManager::use(const std::shared_ptr<kernel::Cursor>& cursor)
 {
 	m_cursorUsed = cursor;

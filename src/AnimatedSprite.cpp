@@ -2,6 +2,9 @@
 #include "../include/hgui/header/TextureManager.h"
 #include "../include/hgui/header/TaskManager.h"
 #include "../include/hgui/header/GIF.h"
+#if defined(HGUI_STATIC)
+#include "../include/hgui/header/Tools.h"
+#endif
 
 hgui::kernel::AnimatedSprite::AnimatedSprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<GIF>& gif, const size& size, const point& position, const color& color, const float rotation) :
 	Sprite(shader, nullptr, size, position, color, rotation),
@@ -71,7 +74,6 @@ void hgui::kernel::AnimatedSprite::display()
 #if defined(HGUI_DYNAMIC)
 	Sprite::set_texture(TextureManager::create(image));
 #elif defined(HGUI_STATIC)
-#include "../include/hgui/header/Tools.h"
 	Sprite::set_texture(TextureManager::create(get_unique_id(), image));
 #endif
 	if (m_frameRendered <= framesCount)

@@ -77,7 +77,7 @@ std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::fun
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Button>> hgui::ButtonManager::m_buttons;
 
-const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture = nullptr, const std::variant<std::tuple<color, color, color>, color>& colors = HGUI_COLOR_WHITE, float borderRadius = 100.f, bool blurrOnHover = true, const std::string& text = "", const std::shared_ptr<kernel::Font>& font = nullptr, const color& textColor = HGUI_COLOR_BLACK, HGUI_PRECISION rotation = 0.0f)
+const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const std::string& buttonID, const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const std::variant<std::tuple<color, color, color>, color>& colors, const float borderRadius, const bool blurrOnHover, const std::string& text, const std::shared_ptr<kernel::Font>& font, const color& textColor, const HGUI_PRECISION rotation)
 {
 	if (!m_buttons.contains(buttonID))
 	{
@@ -94,22 +94,22 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 				"HGUI_BUTTON_TEXT_" + buttonID, text, position, font,
 				{12, textColor, 1.0f})
 			: nullptr,
-			tuple, angularRotation, cornerAngularRadius, blurrOnHover, texture);
-		Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
+			tuple, cornerAngularRadius, cornerAngularRadius, blurrOnHover, texture);
+		kernel::Widget::bind(m_buttons[buttonID], inputs::OVER, [buttonID]()
 			{
 				get(buttonID)->set_state(state::HOVER);
 				CursorManager::use(CursorManager::get(HGUI_CURSOR_HAND));
 			});
-		Widget::bind(m_buttons[buttonID], inputs::NOVER, [buttonID]()
+		kernel::Widget::bind(m_buttons[buttonID], inputs::NOVER, [buttonID]()
 			{
 				get(buttonID)->set_state(state::NORMAL);
 				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
-								for (auto& tag : Widget::m_bindedTags)
+								for (auto& tag : kernel::Widget::get_active_tag())
 								{
-									for (auto& widget : Widget::m_widgets[tag])
+									for (auto& widget : kernel::Widget::get_widgets(tag))
 									{
 										if (const auto button = std::dynamic_pointer_cast<
 											kernel::Button>(
@@ -130,20 +130,20 @@ const std::shared_ptr<hgui::kernel::Button>& hgui::ButtonManager::create(const s
 						}
 					});
 			});
-		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonID]()
+		kernel::Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::REPEAT), [buttonID]()
 			{
 				get(buttonID)->set_state(state::PRESS);
 			});
-		Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]()
+		kernel::Widget::bind(m_buttons[buttonID], std::make_tuple(inputs::OVER, buttons::LEFT, actions::RELEASE), [buttonID]()
 			{
 				get(buttonID)->press();
 				TaskManager::program(std::chrono::milliseconds(0), [&]()
 					{
 						if (auto isHover = []() -> bool
 							{
-								for (auto& tag : Widget::m_bindedTags)
+								for (auto& tag : kernel::Widget::get_active_tag())
 								{
-									for (auto& widget : Widget::m_widgets[tag])
+									for (auto& widget : kernel::Widget::get_widgets(tag))
 									{
 										if (const auto button = std::dynamic_pointer_cast<
 											kernel::Button>(
