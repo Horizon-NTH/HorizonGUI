@@ -30,7 +30,7 @@ namespace hgui
 		[[nodiscard]] static std::shared_ptr<kernel::AnimatedSprite> create(const std::shared_ptr<kernel::GIF>& gif, const size& size, const point& position, const color& color = HGUI_COLOR_WHITE, HGUI_PRECISION rotation = 0.0f);
 
 	private:
-		inline static std::shared_ptr<kernel::Shader> m_shader{};
+		inline static std::shared_ptr<kernel::Shader> m_shader = {};
 
 		friend void kernel::resources_cleaner();
 	};

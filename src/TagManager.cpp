@@ -1,8 +1,5 @@
 #include "../include/hgui/header/TagManager.h"
 
-std::string hgui::TagManager::m_currentTag;
-std::vector<std::string> hgui::TagManager::m_tags;
-
 std::string hgui::TagManager::create_tag(const std::string& newTag)
 {
 	if (std::ranges::find(m_tags, newTag) == m_tags.end())

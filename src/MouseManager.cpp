@@ -3,10 +3,6 @@
 #include "../include/hgui/header/Timer.h"
 #include "../include/hgui/header/Window.h"
 
-std::map<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>> hgui::MouseManager::m_inputs;
-std::variant<std::function<void()>, std::function<void(hgui::buttons, hgui::actions)>> hgui::MouseManager::m_clickCallback{};
-std::variant<std::function<void()>, std::function<void(double, double)>> hgui::MouseManager::m_scrollCallback{};
-
 void hgui::MouseManager::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {
 	if (!is_bind(action))

@@ -26,7 +26,7 @@ namespace hgui
 		[[nodiscard]] static const std::shared_ptr<kernel::Monitor>& get_primary_monitor();
 
 	private:
-		static std::map<std::string, std::shared_ptr<kernel::Monitor>> m_monitors;
+		static inline std::map<std::string, std::shared_ptr<kernel::Monitor>> m_monitors = {};
 
 		static void init();
 

@@ -26,8 +26,8 @@ namespace hgui
 		static void set_current_tag(const std::string& tag);
 
 	private:
-		static std::string m_currentTag;
-		static std::vector<std::string> m_tags;
+		static inline std::string m_currentTag;
+		static inline std::vector<std::string> m_tags = {};
 
 		friend void kernel::resources_cleaner();
 	};

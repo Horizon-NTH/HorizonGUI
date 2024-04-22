@@ -46,9 +46,9 @@ namespace hgui
 		[[nodiscard]] static bool is_mouse_in_sector(const point& mousePosition, const point& sectorPosition, const size& sectorSize);
 		[[nodiscard]] static bool is_action_verified(const std::pair<std::pair<buttons, actions>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>& input);
 
-		static std::variant<std::function<void()>, std::function<void(buttons, actions)>> m_clickCallback;
-		static std::variant<std::function<void()>, std::function<void(double, double)>> m_scrollCallback;
-		static std::map<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>> m_inputs;
+		static inline std::variant<std::function<void()>, std::function<void(buttons, actions)>> m_clickCallback = {};
+		static inline std::variant<std::function<void()>, std::function<void(double, double)>> m_scrollCallback = {};
+		static inline std::map<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>> m_inputs = {};
 
 		friend void kernel::resources_cleaner();
 	};

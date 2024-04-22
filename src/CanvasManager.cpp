@@ -6,8 +6,6 @@
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"
 
-std::shared_ptr<hgui::kernel::Shader> hgui::CanvasManager::m_shader(nullptr);
-
 std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color, HGUI_PRECISION rotation)
 {
 	if (!m_shader)

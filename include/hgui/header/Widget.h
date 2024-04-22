@@ -83,9 +83,9 @@ namespace hgui::kernel
 	private:
 		std::string m_taskID;
 
-		static std::vector<std::string> m_bindedTags;
-		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds;
-		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
+		static inline std::vector<std::string> m_bindedTags = {};
+		static inline std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds = {};
+		static inline std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets = {};
 
 		static void update();
 

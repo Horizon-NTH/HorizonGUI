@@ -1,8 +1,6 @@
 #include "../include/hgui/header/MonitorManager.h"
 #include "../include/hgui/header/Monitor.h"
 
-std::map<std::string, std::shared_ptr<hgui::kernel::Monitor>> hgui::MonitorManager::m_monitors;
-
 const std::shared_ptr<hgui::kernel::Monitor>& hgui::MonitorManager::get(const std::string& monitorName)
 {
 	if (m_monitors.contains(monitorName))

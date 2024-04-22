@@ -60,11 +60,9 @@ void hgui::kernel::init_glad()
 void hgui::kernel::resources_cleaner()
 {
 	ButtonManager::m_shader = nullptr;
-	ButtonManager::m_cursor = nullptr;
 	SpriteManager::m_shader = nullptr;
 	LabelManager::m_shader = nullptr;
 	CanvasManager::m_shader = nullptr;
-	SliderManager::m_cursor = nullptr;
 	Widget::m_binds.clear();
 	Widget::m_bindedTags.clear();
 	Widget::m_widgets.clear();

@@ -1,55 +1,30 @@
 #include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/TagManager.h"
 #include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/Cursor.h"
 #include "../include/hgui/header/CursorManager.h"
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Cursor> hgui::SliderManager::m_cursor(nullptr);
-
 std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function, HGUI_PRECISION rotation)
 {
 	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, rotation);
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Slider>(slider->shared_from_this());
-	slider->bind(inputs::OVER, []
+	auto cursor = CursorManager::create(cursors::HAND);
+	auto dragged = std::make_shared<bool>(false);
+	slider->bind(inputs::OVER, [cursor]
 		{
-			if (!m_cursor)
-			{
-				m_cursor = CursorManager::create(cursors::HAND);
-			}
-			m_cursor->use();
+			CursorManager::use(cursor);
 		});
-	slider->bind(inputs::NOVER, []
+	slider->bind(inputs::NOVER, [cursor, dragged]
 		{
-			TaskManager::program(std::chrono::milliseconds(0), [&]
+			TaskManager::program(std::chrono::milliseconds(0), [cursor, dragged]
 				{
-					if (auto isHover = []() -> bool
-						{
-							std::pair<double, double> mousePosition;
-							glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
-							const point click = {mousePosition.first, mousePosition.second};
-							for (auto& tag : kernel::Widget::get_active_tag())
-							{
-								for (auto& ptr : kernel::Widget::get_widgets(tag))
-								{
-									if (const auto slider_ptr = std::dynamic_pointer_cast<
-										kernel::Slider>(ptr.lock()))
-									{
-										if (slider_ptr->is_inside(click))
-										{
-											return true;
-										}
-									}
-								}
-							}
-							return false;
-						}; !isHover())
+					if (!*dragged && CursorManager::get_cursor_used() == cursor)
 					{
-						m_cursor = nullptr;
+						CursorManager::use(nullptr);
 					}
 				});
 		});
-	slider->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::PRESS), [wwidget]
+	slider->bind(std::make_tuple(inputs::OVER, buttons::LEFT, actions::PRESS), [wwidget, dragged]
 		{
 			if (const auto widget = wwidget.lock())
 			{
@@ -58,6 +33,7 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 				widget->set_slider_position(point(mousePosition.first, mousePosition.second));
 				if (!widget->is_bind(std::make_pair(buttons::LEFT, actions::REPEAT)))
 				{
+					*dragged = true;
 					widget->bind(std::make_pair(buttons::LEFT, actions::REPEAT), [wwidget]
 						{
 							if (const auto widget = wwidget.lock())
@@ -70,7 +46,7 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 				}
 			}
 		});
-	slider->bind(std::make_pair(buttons::LEFT, actions::RELEASE), [wwidget]
+	slider->bind(std::make_pair(buttons::LEFT, actions::RELEASE), [wwidget, cursor, dragged]
 		{
 			if (const auto widget = wwidget.lock())
 			{
@@ -78,6 +54,17 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 				{
 					widget->unbind(std::make_pair(buttons::LEFT, actions::REPEAT));
 				}
+				TaskManager::program(std::chrono::milliseconds(0), [cursor, dragged, widget]
+					{
+						*dragged = false;
+						if (CursorManager::get_cursor_used() == cursor)
+						{
+							std::pair<double, double> mousePosition;
+							glfwGetCursorPos(glfwGetCurrentContext(), &mousePosition.first, &mousePosition.second);
+							if (widget && !widget->is_inside(point(mousePosition.first, mousePosition.second)))
+								CursorManager::use(nullptr);
+						}
+					});
 			}
 		});
 	return slider;

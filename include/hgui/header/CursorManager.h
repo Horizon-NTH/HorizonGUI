@@ -27,6 +27,15 @@ namespace hgui
 
 		static void hide();
 		static void reveal();
+		static void disable();
+		static void enable();
+		static void use(const std::shared_ptr<kernel::Cursor>& cursor);
+		static std::shared_ptr<kernel::Cursor> get_cursor_used();
+
+	private:
+		static inline std::weak_ptr<kernel::Cursor> m_cursorUsed = {};
+
+		friend void kernel::resources_cleaner();
 	};
 #elif defined(HGUI_STATIC)
 	class CursorManager
@@ -51,6 +60,7 @@ namespace hgui
 		static void init();
 
 		static std::map<std::string, std::shared_ptr<kernel::Cursor>> m_cursors;
+		static std::weak_ptr<kernel::Cursor> m_cursorUsed;
 
 		friend void init();
 		friend void kernel::resources_cleaner();

@@ -34,16 +34,11 @@ bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair
 	return leftSide.index() < rightSide.index();
 }
 
-std::map<std::variant<std::pair<hgui::keys, hgui::actions>, std::pair<std::vector<hgui::keys>, hgui::actions>>, std::pair<hgui::Timer, std::function<void()>>, hgui::kernel::VariantKeyComparator> hgui::KeyBoardManager::m_keys;
-std::variant<std::function<void()>, std::function<void(hgui::keys, hgui::actions)>> hgui::KeyBoardManager::m_keyCallback([]
-	{
-	});
-
 void hgui::KeyBoardManager::bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action, const std::function<void()>& function)
 {
 	if (!is_bind(action))
 	{
-		m_keys[action].second = function;
+		m_keys[action] = std::make_pair(std::make_shared<Timer>(), function);
 	}
 	else
 	{
@@ -85,9 +80,9 @@ void hgui::KeyBoardManager::process()
 					first))))
 			{
 				case actions::PRESS:
-					if (!key.second.first.is_counting())
+					if (!key.second.first->is_counting())
 					{
-						key.second.first.start();
+						key.second.first->start();
 						if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
 						{
 							toDo.push_back(key.second.second);
@@ -95,7 +90,7 @@ void hgui::KeyBoardManager::process()
 					}
 					break;
 				case actions::RELEASE:
-					if (key.second.first.is_counting())
+					if (key.second.first->is_counting())
 					{
 						key.second.first.reset();
 						if (action == std::get<std::pair<keys, actions>>(key.first).second && key.second.second)
@@ -108,7 +103,7 @@ void hgui::KeyBoardManager::process()
 					break;
 			}
 			if (std::get<std::pair<keys, actions>>(key.first).second == actions::REPEAT &&
-			    key.second.first.get_time() >= 0.3 && key.second.second)
+			    key.second.first->get_time() >= 0.3 && key.second.second)
 			{
 				toDo.push_back(key.second.second);
 			}
@@ -130,7 +125,7 @@ void hgui::KeyBoardManager::process()
 				{
 					case actions::PRESS:
 
-						key.second.first.start();
+						key.second.first->start();
 						if (!key.first.index())
 						{
 							if (key.second.second)
@@ -140,7 +135,7 @@ void hgui::KeyBoardManager::process()
 						}
 						break;
 					case actions::RELEASE:
-						if (key.second.first.is_counting())
+						if (key.second.first->is_counting())
 						{
 							key.second.first.reset();
 
@@ -151,7 +146,7 @@ void hgui::KeyBoardManager::process()
 						}
 						break;
 					case actions::REPEAT:
-						if (key.second.first.get_time() >= 0.3 && key.second.second)
+						if (key.second.first->get_time() >= 0.3 && key.second.second)
 						{
 							toDo.push_back(key.second.second);
 						}

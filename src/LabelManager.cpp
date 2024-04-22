@@ -5,8 +5,6 @@
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"
 
-std::shared_ptr<hgui::kernel::Shader> hgui::LabelManager::m_shader(nullptr);
-
 std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION rotation)
 {
 	if (!m_shader)
