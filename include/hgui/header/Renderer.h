@@ -9,6 +9,7 @@ namespace hgui
 		class Shader;
 		class Buffer;
 		class Window;
+		void resources_cleaner();
 	}
 
 	class Timer;
@@ -37,18 +38,18 @@ namespace hgui
 	private:
 		static void render();
 
-		static std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, effects>> m_draws;
-		static color m_backGroundColor;
-		static std::shared_ptr<kernel::Buffer> m_frameBuffer;
-		static std::shared_ptr<kernel::Shader> m_frameBufferShader;
-		static std::function<void()> m_drawCallBack;
-		static std::shared_ptr<Timer> m_timer;
-		static double m_deltaTime;
+		static inline std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, effects>> m_draws;
+		static inline color m_backGroundColor;
+		static inline std::shared_ptr<kernel::Buffer> m_frameBuffer;
+		static inline std::shared_ptr<kernel::Shader> m_frameBufferShader;
+		static inline std::function<void()> m_drawCallBack;
+		static inline std::shared_ptr<Timer> m_timer;
+		static inline double m_deltaTime = 0.;
 
-		static
-		void buffer_update();
+		static void buffer_update();
 
 		friend double get_delta_time();
+		friend void kernel::resources_cleaner();
 	};
 #elif defined(HGUI_STATIC)
 	class Renderer

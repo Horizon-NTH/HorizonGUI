@@ -41,8 +41,8 @@ namespace hgui
 		static void process();
 		static void input(GLFWwindow* window, int key, int scan, int action, int mods);
 
-		static inline std::map<std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>, kernel::VariantKeyComparator> m_keys = {};
-		static inline std::variant<std::function<void()>, std::function<void(keys, actions)>> m_keyCallback = {};
+		static inline std::map<std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>, kernel::VariantKeyComparator> m_keys;
+		static inline std::variant<std::function<void()>, std::function<void(keys, actions)>> m_keyCallback;
 
 		friend void kernel::resources_cleaner();
 	};

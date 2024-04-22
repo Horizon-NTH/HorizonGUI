@@ -9,6 +9,9 @@
 #include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
+#include "../include/hgui/header/CursorManager.h"
+#include "../include/hgui/header/Renderer.h"
+#include "../include/hgui/header/TaskManager.h"
 
 #if defined(HGUI_DYNAMIC)
 void hgui::init()
@@ -62,13 +65,27 @@ void hgui::kernel::resources_cleaner()
 	SpriteManager::m_shader = nullptr;
 	LabelManager::m_shader = nullptr;
 	CanvasManager::m_shader = nullptr;
+	Renderer::m_frameBufferShader = nullptr;
+	CursorManager::m_cursorUsed = {};
 	Widget::m_binds.clear();
 	Widget::m_bindedTags.clear();
 	Widget::m_widgets.clear();
 	TagManager::m_tags.clear();
+	TagManager::m_currentTag = "";
+	TaskManager::m_tasks.clear();
 	KeyBoardManager::m_keys.clear();
+	KeyBoardManager::m_keyCallback = {};
 	MouseManager::m_inputs.clear();
+	MouseManager::m_clickCallback = {};
+	MouseManager::m_scrollCallback = {};
+	MonitorManager::m_monitors.clear();
 	SoundPlayerManager::clean();
+	Renderer::m_draws = {};
+	Renderer::m_timer = nullptr;
+	Renderer::m_deltaTime = 0.;
+	Renderer::m_frameBuffer = nullptr;
+	Renderer::m_drawCallBack = nullptr;
+	Renderer::m_backGroundColor = color();
 }
 
 void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned int id, const GLenum severity, [[maybe_unused]] GLsizei length, const char* message, [[maybe_unused]] const void* userParam)

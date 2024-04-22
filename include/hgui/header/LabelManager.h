@@ -26,7 +26,7 @@ namespace hgui
 		[[nodiscard]] static std::shared_ptr<kernel::Label> create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = {12u, HGUI_COLOR_WHITE, 1.0f}, HGUI_PRECISION rotation = 0.0f);
 
 	private:
-		static inline std::shared_ptr<kernel::Shader> m_shader = {};
+		static inline std::shared_ptr<kernel::Shader> m_shader;
 
 		friend void kernel::resources_cleaner();
 	};

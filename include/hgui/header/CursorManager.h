@@ -33,7 +33,7 @@ namespace hgui
 		static std::shared_ptr<kernel::Cursor> get_cursor_used();
 
 	private:
-		static inline std::weak_ptr<kernel::Cursor> m_cursorUsed = {};
+		static inline std::weak_ptr<kernel::Cursor> m_cursorUsed;
 
 		friend void kernel::resources_cleaner();
 	};

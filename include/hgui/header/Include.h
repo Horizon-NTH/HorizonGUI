@@ -39,4 +39,4 @@
 // Libsndfile library
 #include <snd/sndfile.h>
 // HorizonGUI API Type
-#define HGUI_STATIC
+#define HGUI_DYNAMIC

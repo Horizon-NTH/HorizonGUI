@@ -5,12 +5,12 @@
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
 
-hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const HGUI_PRECISION rotation) :
+hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, size size, point position, const HGUI_PRECISION rotation) :
 	m_shader(shader),
 	m_VAO(std::make_shared<VertexArrayObject>()),
 	m_VBO(std::make_shared<VertexBufferObject>()),
-	m_size(size),
-	m_position(position),
+	m_size(std::move(size)),
+	m_position(std::move(position)),
 	m_rotation(rotation)
 {
 	auto tag = TagManager::get_current_tag();

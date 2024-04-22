@@ -31,7 +31,7 @@ namespace hgui
 	private:
 		static inline ALCdevice* m_device = nullptr;
 		static inline ALCcontext* m_context = nullptr;
-		static inline std::vector<std::weak_ptr<kernel::SoundPlayer>> m_players = {};
+		static inline std::vector<std::weak_ptr<kernel::SoundPlayer>> m_players;
 
 		static void init();
 		static void clean();

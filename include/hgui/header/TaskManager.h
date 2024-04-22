@@ -5,6 +5,10 @@
 namespace hgui
 {
 	class Timer;
+	namespace kernel
+	{
+		void resources_cleaner();
+	}
 
 	class TaskManager
 	{
@@ -28,6 +32,8 @@ namespace hgui
 	private:
 		static void process();
 
-		inline static std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<Timer>>> m_tasks = {};
+		inline static std::map<std::string, std::tuple<std::function<void()>, std::chrono::milliseconds, std::shared_ptr<Timer>>> m_tasks;
+
+		friend void kernel::resources_cleaner();
 	};
 }

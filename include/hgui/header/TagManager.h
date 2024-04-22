@@ -27,7 +27,7 @@ namespace hgui
 
 	private:
 		static inline std::string m_currentTag;
-		static inline std::vector<std::string> m_tags = {};
+		static inline std::vector<std::string> m_tags;
 
 		friend void kernel::resources_cleaner();
 	};

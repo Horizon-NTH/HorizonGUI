@@ -12,14 +12,6 @@
 #include "../include/hgui/header/Timer.h"
 
 #if defined(HGUI_DYNAMIC)
-std::pair<std::vector<std::string>, std::pair<std::vector<std::string>, hgui::effects>> hgui::Renderer::m_draws;
-hgui::color hgui::Renderer::m_backGroundColor;
-std::shared_ptr<hgui::kernel::Buffer> hgui::Renderer::m_frameBuffer(nullptr);
-std::shared_ptr<hgui::kernel::Shader> hgui::Renderer::m_frameBufferShader(nullptr);
-std::function<void()> hgui::Renderer::m_drawCallBack(nullptr);
-std::shared_ptr<hgui::Timer> hgui::Renderer::m_timer(std::make_shared<Timer>());
-double hgui::Renderer::m_deltaTime{};
-
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {
 	if (postProcessingOption == effects::CLASSIC)
@@ -60,6 +52,7 @@ void hgui::Renderer::loop()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		m_frameBufferShader = ShaderManager::create(HGUI_GLSL_VERTEX_BUFFER, HGUI_GLSL_FRAGMENT_BUFFER);
 		buffer_update();
+		m_timer = std::make_shared<Timer>();
 		while (!glfwWindowShouldClose(glfwGetCurrentContext()))
 		{
 			// Delta time calculation
