@@ -5,10 +5,11 @@
 #include "../include/hgui/header/VertexBufferObject.h"
 
 hgui::kernel::Sprite::Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, const HGUI_PRECISION rotation) :
-    Widget(shader, size, position, rotation),
+    Widget(shader, size, position),
     m_texture(texture),
     m_modelMatrix(1.0),
-    m_color(color)
+    m_color(color),
+    m_rotation(rotation)
 {
     init_data();
     Sprite::set_position(position);
@@ -37,7 +38,6 @@ bool hgui::kernel::Sprite::is_inside(const point& point) const
     const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
     const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_rotation),
             B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_rotation),
-            C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_rotation),
             D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_rotation);
 
     return point::is_in_rectangle(A, B, D, point);
@@ -46,6 +46,16 @@ bool hgui::kernel::Sprite::is_inside(const point& point) const
 const std::shared_ptr<hgui::kernel::Texture>& hgui::kernel::Sprite::get_texture() const
 {
     return m_texture;
+}
+
+const hgui::color& hgui::kernel::Sprite::get_color() const
+{
+    return m_color;
+}
+
+HGUI_PRECISION hgui::kernel::Sprite::get_rotation() const
+{
+    return m_rotation;
 }
 
 void hgui::kernel::Sprite::set_position(const point& newPosition)
@@ -62,6 +72,17 @@ void hgui::kernel::Sprite::set_position(const point& newPosition)
 void hgui::kernel::Sprite::set_texture(const std::shared_ptr<Texture>& newTexture)
 {
     m_texture = newTexture;
+}
+
+void hgui::kernel::Sprite::set_color(const color& newColor)
+{
+    m_color = newColor;
+}
+
+void hgui::kernel::Sprite::set_rotation(const HGUI_PRECISION rotation)
+{
+    m_rotation = rotation;
+    set_position(m_position);
 }
 
 void hgui::kernel::Sprite::init_data() const

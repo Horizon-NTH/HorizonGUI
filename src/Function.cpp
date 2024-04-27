@@ -14,6 +14,8 @@
 #include "../include/hgui/header/TaskManager.h"
 
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/TextInputManager.h"
+
 void hgui::init()
 {
 	static bool alreadyInitialize = false;

@@ -268,19 +268,13 @@ void hgui::MouseManager::process()
 
 void hgui::MouseManager::scroll([[maybe_unused]] GLFWwindow* window, const double xOffset, const double yOffset)
 {
-	if (const auto function = std::get_if<std::function<void()>>(&m_scrollCallback))
+	if (const auto functionWithoutScrollInformation = std::get_if<std::function<void()>>(&m_scrollCallback); functionWithoutScrollInformation && *functionWithoutScrollInformation)
 	{
-		if (*function)
-		{
-			(*function)();
-		}
+		(*functionWithoutScrollInformation)();
 	}
-	else if (const auto functionWithParameter = std::get_if<std::function<void(double, double)>>(&m_scrollCallback))
+	else if (const auto functionWithScrollInformation = std::get_if<std::function<void(double, double)>>(&m_scrollCallback); functionWithScrollInformation && *functionWithScrollInformation)
 	{
-		if (*functionWithParameter)
-		{
-			(*functionWithParameter)(xOffset, yOffset);
-		}
+		(*functionWithScrollInformation)(xOffset, yOffset);
 	}
 	std::vector<std::function<void()>> toDo;
 	//PROCESSING INPUTS
@@ -510,19 +504,13 @@ bool hgui::MouseManager::is_action_verified(const std::pair<std::pair<buttons, a
 
 void hgui::MouseManager::input([[maybe_unused]] GLFWwindow* window, int button, int action, [[maybe_unused]] int mods)
 {
-	if (const auto function = std::get_if<std::function<void()>>(&m_clickCallback))
+	if (const auto functionWithoutInputInformation = std::get_if<std::function<void()>>(&m_clickCallback); functionWithoutInputInformation && *functionWithoutInputInformation)
 	{
-		if (*function)
-		{
-			(*function)();
-		}
+		(*functionWithoutInputInformation)();
 	}
-	else if (const auto functionWithParameter = std::get_if<std::function<void(buttons, actions)>>(&m_clickCallback))
+	else if (const auto functionWithInputInformation = std::get_if<std::function<void(buttons, actions)>>(&m_clickCallback); functionWithInputInformation && *functionWithInputInformation)
 	{
-		if (*functionWithParameter)
-		{
-			(*functionWithParameter)(static_cast<buttons>(button), static_cast<actions>(action));
-		}
+		(*functionWithInputInformation)(static_cast<buttons>(button), static_cast<actions>(action));
 	}
 }
 

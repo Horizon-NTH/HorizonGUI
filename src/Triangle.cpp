@@ -120,7 +120,7 @@ hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& s
 	}
 }
 
-void hgui::kernel::shape::Triangle::draw(const point& canvasPosition, const size& canvasSize, const float canvasRotation) const
+void hgui::kernel::shape::Triangle::draw(const point& canvasPosition, const size& canvasSize) const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
@@ -128,7 +128,6 @@ void hgui::kernel::shape::Triangle::draw(const point& canvasPosition, const size
 	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
 	        .set_vec2("canvasPosition", canvasPosition)
 	        .set_vec2("canvasSize", canvasSize)
-	        .set_float("canvasRotation", canvasRotation)
 	        .set_vec4("color", m_color)
 	        .set_float("radius", m_thickness / 2.0f);
 	m_VAO->bind();

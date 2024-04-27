@@ -4,9 +4,9 @@
 #include "../include/hgui/header/CursorManager.h"
 
 #if defined(HGUI_DYNAMIC)
-std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function, HGUI_PRECISION rotation)
+std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function)
 {
-	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, rotation);
+	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function);
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Slider>(slider->shared_from_this());
 	auto cursor = CursorManager::create(cursors::HAND);
 	auto dragged = std::make_shared<bool>(false);
@@ -73,11 +73,11 @@ std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::
 #include "../include/hgui/header/Cursor.h"
 std::map<std::string, std::shared_ptr<hgui::kernel::Slider>> hgui::SliderManager::m_sliders;
 
-const std::shared_ptr<hgui::kernel::Slider>& hgui::SliderManager::create(const std::string& sliderID, const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function, HGUI_PRECISION angularRotation)
+const std::shared_ptr<hgui::kernel::Slider>& hgui::SliderManager::create(const std::string& sliderID, const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function)
 {
 	if (!m_sliders.contains(sliderID))
 	{
-		m_sliders[sliderID] = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function, angularRotation);
+		m_sliders[sliderID] = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function);
 		kernel::Widget::bind(m_sliders[sliderID], inputs::OVER, []
 			{
 				CursorManager::use(CursorManager::get(HGUI_CURSOR_HAND));

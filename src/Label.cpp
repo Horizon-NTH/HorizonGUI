@@ -5,13 +5,15 @@
 #include "../include/hgui/header/Shader.h"
 #include "../include/hgui/header/Texture.h"
 
-hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const HGUI_PRECISION scale, const HGUI_PRECISION rotation) :
-	Widget(shader, size(glm::vec2(0.0f)), position, rotation),
+hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const bool align, const HGUI_PRECISION scale, const HGUI_PRECISION rotation) :
+	Widget(shader, size(glm::vec2(0.0f)), position),
 	m_text(std::move(text)),
 	m_scale(scale),
 	m_fontSize(fontSize),
 	m_font(font),
-	m_color(color)
+	m_color(color),
+	m_align(align),
+	m_rotation(rotation)
 {
 	m_VAO->bind();
 	m_VBO->set_data(nullptr, 24 * sizeof(float), true);
@@ -19,13 +21,9 @@ hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shad
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
 	m_VAO->unbind();
 	if (!m_font)
-	{
 		throw std::runtime_error("ERROR CANNOT CREATE TEXT WITHOUT SETTING A FONT");
-	}
 	if (!m_font->is_load(m_fontSize))
-	{
 		m_font->load_font(m_fontSize);
-	}
 	calcul_size();
 }
 
@@ -44,6 +42,26 @@ unsigned int hgui::kernel::Label::get_font_size() const
 	return m_fontSize;
 }
 
+const std::shared_ptr<hgui::kernel::Font>& hgui::kernel::Label::get_font() const
+{
+	return m_font;
+}
+
+bool hgui::kernel::Label::is_align() const
+{
+	return m_align;
+}
+
+HGUI_PRECISION hgui::kernel::Label::get_scale() const
+{
+	return m_scale;
+}
+
+HGUI_PRECISION hgui::kernel::Label::get_rotation() const
+{
+	return m_rotation;
+}
+
 void hgui::kernel::Label::set_font_size(const unsigned int fontSize)
 {
 	m_fontSize = fontSize;
@@ -58,6 +76,32 @@ void hgui::kernel::Label::set_text(const std::string& newText)
 void hgui::kernel::Label::set_color(const color& newColor)
 {
 	m_color = newColor;
+}
+
+void hgui::kernel::Label::set_font(const std::shared_ptr<Font>& font)
+{
+	if (!font)
+		throw std::runtime_error("ERROR CANNOT SET A NULLPTR FONT");
+	m_font = font;
+	if (!m_font->is_load(m_fontSize))
+		m_font->load_font(m_fontSize);
+	calcul_size();
+}
+
+void hgui::kernel::Label::set_alignement(const bool align)
+{
+	m_align = align;
+}
+
+void hgui::kernel::Label::set_scale(const HGUI_PRECISION scale)
+{
+	m_scale = scale;
+	calcul_size();
+}
+
+void hgui::kernel::Label::set_rotation(const HGUI_PRECISION rotation)
+{
+	m_rotation = rotation;
 }
 
 void hgui::kernel::Label::set_width(const unsigned int newWidth)
@@ -181,9 +225,10 @@ int hgui::kernel::Label::get_max_bearing_y() const
 {
 	if (m_text.empty())
 		return 0;
+	const auto text = m_align ? m_font->get_printable_characters(m_fontSize) : m_text;
 	return std::accumulate(
-		std::next(m_text.begin()), m_text.end(),
-		m_font->get_char(m_text[0], m_fontSize).bearing.y,
+		std::next(text.begin()), text.end(),
+		m_font->get_char(text[0], m_fontSize).bearing.y,
 		[this](const int max, const char c)
 			{
 				return std::max(max, m_font->get_char(c, m_fontSize).bearing.y);

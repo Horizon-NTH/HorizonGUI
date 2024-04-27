@@ -14,6 +14,7 @@ std::string hgui::TaskManager::program(const std::chrono::milliseconds& delay, c
 	if (!m_tasks.contains(id))
 	{
 		m_tasks[id] = std::make_tuple(function, delay, timer);
+		m_insertionOrder.push_back(id);
 	}
 	else
 	{
@@ -35,6 +36,7 @@ void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<st
 		if (m_tasks.contains(*id))
 		{
 			m_tasks.erase(*id);
+			m_insertionOrder.erase(std::ranges::find(m_insertionOrder, *id));
 		}
 		else
 		{
@@ -48,6 +50,7 @@ void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<st
 			if (m_tasks.contains(identifiant))
 			{
 				m_tasks.erase(identifiant);
+				m_insertionOrder.erase(std::ranges::find(m_insertionOrder, identifiant));
 			}
 			else
 			{
@@ -59,22 +62,16 @@ void hgui::TaskManager::deprogram(const std::variant<std::string, std::vector<st
 
 std::vector<std::string> hgui::TaskManager::get_ids()
 {
-	std::vector<std::string> ids;
-	ids.reserve(m_tasks.size());
-	for (const auto& id : m_tasks | std::views::keys)
-	{
-		ids.push_back(id);
-	}
-	return ids;
+	return m_insertionOrder;
 }
 
 void hgui::TaskManager::process()
 {
 	std::vector<std::string> taskToDo;
-	for (const auto& [id, task] : m_tasks)
+	for (const auto& id : m_insertionOrder)
 	{
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(task)->get_time()))
-		    >= std::get<1>(task))
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(std::get<2>(m_tasks[id])->get_time()))
+		    >= std::get<1>(m_tasks[id]))
 		{
 			taskToDo.push_back(id);
 		}
@@ -83,5 +80,6 @@ void hgui::TaskManager::process()
 	{
 		std::get<0>(m_tasks[id])();
 		m_tasks.erase(id);
+		m_insertionOrder.erase(std::ranges::find(m_insertionOrder, id));
 	}
 }
