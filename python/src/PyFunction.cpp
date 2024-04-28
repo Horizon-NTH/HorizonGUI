@@ -90,7 +90,7 @@ void init_function(py::module& hgui, py::module& kernel)
 
 	hgui.def("after", &hgui::after, "delay"_a, "function"_a,
 		"Schedules a function to be executed after a specified delay.");
-	hgui.def("file_reader", &hgui::file_reader, "filePath"_a,
+	hgui.def("file_reader", &hgui::file_reader, "file_path"_a,
 		"Reads the contents of a file and returns them as a string.");
 	hgui.def("random", &hgui::random, "chances"_a,
 		"Generates a random boolean value based on the given probability (chances). Returns true with the given probability, and false otherwise.");

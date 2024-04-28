@@ -35,7 +35,7 @@ namespace hgui::kernel
 		void set_state(const state& state);
 		void set_color(const std::tuple<color, color, color>& newColors);
 		void set_texture(const std::shared_ptr<Texture>& texture);
-		void set_label(const std::shared_ptr<Label>& text);
+		void set_label(const std::shared_ptr<Label>& label);
 		void set_text(const std::string& text);
 		void set_function(const std::function<void()>& function);
 		void set_blurr_on_hover(bool blurrOnHover);

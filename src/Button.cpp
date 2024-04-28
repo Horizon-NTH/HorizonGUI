@@ -164,9 +164,9 @@ void hgui::kernel::Button::set_texture(const std::shared_ptr<Texture>& texture)
 	m_texture = texture;
 }
 
-void hgui::kernel::Button::set_label(const std::shared_ptr<Label>& text)
+void hgui::kernel::Button::set_label(const std::shared_ptr<Label>& label)
 {
-	m_text = text;
+	m_text = label;
 	if (m_text)
 	{
 		m_text->set_alignement(false);

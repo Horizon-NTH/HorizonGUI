@@ -5,39 +5,39 @@ void init_resources(const py::module& hgui, const py::module& kernel)
 	using shader = hgui::kernel::Shader;
 	py::class_<shader, std::shared_ptr<shader>>(hgui, "Shader",
 				"The Shader class facilitates the creation, management, and utilization of shader programs.")
-			.def(py::init<const std::string&, const std::string&, const std::string&>(), "vertexShader"_a, "fragmentShader"_a, "geometryShader"_a = "",
+			.def(py::init<const std::string&, const std::string&, const std::string&>(), "vertex_shader"_a, "fragment_shader"_a, "geometry_shader"_a = "",
 				"Constructs a Shader object by specifying the source code for the vertex, fragment, and geometry shaders. This constructor compiles and links the shaders to create a shader program.")
 			.def("use", &shader::use, py::return_value_policy::reference_internal,
 				"Sets the shader program as the current one for rendering.")
 			.def_property_readonly("id", &shader::get_id,
 				"Retrieves the ID of the shader program.")
-			.def("set_int", &shader::set_int, py::return_value_policy::reference_internal, "uniformName"_a, "integer"_a,
+			.def("set_int", &shader::set_int, py::return_value_policy::reference_internal, "uniform_name"_a, "integer"_a,
 				"Sets an integer uniform variable in the shader.")
-			.def("set_float", &shader::set_float, py::return_value_policy::reference_internal, "uniformName"_a, "float"_a,
+			.def("set_float", &shader::set_float, py::return_value_policy::reference_internal, "uniform_name"_a, "float"_a,
 				"Sets an floating-point uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::vec2&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "vec2"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::vec2&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec2"_a,
 				"Sets an vec2 uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::point&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "point"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::point&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "point"_a,
 				"Sets an point uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::size&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "size"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::size&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "size"_a,
 				"Sets an size uniform variable in the shader.")
-			.def("set_vec3", py::overload_cast<const std::string&, const hgui::vec3&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "vec3"_a,
+			.def("set_vec3", py::overload_cast<const std::string&, const hgui::vec3&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec3"_a,
 				"Sets an vec3 uniform variable in the shader.")
-			.def("set_vec3", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "color"_a,
+			.def("set_vec3", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
 				"Sets an color uniform variable in the shader.")
-			.def("set_vec4", py::overload_cast<const std::string&, const hgui::vec4&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "vec4"_a,
+			.def("set_vec4", py::overload_cast<const std::string&, const hgui::vec4&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec4"_a,
 				"Sets an vec4 uniform variable in the shader.")
-			.def("set_vec4", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "color"_a,
+			.def("set_vec4", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
 				"Sets an color with alpha value uniform variable in the shader.")
-			.def("set_double", &shader::set_double, py::return_value_policy::reference_internal, "uniformName"_a, "double"_a,
+			.def("set_double", &shader::set_double, py::return_value_policy::reference_internal, "uniform_name"_a, "double"_a,
 				"Sets an double uniform variable in the shader.")
-			.def("set_dvec2", py::overload_cast<const std::string&, const hgui::dvec2&>(&shader::set_dvec2, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "dvec2"_a,
+			.def("set_dvec2", py::overload_cast<const std::string&, const hgui::dvec2&>(&shader::set_dvec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec2"_a,
 				"Sets an dvec2 uniform variable in the shader.")
-			.def("set_dvec3", py::overload_cast<const std::string&, const hgui::dvec3&>(&shader::set_dvec3, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "dvec3"_a,
+			.def("set_dvec3", py::overload_cast<const std::string&, const hgui::dvec3&>(&shader::set_dvec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec3"_a,
 				"Sets an dvec3 uniform variable in the shader.")
-			.def("set_dvec4", py::overload_cast<const std::string&, const hgui::dvec4&>(&shader::set_dvec4, py::const_), py::return_value_policy::reference_internal, "uniformName"_a, "dvec4"_a,
+			.def("set_dvec4", py::overload_cast<const std::string&, const hgui::dvec4&>(&shader::set_dvec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec4"_a,
 				"Sets an dvec4 uniform variable in the shader.")
-			.def("set_mat4", [](const shader& self, const std::string& uniformName, const std::array<float, 16>& mat4) { self.set_mat4(uniformName, glm::make_mat4(mat4.data())); }, py::return_value_policy::reference_internal, "uniformName"_a, "mat4"_a,
+			.def("set_mat4", [](const shader& self, const std::string& uniform_name, const std::array<float, 16>& mat4) { self.set_mat4(uniform_name, glm::make_mat4(mat4.data())); }, py::return_value_policy::reference_internal, "uniform_name"_a, "mat4"_a,
 				"Sets an mat4 uniform variable in the shader.");
 
 	using option = hgui::kernel::TextureOption;
@@ -118,7 +118,7 @@ void init_resources(const py::module& hgui, const py::module& kernel)
 				"Checks if the Framebuffer is complete and ready for rendering.")
 			.def("attach_texture", &framebuffer::attach_texture, "texture"_a,
 				"Attaches a texture to the Framebuffer, enabling rendering into the provided texture.")
-			.def("attach_render_buffer", &framebuffer::attach_render_buffer, "renderBuffer"_a,
+			.def("attach_render_buffer", &framebuffer::attach_render_buffer, "render_buffer"_a,
 				"Attaches a Render Buffer to the Framebuffer, allowing depth and stencil information storage.")
 			.def_property_readonly("id", &framebuffer::get_id,
 				"Retrieves the ID of the Framebuffer.");
@@ -128,7 +128,10 @@ void init_resources(const py::module& hgui, const py::module& kernel)
 				"The Buffer class serves as a powerful tool for encapsulating render buffers and frame buffers.")
 			.def(py::init<const std::shared_ptr<shader>&, const std::shared_ptr<texture>&>(), "shader"_a, "texture"_a,
 				"Constructs a Buffer object with the specified shader and texture.")
-			.def(py::init([](const std::shared_ptr<shader>& bufferShader, const hgui::size& bufferSize) { return hgui::BufferManager::create(bufferShader, bufferSize); }), "shader"_a, "bufferSize"_a,
+			.def(py::init([](const std::shared_ptr<shader>& bufferShader, const hgui::size& bufferSize)
+					{
+						return hgui::BufferManager::create(bufferShader, bufferSize);
+					}), "shader"_a, "buffer_size"_a,
 				"Creates a buffer with the specified shader and buffer size")
 			.def("bind", &buffer::bind,
 				"Binds the frame buffers, allowing you to render in it.")

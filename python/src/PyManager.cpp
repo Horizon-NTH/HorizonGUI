@@ -5,7 +5,7 @@ void init_managers(py::module& hgui)
 	using tag = hgui::TagManager;
 	py::module manager = hgui.def_submodule("TagManager",
 		"The TagManager module is an utility that provides functionality to manage and organize tags within your application. Tags can be associated with various elements, such as widgets, to categorize and group them. This allows you to create, retrieve, and set the current tag. It's a useful tool for implementing features like rendering specific groups of elements or applying effects to elements with certain tags.");
-	manager.def("create_tag", &tag::create_tag, "newTag"_a,
+	manager.def("create_tag", &tag::create_tag, "new_tag"_a,
 		"Creates a new tag with the provided name.");
 	manager.def("get_tags", &tag::get_tags, py::return_value_policy::reference_internal,
 		"Retrieves a vector containing all the created tags.");
@@ -31,6 +31,8 @@ void init_managers(py::module& hgui)
 		"The KeyBoardManager module facilitates keyboard input handling in your graphical user interface. It allows you to bind specific key with a specific actions to corresponding functions, enabling you to respond to key action. It supports binding both individual keys and key combinations.");
 	manager.def("bind", &keyboard::bind, "action"_a, "function"_a,
 		"Binds a keyboard action or combination to a specific function.");
+	manager.def("get_bind", &keyboard::get_bind, "action"_a,
+		"Retrieves the function bound to a keyboard action or combination.");
 	manager.def("is_bind", &keyboard::is_bind, "action"_a,
 		"Checks if a keyboard action or combination is already bound.");
 	manager.def("unbind", &keyboard::unbind, "action"_a,
@@ -55,7 +57,7 @@ void init_managers(py::module& hgui)
 	using renderer = hgui::Renderer;
 	manager = hgui.def_submodule("Renderer",
 		"The Renderer module is a fundamental component for rendering and displaying graphical content in your graphical application.");
-	manager.def("draw", &renderer::draw, "tags"_a = std::vector<std::string>{}, "postProcessingOption"_a = hgui::effects::CLASSIC,
+	manager.def("draw", &renderer::draw, "tags"_a = std::vector<std::string>{}, "post_processing_option"_a = hgui::effects::CLASSIC,
 		"Renders graphical content based on specified tags and post-processing effects.");
 	manager.def("set_background_color", &renderer::set_background_color, "color"_a,
 		"Sets the background color for the rendering.");
