@@ -6,7 +6,6 @@
 #include "../include/hgui/header/SpriteManager.h"
 #include "../include/hgui/header/LabelManager.h"
 #include "../include/hgui/header/CanvasManager.h"
-#include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
 #include "../include/hgui/header/CursorManager.h"
@@ -15,6 +14,7 @@
 
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/TextInputManager.h"
+#include "../include/hgui/header/TextInput.h"
 
 void hgui::init()
 {
@@ -68,6 +68,8 @@ void hgui::kernel::resources_cleaner()
 	LabelManager::m_shader = nullptr;
 	CanvasManager::m_shader = nullptr;
 	Renderer::m_frameBufferShader = nullptr;
+	TextInputManager::m_shader = nullptr;
+	TextInput::m_focused.reset();
 	CursorManager::m_cursorUsed = {};
 	Widget::m_binds.clear();
 	Widget::m_bindedTags.clear();

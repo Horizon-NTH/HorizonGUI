@@ -6,6 +6,7 @@
 namespace hgui
 {
 	class Timer;
+	class TextInputManager;
 
 	namespace kernel
 	{
@@ -22,6 +23,7 @@ namespace hgui
 	{
 		friend class Renderer;
 		friend class WindowManager;
+		friend class TextInputManager;
 
 	public:
 		KeyBoardManager() = delete;
@@ -33,15 +35,18 @@ namespace hgui
 		KeyBoardManager& operator=(KeyBoardManager&& keyboardManage) = delete;
 
 		static void bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action, const std::function<void()>& function);
-		[[nodiscard]] static bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
+		static [[nodiscard]] bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
+		static [[nodiscard]] const std::function<void()>& get_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void unbind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void bind_key_callback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function);
 
 	private:
 		static void process();
 		static void input(GLFWwindow* window, int key, int scan, int action, int mods);
+		static void add_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action, const std::function<void()>& function);
 
 		static inline std::map<std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>, kernel::VariantKeyComparator> m_keys;
+		static inline std::vector<std::pair<std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>> m_apiBinds;
 		static inline std::variant<std::function<void()>, std::function<void(keys, actions)>> m_keyCallback;
 
 		friend void kernel::resources_cleaner();

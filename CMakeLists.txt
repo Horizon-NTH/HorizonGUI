@@ -4,7 +4,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 option(API_TYPE "Choose the API type: ON => STATIC, OFF => DYNAMIC" OFF)
 
-project(horizongui VERSION 2.0)
+project(horizongui VERSION 3.0)
 
 if (API_TYPE)
 	if (NOT type OR type STREQUAL "DYNAMIC")
@@ -97,6 +97,8 @@ set(HEADER_FILES
 	include/hgui/header/Window.h
 	include/hgui/header/WindowManager.h
 	include/hgui/HorizonGUI.h
+	include/hgui/header/TextInput.h
+	include/hgui/header/TextInputManager.h
 )
 
 set(SOURCE_FILES
@@ -151,6 +153,8 @@ set(SOURCE_FILES
 	src/Window.cpp
 	src/WindowManager.cpp
 	deps/glad/src/glad.c
+	src/TextInput.cpp
+	src/TextInputManager.cpp
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)

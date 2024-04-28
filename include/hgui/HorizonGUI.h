@@ -22,6 +22,8 @@
 #include "header/GLSL.h"
 #include "header/Image.h"
 #include "header/Include.h"
+#include "header/TextInput.h"
+#include "header/TextInputManager.h"
 #include "header/Iterator.hpp"
 #include "header/KeyBoardManager.h"
 #include "header/Label.h"
