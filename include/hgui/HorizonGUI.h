@@ -58,6 +58,3 @@
 #include "header/Widget.h"
 #include "header/Window.h"
 #include "header/WindowManager.h"
-#if defined(HGUI_STATIC)
-#warning "STATIC API is deprecated and will be removed in the future. Please use DYNAMIC API instead."
-#endif

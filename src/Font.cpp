@@ -18,7 +18,7 @@ hgui::kernel::Character hgui::kernel::Font::get_char(const char character, const
 	                         + std::string(" IN THE SIZE : " + std::to_string(size)));
 }
 
-std::string hgui::kernel::Font::get_printable_characters(unsigned int size) const
+std::string hgui::kernel::Font::get_printable_characters(const unsigned int size) const
 {
 	std::string printableChars;
 	for (char c = 32; c <= 126; ++c)

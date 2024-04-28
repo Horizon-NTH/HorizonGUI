@@ -33,26 +33,22 @@ You will now able to choose between [script](#script-installation) or [manual](#
 #### Script Installation
 
 Use the [`install.sh`](https://github.com/Horizon-NTH/HorizonGUI/blob/master/install.sh) script to compile the
-library. You can choose the API type you want to build by passing an argument to the script:
-`-d` / `--dynamic` for dynamic or `-s` / `--static` for static. You can also erase build files by
-adding `-e` / `--erase`.
+library. You can also erase build files by adding `-e` / `--erase`.
 
   ```bash
-  ./install.sh --dynamic -e
+  ./install.sh -e
   ```
 
 #### Manual Installation
 
 ##### Create Build Environment
 
-Ensure you have [CMake](https://cmake.org/) installed. Generate the build environment using CMake. You can choose the
-API type to **STATIC** (default is **DYNAMIC**) by setting the `API_TYPE` variable to
-`ON`:
+Ensure you have [CMake](https://cmake.org/) installed. Generate the build environment using CMake:
 
   ```bash
   cd HorizonGUI
   mkdir build && cd build
-  cmake .. [-DAPI_TYPE=ON]
+  cmake ..
   ```
 
 ##### Build
