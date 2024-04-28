@@ -4,10 +4,9 @@
 #include "../include/hgui/header/Circle.h"
 #include "../include/hgui/header/StraightLine.h"
 
-hgui::kernel::Drawer::Drawer(point position, size size, const HGUI_PRECISION rotation) :
+hgui::kernel::Drawer::Drawer(point position, size size) :
 	m_position(std::move(position)),
 	m_size(std::move(size)),
-	m_rotation(rotation),
 	m_shapes(std::make_shared<std::map<std::string, std::shared_ptr<shape::Shape>>>())
 {
 }
@@ -63,6 +62,17 @@ const std::shared_ptr<std::map<std::string, std::shared_ptr<hgui::kernel::shape:
 	return m_shapes;
 }
 
+std::pair<hgui::point, hgui::size> hgui::kernel::Drawer::get_placement() const
+{
+	return std::make_pair(m_position, m_size);
+}
+
+void hgui::kernel::Drawer::set_placement(const point& position, const size& size)
+{
+	m_position = position;
+	m_size = size;
+}
+
 void hgui::kernel::Drawer::draw() const
 {
 	std::vector<std::string> idToDelete;
@@ -70,7 +80,7 @@ void hgui::kernel::Drawer::draw() const
 	{
 		if (m_shapes->contains(id))
 		{
-			(*m_shapes)[id]->draw(m_position, m_size, m_rotation);
+			(*m_shapes)[id]->draw(m_position, m_size);
 		}
 		else
 		{

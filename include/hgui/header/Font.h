@@ -27,6 +27,7 @@ namespace hgui::kernel
 		Font& operator=(Font&& font) = default;
 
 		[[nodiscard]] Character get_char(char character, unsigned int size) const;
+		[[nodiscard]] std::string get_printable_characters(unsigned int size) const;
 
 		void load_font(unsigned int size);
 		[[nodiscard]] bool is_load(unsigned int size) const;

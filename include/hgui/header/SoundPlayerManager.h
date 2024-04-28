@@ -29,9 +29,9 @@ namespace hgui
 		[[nodiscard]] static std::shared_ptr<kernel::SoundPlayer> create(const std::shared_ptr<kernel::Audio>& audio);
 
 	private:
-		static ALCdevice* m_device;
-		static ALCcontext* m_context;
-		static std::vector<std::weak_ptr<kernel::SoundPlayer>> m_players;
+		static inline ALCdevice* m_device = nullptr;
+		static inline ALCcontext* m_context = nullptr;
+		static inline std::vector<std::weak_ptr<kernel::SoundPlayer>> m_players;
 
 		static void init();
 		static void clean();

@@ -6,12 +6,16 @@
 #include "../include/hgui/header/SpriteManager.h"
 #include "../include/hgui/header/LabelManager.h"
 #include "../include/hgui/header/CanvasManager.h"
-#include "../include/hgui/header/SliderManager.h"
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
-#include "../include/hgui/header/Timer.h"
+#include "../include/hgui/header/CursorManager.h"
+#include "../include/hgui/header/Renderer.h"
+#include "../include/hgui/header/TaskManager.h"
 
 #if defined(HGUI_DYNAMIC)
+#include "../include/hgui/header/TextInputManager.h"
+#include "../include/hgui/header/TextInput.h"
+
 void hgui::init()
 {
 	static bool alreadyInitialize = false;
@@ -60,18 +64,32 @@ void hgui::kernel::init_glad()
 void hgui::kernel::resources_cleaner()
 {
 	ButtonManager::m_shader = nullptr;
-	ButtonManager::m_cursor = nullptr;
 	SpriteManager::m_shader = nullptr;
 	LabelManager::m_shader = nullptr;
 	CanvasManager::m_shader = nullptr;
-	SliderManager::m_cursor = nullptr;
+	Renderer::m_frameBufferShader = nullptr;
+	TextInputManager::m_shader = nullptr;
+	TextInput::m_focused.reset();
+	CursorManager::m_cursorUsed = {};
 	Widget::m_binds.clear();
 	Widget::m_bindedTags.clear();
 	Widget::m_widgets.clear();
 	TagManager::m_tags.clear();
+	TagManager::m_currentTag = "";
+	TaskManager::m_tasks.clear();
 	KeyBoardManager::m_keys.clear();
+	KeyBoardManager::m_keyCallback = {};
 	MouseManager::m_inputs.clear();
+	MouseManager::m_clickCallback = {};
+	MouseManager::m_scrollCallback = {};
+	MonitorManager::m_monitors.clear();
 	SoundPlayerManager::clean();
+	Renderer::m_draws = {};
+	Renderer::m_timer = nullptr;
+	Renderer::m_deltaTime = 0.;
+	Renderer::m_frameBuffer = nullptr;
+	Renderer::m_drawCallBack = nullptr;
+	Renderer::m_backGroundColor = color();
 }
 
 void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned int id, const GLenum severity, [[maybe_unused]] GLsizei length, const char* message, [[maybe_unused]] const void* userParam)
@@ -185,6 +203,8 @@ bool hgui::kernel::init_glfw()
 #include "../include/hgui/header/BufferManager.h"
 #include "../include/hgui/header/WindowManager.h"
 #include "../include/hgui/header/FontManager.h"
+#include "../include/hgui/header/CursorManager.h"
+#include "../include/hgui/header/ShaderManager.h"
 
 void hgui::init()
 {
@@ -235,7 +255,6 @@ void hgui::kernel::init_glad()
 void hgui::kernel::init_resources()
 {
 	ShaderManager::create(HGUI_SHADER_FRAMEBUFFER, HGUI_GLSL_VERTEX_BUFFER, HGUI_GLSL_FRAGMENT_BUFFER);
-	const auto* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 	BufferManager::create(HGUI_FRAMEBUFFER_POST_PROCESSING,
 		ShaderManager::get(HGUI_SHADER_FRAMEBUFFER), size(100_em));
 	ShaderManager::create(HGUI_SHADER_BUTTON, HGUI_GLSL_VERTEX_BUTTON, HGUI_GLSL_FRAGMENT_BUTTON);

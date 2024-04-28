@@ -5,9 +5,7 @@
 #if defined(HGUI_DYNAMIC)
 #include "../include/hgui/header/GLSL.h"
 
-std::shared_ptr<hgui::kernel::Shader> hgui::LabelManager::m_shader(nullptr);
-
-std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION rotation)
+std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, bool align, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, const HGUI_PRECISION rotation)
 {
 	if (!m_shader)
 	{
@@ -15,19 +13,19 @@ std::shared_ptr<hgui::kernel::Label> hgui::LabelManager::create(const std::strin
 	}
 	auto widget = std::make_shared<kernel::Label>(text,
 		m_shader, position, font, std::get<0>(textOptions),
-		std::get<1>(textOptions), std::get<2>(textOptions), rotation);
+		std::get<1>(textOptions), align, std::get<2>(textOptions), rotation);
 	return widget;
 }
 #elif defined(HGUI_STATIC)
 std::map<std::string, std::shared_ptr<hgui::kernel::Label>> hgui::LabelManager::m_labels;
 
-const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::create(const std::string& labelID, const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, HGUI_PRECISION angularRotation)
+const std::shared_ptr<hgui::kernel::Label>& hgui::LabelManager::create(const std::string& labelID, const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const bool align, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions, HGUI_PRECISION rotation)
 {
 	if (!m_labels.contains(labelID))
 	{
 		m_labels[labelID] = std::make_shared<kernel::Label>(text,
 			ShaderManager::get(HGUI_SHADER_LABEL), position, font, std::get<0>(textOptions),
-			std::get<1>(textOptions), std::get<2>(textOptions), angularRotation);
+			std::get<1>(textOptions), align, std::get<2>(textOptions), rotation);
 		return m_labels[labelID];
 	}
 	throw std::runtime_error(("THERE IS ALREADY A LABEL WITH THE ID : " + labelID).c_str());

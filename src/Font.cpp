@@ -18,6 +18,22 @@ hgui::kernel::Character hgui::kernel::Font::get_char(const char character, const
 	                         + std::string(" IN THE SIZE : " + std::to_string(size)));
 }
 
+std::string hgui::kernel::Font::get_printable_characters(unsigned int size) const
+{
+	std::string printableChars;
+	for (char c = 32; c <= 126; ++c)
+	{
+		try
+		{
+			// We test if the character is printable with the current font
+			[[maybe_unused]] const auto test = get_char(c, size);
+			printableChars += c;
+		}
+		catch (...) {}
+	}
+	return printableChars;
+}
+
 void hgui::kernel::Font::load_font(const unsigned int size)
 {
 	if (!m_characters.contains(size))

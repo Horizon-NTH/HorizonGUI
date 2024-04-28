@@ -5,9 +5,10 @@
 #include "../include/hgui/header/Label.h"
 #include "../include/hgui/header/Texture.h"
 #include "../include/hgui/header/Renderer.h"
+#include "../include/hgui/header/Font.h"
 
-hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::tuple<color, color, color>& color, const HGUI_PRECISION rotation, const HGUI_PRECISION cornerRadius, const bool blurrOnHover, const std::shared_ptr<Texture>& texture) :
-	Widget(shader, size, position, rotation),
+hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::tuple<color, color, color>& colors, const HGUI_PRECISION cornerRadius, const bool blurrOnHover, const std::shared_ptr<Texture>& texture) :
+	Widget(shader, size, position),
 	m_state(state::NORMAL),
 	m_function(function),
 	m_texture(texture),
@@ -15,14 +16,17 @@ hgui::kernel::Button::Button(const std::function<void()>& function, const std::s
 	m_cornerRadius(std::clamp(cornerRadius, 0.f, 1.f)),
 	m_cornerAngularRadius(std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius),
 	m_modelMatrix(1.0),
-	m_isTextDrawable(false),
-	m_colors(color),
-	m_blurrOnHover(blurrOnHover)
+	m_colors(colors),
+	m_blurrOnHover(blurrOnHover),
+	m_textValue(m_text ? m_text->get_text() : "")
 {
 	set_texture(texture);
 	Button::set_position(position);
 	init_data();
+	if (m_text)
+		m_text->set_alignement(false);
 	set_text_placment();
+	truncate_text();
 }
 
 void hgui::kernel::Button::press() const
@@ -52,11 +56,13 @@ void hgui::kernel::Button::draw() const
 		default:
 			break;
 	}
-	[[maybe_unused]] auto& null = m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
-	                                      .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
-	                                      .set_vec4("buttonColor", vec4(buttonColor)).set_int("focused", static_cast<int>(m_state))
-	                                      .set_int("custom", m_texture ? true : false)
-	                                      .set_int("blurrOnHover", m_blurrOnHover);
+	[[maybe_unused]] auto& null =
+			m_shader->use().set_mat4("modelMatrix", m_modelMatrix)
+			        .set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
+			        .set_vec4("buttonColor", vec4(buttonColor))
+			        .set_int("focused", static_cast<int>(m_state))
+			        .set_int("custom", m_texture ? true : false)
+			        .set_int("blurrOnHover", m_blurrOnHover);
 	if (m_blurrOnHover)
 	{
 		const auto backgroundColor = Renderer::get_background_color();
@@ -72,27 +78,22 @@ void hgui::kernel::Button::draw() const
 	}
 	glDrawArrays(GL_TRIANGLES, 0, 138);
 	m_VAO->unbind();
-	if (m_isTextDrawable and m_text)
-	{
-		m_text->draw();
-	}
 }
 
 bool hgui::kernel::Button::is_inside(const point& point) const
 {
-	const hgui::point center = m_position + m_size / 2.f;
-	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_rotation),
-			a = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_rotation),
-			ap = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y), center, m_rotation),
-			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_rotation),
-			b = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_cornerAngularRadius), center, m_rotation),
-			bp = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y), center, m_rotation),
-			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_rotation),
-			c = point::rotate(hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_rotation),
-			cp = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height - m_cornerAngularRadius), center, m_rotation),
-			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_rotation),
-			d = point::rotate(hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius), center, m_rotation),
-			dp = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height - m_cornerAngularRadius), center, m_rotation);
+	const auto A = m_position,
+			a = hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_cornerAngularRadius),
+			ap = hgui::point(m_position.x + m_cornerAngularRadius, m_position.y),
+			B = hgui::point(m_position.x + m_size.width, m_position.y),
+			b = hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_cornerAngularRadius),
+			bp = hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y),
+			C = hgui::point(m_position.x + m_size.width, m_position.y + m_size.height),
+			c = hgui::point(m_position.x + m_size.width - m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius),
+			cp = hgui::point(m_position.x + m_size.width, m_position.y + m_size.height - m_cornerAngularRadius),
+			D = hgui::point(m_position.x, m_position.y + m_size.height),
+			d = hgui::point(m_position.x + m_cornerAngularRadius, m_position.y + m_size.height - m_cornerAngularRadius),
+			dp = hgui::point(m_position.x, m_position.y + m_size.height - m_cornerAngularRadius);
 
 	return point::is_in_rectangle(A, B, D, point) && !((point::is_in_rectangle(ap, a, A, point) && point::distance(point, a) >= m_cornerAngularRadius)
 	                                                   || (point::is_in_rectangle(bp, B, b, point) && point::distance(point, b) >= m_cornerAngularRadius)
@@ -105,9 +106,6 @@ void hgui::kernel::Button::set_position(const point& newPosition)
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(m_position.x, m_position.y, 0.0f));
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
-	m_modelMatrix = rotate(m_modelMatrix, glm::radians(m_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	set_text_placment();
 }
@@ -118,16 +116,7 @@ void hgui::kernel::Button::set_size(const size& newSize)
 	m_cornerAngularRadius = std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius;
 	init_data();
 	set_text_placment();
-}
-
-void hgui::kernel::Button::set_state(const state& state)
-{
-	m_state = state;
-}
-
-void hgui::kernel::Button::set_color(const std::tuple<color, color, color>& newColors)
-{
-	m_colors = newColors;
+	truncate_text();
 }
 
 const hgui::state& hgui::kernel::Button::get_state() const
@@ -145,9 +134,9 @@ const std::shared_ptr<hgui::kernel::Texture>& hgui::kernel::Button::get_texture(
 	return m_texture;
 }
 
-const std::shared_ptr<hgui::kernel::Label>& hgui::kernel::Button::get_text() const
+const std::string& hgui::kernel::Button::get_text() const
 {
-	return m_text;
+	return m_textValue;
 }
 
 const std::function<void()>& hgui::kernel::Button::get_function() const
@@ -160,15 +149,38 @@ bool hgui::kernel::Button::get_blurr_on_hover() const
 	return m_blurrOnHover;
 }
 
+void hgui::kernel::Button::set_state(const state& state)
+{
+	m_state = state;
+}
+
+void hgui::kernel::Button::set_color(const std::tuple<color, color, color>& newColors)
+{
+	m_colors = newColors;
+}
+
 void hgui::kernel::Button::set_texture(const std::shared_ptr<Texture>& texture)
 {
 	m_texture = texture;
 }
 
-void hgui::kernel::Button::set_text(const std::shared_ptr<Label>& text)
+void hgui::kernel::Button::set_label(const std::shared_ptr<Label>& label)
 {
-	m_text = text;
+	m_text = label;
+	if (m_text)
+	{
+		m_text->set_alignement(false);
+		m_textValue = m_text->get_text();
+	}
 	set_text_placment();
+	truncate_text();
+}
+
+void hgui::kernel::Button::set_text(const std::string& text)
+{
+	m_textValue = text;
+	set_text_placment();
+	truncate_text();
 }
 
 void hgui::kernel::Button::set_function(const std::function<void()>& function)
@@ -298,34 +310,31 @@ void hgui::kernel::Button::init_data()
 	m_VAO->unbind();
 }
 
-void hgui::kernel::Button::set_text_placment()
+void hgui::kernel::Button::set_text_placment() const
 {
 	if (m_text)
 	{
-		const point b1 = m_position + point(m_cornerAngularRadius),
-				b2 = m_position + m_size - point(m_cornerAngularRadius);
-		point textPosition(b1);
-		size textSize(b2);
-		if (m_cornerAngularRadius < 5.f)
+		m_text->set_height(static_cast<unsigned>(0.4f * m_size.height));
+		const auto offset = point(std::max(0.3f * m_size.height, 0.5f * m_cornerAngularRadius), 0.3f * m_size.height);
+		m_text->set_position(m_position + offset);
+	}
+}
+
+void hgui::kernel::Button::truncate_text() const
+{
+	if (m_text)
+	{
+		unsigned totalAdvance = 0u;
+		unsigned index = 0u;
+		const auto& font = m_text->get_font();
+		const auto maxWidth = static_cast<unsigned>(m_size.width - std::max(0.4f * m_size.height, m_cornerAngularRadius));
+		while (totalAdvance < maxWidth && index < m_textValue.size())
 		{
-			textPosition += point(5.f);
-			textSize -= point(5.f) + textPosition;
+			totalAdvance += font->get_char(m_textValue[index], m_text->get_font_size()).advance >> 6;
+			index++;
 		}
-		else
-		{
-			textPosition += point::normalize(m_position - b1) * m_cornerAngularRadius;
-			textSize += point::normalize(m_position + m_size - b2) * m_cornerAngularRadius - textPosition;
-		}
-		m_text->set_width(static_cast<unsigned>(textSize.width));
-		if (m_text->get_size().height > textSize.height)
-		{
-			m_text->set_height(static_cast<unsigned>(textSize.height));
-			if (m_text->get_size().width > textSize.width)
-				m_isTextDrawable = false;
-			else
-				m_isTextDrawable = true;
-		}
-		const point gap = (textSize - m_text->get_size()) / 2.f;
-		m_text->set_position(textPosition + gap);
+		if (totalAdvance > maxWidth)
+			--index;
+		m_text->set_text(m_textValue.substr(0, index));
 	}
 }

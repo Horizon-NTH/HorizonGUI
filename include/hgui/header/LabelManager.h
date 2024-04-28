@@ -23,10 +23,10 @@ namespace hgui
 		LabelManager& operator=(const LabelManager& labelManager) = delete;
 		LabelManager& operator=(LabelManager&& labelManager) = delete;
 
-		[[nodiscard]] static std::shared_ptr<kernel::Label> create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = {12u, HGUI_COLOR_WHITE, 1.0f}, HGUI_PRECISION rotation = 0.0f);
+		[[nodiscard]] static std::shared_ptr<kernel::Label> create(const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, bool align = true, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = {12u, HGUI_COLOR_WHITE, 1.0f}, HGUI_PRECISION rotation = 0.0f);
 
 	private:
-		static std::shared_ptr<kernel::Shader> m_shader;
+		static inline std::shared_ptr<kernel::Shader> m_shader;
 
 		friend void kernel::resources_cleaner();
 	};
@@ -42,7 +42,7 @@ namespace hgui
 		LabelManager& operator=(const LabelManager& bufferManager) = delete;
 		LabelManager& operator=(LabelManager&& bufferManager) = delete;
 
-		static const std::shared_ptr<kernel::Label>& create(const std::string& labelID, const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = { 12u, HGUI_COLOR_WHITE, 1.0f }, HGUI_PRECISION angularRotation = 0.0f);
+		static const std::shared_ptr<kernel::Label>& create(const std::string& labelID, const std::string& text, const point& position, const std::shared_ptr<kernel::Font>& font, bool align, const std::tuple<unsigned int, color, HGUI_PRECISION>& textOptions = {12u, HGUI_COLOR_WHITE, 1.0f}, HGUI_PRECISION rotation = 0.0f);
 		[[nodiscard]] static const std::shared_ptr<kernel::Label>& get(const std::string& labelID);
 		static void destroy(const std::initializer_list<std::string>& labelsID = {});
 

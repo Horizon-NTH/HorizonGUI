@@ -17,7 +17,7 @@ namespace hgui::kernel
 		friend class Canvas;
 
 	public:
-		Drawer(point position, size size, HGUI_PRECISION rotation = 0.f);
+		Drawer(point position, size size);
 		Drawer(const Drawer& drawer) = delete;
 		Drawer(Drawer&& drawer) = default;
 
@@ -30,14 +30,17 @@ namespace hgui::kernel
 		const std::string& draw_triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, bool fill = true, float thickness = 10.0f, const std::string& id = get_unique_id()) const;
 		const std::string& draw_circle(const point& centerPosition, float radius, const color& color, bool fill = true, float thickness = 10.0f, const std::string& id = get_unique_id()) const;
 		const std::string& draw_line(const point& firstVertex, const point& secondVertex, const color& color, float thickness = 10.0f, const std::string& id = get_unique_id()) const;
-		[[nodiscard]] const std::shared_ptr<std::map<std::string, std::shared_ptr<shape::Shape>>>& get_shapes() const;
 
 		void draw() const;
+
+		[[nodiscard]] const std::shared_ptr<std::map<std::string, std::shared_ptr<shape::Shape>>>& get_shapes() const;
+		[[nodiscard]] std::pair<point, size> get_placement() const;
+
+		void set_placement(const point& position, const size& size);
 
 	private:
 		point m_position;
 		size m_size;
-		HGUI_PRECISION m_rotation;
 		std::shared_ptr<std::map<std::string, std::shared_ptr<shape::Shape>>> m_shapes;
 		mutable std::vector<std::string> m_order;
 	};

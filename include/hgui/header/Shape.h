@@ -29,7 +29,7 @@ namespace hgui::kernel::shape
 		Shape& operator=(const Shape& shape) = default;
 		Shape& operator=(Shape&& shape) = default;
 
-		virtual void draw(const point& canvasPosition, const size& canvasSize, float canvasRotation) const = 0;
+		virtual void draw(const point& canvasPosition, const size& canvasSize) const = 0;
 
 		[[nodiscard]] float get_thickness() const;
 		[[nodiscard]] bool is_fill() const;

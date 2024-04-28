@@ -20,7 +20,7 @@ namespace hgui::kernel
 		[[nodiscard]] GLuint get_id() const noexcept;
 
 		const Shader& set_int(const std::string& uniformName, int i) const noexcept;
-
+		
 		const Shader& set_float(const std::string& uniformName, float f) const noexcept;
 		const Shader& set_vec2(const std::string& uniformName, const vec2& vec2) const noexcept;
 		const Shader& set_vec2(const std::string& uniformName, const point& vec2) const noexcept;

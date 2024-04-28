@@ -5,16 +5,28 @@ void init_utils(const py::module& hgui)
 	using cursor = hgui::kernel::Cursor;
 	py::class_<cursor, std::shared_ptr<cursor>>(hgui, "Cursor",
 				"The Cursor class allows you to set and customize the mouse cursor appearance for your graphical user interface.")
-			.def(py::init<hgui::cursors>(), "standardCursor"_a,
+			.def(py::init<hgui::cursors>(), "standard_cursor"_a,
 				"Constructs a Cursor object using a standard cursor.")
-			.def(py::init<const std::shared_ptr<hgui::kernel::Image>&, const hgui::point&>(), "customCursor"_a, "clickPosition"_a,
+			.def(py::init<const std::shared_ptr<hgui::kernel::Image>&, const hgui::point&>(), "custom_cursor"_a, "click_position"_a,
 				"Constructs a Cursor object using a custom cursor image and click position.")
-			.def("use", &cursor::use,
-				"Sets the cursor as the active mouse cursor for the application.")
+			.def("make_custom", &cursor::make_custom_cursor, "custom_cursor"_a, "click_position"_a,
+				"Sets the cursor to a custom image and click position.")
+			.def("make_standard", &cursor::make_standard_cursor, "standard_cursor"_a,
+				"Sets the cursor to one of the standard cursors.")
+			.def_property_readonly("type", &cursor::get_type,
+				"Retrieves the type of the cursor.")
 			.def_static("hide", &hgui::CursorManager::hide,
 				"Hides the cursor from view.")
 			.def_static("reveal", &hgui::CursorManager::reveal,
-				"Reveals the hidden cursor.");
+				"Reveals the hidden cursor.")
+			.def_static("disable", &hgui::CursorManager::disable,
+				"Disable the cursor.")
+			.def_static("enable", &hgui::CursorManager::enable,
+				"Enable the cursor.")
+			.def_static("use", &hgui::CursorManager::use, "cursor"_a,
+				"Sets the cursor to the specified cursor object.")
+			.def("get_cursor_used", &hgui::CursorManager::get_cursor_used, py::return_value_policy::reference_internal,
+				"Retrieves the current used cursor.");
 
 	using monitor = hgui::kernel::Monitor;
 	py::class_<monitor, std::shared_ptr<monitor>>(hgui, "Monitor",
@@ -25,11 +37,11 @@ void init_utils(const py::module& hgui)
 				"Retrieves the name of the monitor.")
 			.def_property_readonly("position", &monitor::get_position, py::return_value_policy::reference_internal,
 				"Retrieves the position of the monitor.")
-			.def_static("get", &hgui::MonitorManager::get, py::return_value_policy::reference_internal, "monitorName"_a,
+			.def_static("get", &hgui::MonitorManager::get, py::return_value_policy::reference_internal, "monitor_name"_a,
 				"Retrieves a monitor with the specified name.")
 			.def_static("get_monitors_names", &hgui::MonitorManager::get_monitors_names,
 				"Retrieves a list of monitor names available in the system.")
-			.def_static("get_primary_monitor", &hgui::MonitorManager::get_primary_monitor,
+			.def_static("get_primary_monitor", &hgui::MonitorManager::get_primary_monitor, py::return_value_policy::reference_internal,
 				"Retrieves the primary monitor.");
 
 	using soundplayer = hgui::kernel::SoundPlayer;
@@ -76,7 +88,7 @@ void init_utils(const py::module& hgui)
 			.def(py::init([](const std::string& windowName, const hgui::size& size, const hgui::point& position, const std::shared_ptr<hgui::kernel::Image>& icon, const std::shared_ptr<monitor>& fullscreenMonitor, const std::map<hgui::options, bool>& options)
 					{
 						return hgui::WindowManager::create(windowName, size, position, icon, fullscreenMonitor, options);
-					}), "windowName"_a, "size"_a, "position"_a, "icon"_a = nullptr, "monitor"_a = nullptr, "options"_a = std::map<hgui::options, bool>{},
+					}), "window_name"_a, "size"_a, "position"_a, "icon"_a = nullptr, "monitor"_a = nullptr, "options"_a = std::map<hgui::options, bool>{},
 				"Creates a new window with the specified properties, such as window name, size, position, icon, monitor, and additional options.")
 			.def_property("size", py::cpp_function(&window::get_size, py::return_value_policy::reference_internal), py::cpp_function(&window::set_size),
 				"Property to access to the window size.")

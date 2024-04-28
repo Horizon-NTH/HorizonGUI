@@ -9,7 +9,6 @@ public:
 
 	void set_size(const hgui::size& newSize) override;
 	void set_position(const hgui::point& newPosition) override;
-	void set_rotation(float newRotation) override;
 	void draw() const override;
 	bool is_inside(const hgui::point& point) const override;
 };
@@ -19,7 +18,6 @@ class PySprite : public hgui::kernel::Sprite
 public:
 	using Sprite::Sprite;
 	void set_position(const hgui::point& newPosition) override;
-	void set_rotation(float newRotation) override;
 	void set_size(const hgui::size& newSize) override;
 	void draw() const override;
 	bool is_inside(const hgui::point& point) const override;

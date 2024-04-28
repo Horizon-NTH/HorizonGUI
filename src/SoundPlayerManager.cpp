@@ -2,10 +2,6 @@
 #include "../include/hgui/header/SoundPlayer.h"
 
 #if defined(HGUI_DYNAMIC)
-ALCdevice* hgui::SoundPlayerManager::m_device(nullptr);
-ALCcontext* hgui::SoundPlayerManager::m_context(nullptr);
-std::vector<std::weak_ptr<hgui::kernel::SoundPlayer>> hgui::SoundPlayerManager::m_players;
-
 std::shared_ptr<hgui::kernel::SoundPlayer> hgui::SoundPlayerManager::create(const std::shared_ptr<kernel::Audio>& audio)
 {
 	auto player = std::make_shared<kernel::SoundPlayer>(audio);

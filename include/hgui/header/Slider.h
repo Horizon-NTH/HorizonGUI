@@ -20,7 +20,7 @@ namespace hgui::kernel
 		using Function = std::variant<std::function<void()>, std::function<void(HGUI_PRECISION, HGUI_PRECISION, std::shared_ptr<Slider>)>>;
 
 	public:
-		Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function, HGUI_PRECISION rotation);
+		Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function);
 		Slider(const Slider& slider) = default;
 		Slider(Slider&& slider) = default;
 
@@ -39,7 +39,6 @@ namespace hgui::kernel
 
 		void set_position(const point& newPosition) override;
 		void set_size(const size& newSize) override;
-		void set_rotation(HGUI_PRECISION newAngularRotation) override;
 		void set_value(HGUI_PRECISION newValue);
 		void set_range(const Ranges& newRange);
 		void set_slider_position(point newPosition);
@@ -50,7 +49,7 @@ namespace hgui::kernel
 		color m_inactiveBarColor;
 		color m_activeBarColor;
 		point m_slider;
-		std::tuple<point, point, point> m_points;
+		std::pair<point, point> m_points;
 		Function m_function;
 		color m_color;
 

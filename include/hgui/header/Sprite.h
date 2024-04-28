@@ -23,14 +23,19 @@ namespace hgui::kernel
 		[[nodiscard]] bool is_inside(const point& point) const override;
 
 		const std::shared_ptr<Texture>& get_texture() const;
+		const color& get_color() const;
+		HGUI_PRECISION get_rotation() const;
 
 		void set_position(const point& newPosition) override;
 		void set_texture(const std::shared_ptr<Texture>& newTexture);
+		void set_color(const color& newColor);
+		void set_rotation(HGUI_PRECISION rotation);
 
 	private:
 		std::shared_ptr<Texture> m_texture;
 		glm::mat4 m_modelMatrix;
 		color m_color;
+		HGUI_PRECISION m_rotation;
 
 		void init_data() const;
 	};

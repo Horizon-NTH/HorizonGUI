@@ -25,10 +25,15 @@ namespace hgui
 			Cursor& operator=(const Cursor& cursor) = delete;
 			Cursor& operator=(Cursor&& cursor) = delete;
 
-			void use() const;
+			[[nodiscard]] GLFWcursor* get_cursor_ptr() const;
+			[[nodiscard]] cursors get_type() const;
+
+			void make_custom_cursor(const std::shared_ptr<Image>& customCursor, const point& clickPosition);
+			void make_standard_cursor(cursors standardCursor);
 
 		private:
 			GLFWcursor* m_cursorPTR;
+			cursors m_type;
 		};
 	}
 }

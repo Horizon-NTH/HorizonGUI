@@ -40,7 +40,7 @@ namespace hgui::kernel
 		friend class hgui::MouseManager;
 
 	public:
-		Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, HGUI_PRECISION rotation);
+		Widget(const std::shared_ptr<Shader>& shader, size size, point position);
 		Widget(const Widget& widget) = default;
 		Widget(Widget&& widget) = default;
 
@@ -51,11 +51,9 @@ namespace hgui::kernel
 
 		[[nodiscard]] const point& get_position() const;
 		[[nodiscard]] const size& get_size() const;
-		[[nodiscard]] HGUI_PRECISION get_rotation() const;
 
 		virtual void set_position(const point& newPosition);
 		virtual void set_size(const size& newSize);
-		virtual void set_rotation(HGUI_PRECISION newRotation);
 
 		void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
 		[[nodiscard]] bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
@@ -78,14 +76,13 @@ namespace hgui::kernel
 		std::shared_ptr<VertexBufferObject> m_VBO;
 		size m_size;
 		point m_position;
-		HGUI_PRECISION m_rotation;
 
 	private:
 		std::string m_taskID;
 
-		static std::vector<std::string> m_bindedTags;
-		static std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds;
-		static std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
+		static inline std::vector<std::string> m_bindedTags;
+		static inline std::map<std::weak_ptr<Widget>, std::vector<std::pair<std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>, std::pair<std::shared_ptr<Timer>, std::function<void()>>>>, WeakPTRComparator<Widget>> m_binds;
+		static inline std::map<std::string, std::vector<std::weak_ptr<Widget>>> m_widgets;
 
 		static void update();
 

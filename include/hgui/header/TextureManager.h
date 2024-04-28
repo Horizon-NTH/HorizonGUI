@@ -8,6 +8,9 @@ namespace hgui
 	{
 		class Image;
 		class Texture;
+#if defined(HGUI_STATIC)
+		void resources_cleaner();
+#endif
 	}
 
 #if defined(HGUI_DYNAMIC)

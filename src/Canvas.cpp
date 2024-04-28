@@ -4,10 +4,10 @@
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
 
-hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color, const HGUI_PRECISION rotation) :
-	Widget(shader, size, position, rotation),
+hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color) :
+	Widget(shader, size, position),
 	m_modelMatrix(),
-	m_drawer(std::make_shared<Drawer>(position, size, m_rotation)),
+	m_drawer(std::make_shared<Drawer>(position, size)),
 	m_color(color)
 {
 	Canvas::set_position(position);
@@ -31,9 +31,6 @@ void hgui::kernel::Canvas::set_position(const point& newPosition)
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
 	m_modelMatrix = translate(m_modelMatrix, glm::vec3(m_position.x, m_position.y, 0.0f));
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(0.5f * m_size.width, 0.5f * m_size.height, 0.0f));
-	m_modelMatrix = rotate(m_modelMatrix, glm::radians(m_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(-0.5f * m_size.width, -0.5f * m_size.height, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
 	m_drawer->m_position = newPosition;
 }
@@ -44,21 +41,9 @@ void hgui::kernel::Canvas::set_size(const size& newSize)
 	m_drawer->m_size = m_size;
 }
 
-void hgui::kernel::Canvas::set_rotation(const float newAngularRotation)
-{
-	Widget::set_rotation(newAngularRotation);
-	m_drawer->m_rotation = m_rotation;
-}
-
 bool hgui::kernel::Canvas::is_inside(const point& point) const
 {
-	const hgui::point center(m_position.x + m_size.width / 2.f, m_position.y + m_size.height / 2.f);
-	const auto A = point::rotate(hgui::point(m_position.x, m_position.y), center, m_rotation),
-			B = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y), center, m_rotation),
-			C = point::rotate(hgui::point(m_position.x + m_size.width, m_position.y + m_size.height), center, m_rotation),
-			D = point::rotate(hgui::point(m_position.x, m_position.y + m_size.height), center, m_rotation);
-
-	return point::is_in_rectangle(A, B, D, point);
+	return point::is_in_rectangle(m_position, hgui::point(m_position.x + m_size.width, m_position.y), hgui::point(m_position.x, m_position.y + m_size.height), point);
 }
 
 const std::shared_ptr<hgui::kernel::Drawer>& hgui::kernel::Canvas::get_drawer() const

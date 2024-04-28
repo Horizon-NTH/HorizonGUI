@@ -5,17 +5,12 @@
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
 
-std::vector<std::string> hgui::kernel::Widget::m_bindedTags;
-std::map<std::weak_ptr<hgui::kernel::Widget>, std::vector<std::pair<std::variant<hgui::inputs, std::pair<hgui::buttons, hgui::actions>, std::tuple<hgui::inputs, hgui::buttons, hgui::actions>>, std::pair<std::shared_ptr<hgui::Timer>, std::function<void()>>>>, hgui::kernel::WeakPTRComparator<hgui::kernel::Widget>> hgui::kernel::Widget::m_binds;
-std::map<std::string, std::vector<std::weak_ptr<hgui::kernel::Widget>>> hgui::kernel::Widget::m_widgets;
-
-hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const HGUI_PRECISION rotation) :
+hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, size size, point position) :
 	m_shader(shader),
 	m_VAO(std::make_shared<VertexArrayObject>()),
 	m_VBO(std::make_shared<VertexBufferObject>()),
-	m_size(size),
-	m_position(position),
-	m_rotation(rotation)
+	m_size(std::move(size)),
+	m_position(std::move(position))
 {
 	auto tag = TagManager::get_current_tag();
 	m_taskID = TaskManager::program(std::chrono::milliseconds{}, [&, tag]
@@ -50,11 +45,6 @@ const hgui::size& hgui::kernel::Widget::get_size() const
 	return m_size;
 }
 
-HGUI_PRECISION hgui::kernel::Widget::get_rotation() const
-{
-	return m_rotation;
-}
-
 void hgui::kernel::Widget::set_position(const point& newPosition)
 {
 	m_position = newPosition;
@@ -63,11 +53,6 @@ void hgui::kernel::Widget::set_position(const point& newPosition)
 void hgui::kernel::Widget::set_size(const size& newSize)
 {
 	m_size = newSize;
-}
-
-void hgui::kernel::Widget::set_rotation(const HGUI_PRECISION newRotation)
-{
-	m_rotation = newRotation;
 }
 
 void hgui::kernel::Widget::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)

@@ -8,7 +8,7 @@ void init_generic_vector(const py::module& m, const std::string& name)
 		           "A generic mathematical vector class.")
 	           .def(py::init(),
 		           "Default constructor for the vector.")
-	           .def(py::init<const T&>(), "initializationValue"_a,
+	           .def(py::init<const T&>(), "initialization_value"_a,
 		           "Constructs the vector with a single value.")
 	           .def(py::init<const vector&>(), "vector"_a,
 		           "Copy constructor for the vector.")
@@ -98,7 +98,7 @@ void init_generic_GLSLvec2(const py::module& m, const std::string& name)
 		           "A generic 2-dimensional mathematical vector class inspired from GLSL.")
 	           .def(py::init(),
 		           "Default constructor for the vector.")
-	           .def(py::init<T>(), "initializationValue"_a,
+	           .def(py::init<T>(), "initialization_value"_a,
 		           "Constructs the vector with a single value.")
 	           .def(py::init<T, T>(), "x"_a, "y"_a,
 		           "Constructs the vector with x-component and y-component.")
@@ -156,7 +156,7 @@ void init_generic_GLSLvec3(const py::module& m, const std::string& name)
 		           "A generic 3-dimensional mathematical vector class inspired from GLSL.")
 	           .def(py::init(),
 		           "Default constructor for the vector.")
-	           .def(py::init<T>(), "initializationValue"_a,
+	           .def(py::init<T>(), "initialization_value"_a,
 		           "Constructs the vector with a single value.")
 	           .def(py::init<T, T, T>(), "x"_a, "y"_a, "z"_a,
 		           "Constructs the vector with x-component, y-component and z-component.")
@@ -218,7 +218,7 @@ void init_generic_GLSLvec4(const py::module& m, const std::string& name)
 		           "A generic 4-dimensional mathematical vector class inspired from GLSL.")
 	           .def(py::init(),
 		           "Default constructor for the vector.")
-	           .def(py::init<T>(), "initializationValue"_a,
+	           .def(py::init<T>(), "initialization_value"_a,
 		           "Constructs the vector with a single value.")
 	           .def(py::init<T, T, T, T>(), "x"_a, "y"_a, "z"_a, "w"_a,
 		           "Constructs the vector with x-component, y-component, z-component and w-component.")
@@ -286,7 +286,7 @@ void init_generic_color(const py::module& m, const std::string& name)
 		           "Default constructor for the color.")
 	           .def(py::init<T, T>(), "rgb"_a, "aplha"_a = static_cast<T>(1),
 		           "Constructs the color with a single value and an optional alpha value.")
-	           .def(py::init<const std::string&, T>(), "hexRGB"_a, "aplha"_a = static_cast<T>(1),
+	           .def(py::init<const std::string&, T>(), "hex"_a, "aplha"_a = static_cast<T>(1),
 		           "Constructs the color with a single value and an optional alpha value.")
 	           .def(py::init<T, T, T, T>(), "r"_a, "g"_a, "b"_a, "a"_a = static_cast<T>(1),
 		           "Constructs the color with r-component, g-component, b-component and an optional a-component.")
