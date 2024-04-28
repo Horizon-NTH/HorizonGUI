@@ -57,7 +57,7 @@ void init_data(const py::module& hgui, const py::module& kernel)
 			.def("get_char", &font::get_char, "character"_a, "size"_a,
 				"Retrieves a Character struct for the specified character and font size.")
 			.def("get_printable_characters", &font::get_printable_characters, "size"_a,
-				"Retrieves a all the printable characters that are available in the font.")
+				"Retrieves all the printable characters that are available in the font.")
 			.def("load_font", &font::load_font, "size"_a,
 				"Loads the font for a specific size. The loaded font can be accessed using the get_char function.")
 			.def("is_load", &font::is_load, "size"_a,

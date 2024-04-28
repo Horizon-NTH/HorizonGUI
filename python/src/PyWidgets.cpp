@@ -118,8 +118,8 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 				"Property to access the button's text.")
 			.def_property("function", py::cpp_function(&button::get_function, py::return_value_policy::reference_internal), py::cpp_function(&button::set_function),
 				"Property to access the button's function.")
-			.def("set_label", &button::set_label, "label"_a,
-				"Sets the button's label.");
+			.def_property("label", py::cpp_function(&button::get_label, py::return_value_policy::reference_internal), py::cpp_function(&button::set_label),
+				"Property to access the button's label.");
 
 	using canvas = hgui::kernel::Canvas;
 	py::class_<canvas, widget, std::shared_ptr<canvas>>(hgui, "Canvas", py::is_final(),

@@ -139,6 +139,11 @@ const std::string& hgui::kernel::Button::get_text() const
 	return m_textValue;
 }
 
+const std::shared_ptr<hgui::kernel::Label>& hgui::kernel::Button::get_label() const
+{
+	return m_text;
+}
+
 const std::function<void()>& hgui::kernel::Button::get_function() const
 {
 	return m_function;
@@ -315,7 +320,7 @@ void hgui::kernel::Button::set_text_placment() const
 	if (m_text)
 	{
 		m_text->set_height(static_cast<unsigned>(0.4f * m_size.height));
-		const auto offset = point(std::max(0.3f * m_size.height, 0.5f * m_cornerAngularRadius), 0.3f * m_size.height);
+		const auto offset = point((m_size.em_width - m_text->get_size().em_width) * 0.5f, 0.3f * m_size.height);
 		m_text->set_position(m_position + offset);
 	}
 }

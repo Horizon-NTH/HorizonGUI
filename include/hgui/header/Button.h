@@ -27,6 +27,7 @@ namespace hgui::kernel
 		[[nodiscard]] const std::tuple<color, color, color>& get_color() const;
 		[[nodiscard]] const std::shared_ptr<Texture>& get_texture() const;
 		[[nodiscard]] const std::string& get_text() const;
+		[[nodiscard]] const std::shared_ptr<Label>& get_label() const;
 		[[nodiscard]] const std::function<void()>& get_function() const;
 		[[nodiscard]] bool get_blurr_on_hover() const;
 
