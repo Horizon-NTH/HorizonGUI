@@ -38,5 +38,3 @@
 #include <AL/alext.h>
 // Libsndfile library
 #include <snd/sndfile.h>
-// HorizonGUI API Type
-#define HGUI_DYNAMIC

@@ -9,7 +9,6 @@
 #include "../include/hgui/header/KeyBoardManager.h"
 #include "../include/hgui/header/MouseManager.h"
 
-#if defined(HGUI_DYNAMIC)
 std::shared_ptr<hgui::kernel::TextInput> hgui::TextInputManager::create(const size& size, const point& position, const std::pair<std::shared_ptr<kernel::Font>, color>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, const std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>& onChange, const std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>& onEnter, const HGUI_PRECISION cornerRadius, const unsigned borderWidth)
 {
 	if (!m_shader)
@@ -172,4 +171,3 @@ std::shared_ptr<hgui::kernel::TextInput> hgui::TextInputManager::create(const si
 		});
 	return textInput;
 }
-#endif

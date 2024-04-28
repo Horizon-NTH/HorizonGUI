@@ -3,18 +3,14 @@
 #include "../include/hgui/header/ShaderManager.h"
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
+#include "../include/hgui/header/GLSL.h"
 
 hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, const bool fill, const float thickness) :
 	Shape(fill, thickness, color, std::array{firstVertex, secondVertex, thirdVertex})
 {
 	if (!m_shader)
 	{
-#if defined(HGUI_DYNAMIC)
-#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
-#elif defined(HGUI_STATIC)
-		m_shader = ShaderManager::get(HGUI_SHADER_TRIANGLE);
-#endif
 	}
 	if (fill)
 	{

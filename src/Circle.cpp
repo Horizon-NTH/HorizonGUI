@@ -3,18 +3,14 @@
 #include "../include/hgui/header/ShaderManager.h"
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
+#include "../include/hgui/header/GLSL.h"
 
 hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float radius, const color& color, const bool fill, float thickness) :
 	Shape(fill, thickness, color, std::make_pair(centerPosition, radius))
 {
 	if (!m_shader)
 	{
-#if defined(HGUI_DYNAMIC)
-#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_CIRCLE, HGUI_GLSL_FRAGMENT_CIRCLE);
-#elif defined(HGUI_STATIC)
-		m_shader = ShaderManager::get(HGUI_SHADER_CIRCLE);
-#endif
 	}
 	if (fill)
 		thickness = 0.0f;

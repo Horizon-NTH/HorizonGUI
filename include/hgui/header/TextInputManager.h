@@ -11,7 +11,7 @@ namespace hgui
 		class Shader;
 		class TextInput;
 	}
-#if defined(HGUI_DYNAMIC)
+
 	class TextInputManager
 	{
 	public:
@@ -30,6 +30,5 @@ namespace hgui
 
 		friend void kernel::resources_cleaner();
 	};
-#endif
 }
 

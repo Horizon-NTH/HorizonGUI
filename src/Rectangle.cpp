@@ -3,18 +3,14 @@
 #include "../include/hgui/header/ShaderManager.h"
 #include "../include/hgui/header/VertexArrayObject.h"
 #include "../include/hgui/header/VertexBufferObject.h"
+#include "../include/hgui/header/GLSL.h"
 
 hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill, const float thickness) :
 	Shape(fill, thickness, color, std::make_pair(topLeftVertex, bottomRightVertex))
 {
 	if (!m_shader)
 	{
-#if defined(HGUI_DYNAMIC)
-#include "../include/hgui/header/GLSL.h"
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
-#elif defined(HGUI_STATIC)
-		m_shader = ShaderManager::get(HGUI_SHADER_RECTANGLE);
-#endif
 	}
 	point firstVertex = topLeftVertex,
 			secondVertex = point(bottomRightVertex.x, topLeftVertex.y),

@@ -1,39 +1,13 @@
 #!/bin/bash
 
-type=OFF
 erase=false
-while getops ":d:s:e:-:" opt;
+for arg in "$@"
 do
-	case $opt in
-		d)
-			type=OFF
-			;;
-		s)
-			type=ON
-			;;
-		e)
-			erase=true
-			;;
-		-)
-			case "$OPTARG" in
-				dynamic)
-					type=OFF
-					;;
-				static)
-					type=ONN
-					;;
-				erase)
-					erase=true
-					;;
-				*)
-					echo "Invalid option: --$OPTARG" >&2
-					;;
-			esac
-			;;
-		\?)
-			echo "Invalid option: -$OPTARG" >&2
-			;;
-	esac	
+    case $arg in
+        -e|--erase)
+        erase=true
+        ;;
+    esac
 done
 
 if [ -d "build" ]
@@ -42,8 +16,9 @@ then
 fi
 mkdir build
 cd build
-cmake .. -DAPI_TYPE=$type
+cmake ..
 cmake --build .
+echo "Build completed."
 cd ..
 if [ "$erase" = true ]
 then
