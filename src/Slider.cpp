@@ -21,9 +21,11 @@ void hgui::kernel::Slider::draw() const
 	const auto activeBar = std::make_shared<shape::StraightLine>(m_points.first, m_slider, m_activeBarColor, m_size.height / 4.f);
 	const auto inactiveBar = std::make_shared<shape::StraightLine>(m_slider, m_points.second, m_inactiveBarColor, m_size.height / 4.f);
 	const auto slider = std::make_shared<shape::Circle>(m_slider, m_size.height / 2.f, m_color, true, 0.f);
-	activeBar->draw(m_position, m_size);
-	inactiveBar->draw(m_position, m_size);
-	slider->draw(m_position, m_size);
+	const auto drawerPosition = m_position - point(m_size.height / 2.f),
+			drawerSize = m_size + point(m_size.height);
+	activeBar->draw(drawerPosition, drawerSize);
+	inactiveBar->draw(drawerPosition, drawerSize);
+	slider->draw(drawerPosition, drawerSize);
 }
 
 bool hgui::kernel::Slider::is_inside(const point& point) const
