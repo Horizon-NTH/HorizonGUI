@@ -40,7 +40,7 @@ namespace hgui::kernel
 		template<typename U = T, typename = std::enable_if_t<std::is_signed_v<U>>>
 		Vector operator-() const noexcept;
 
-		const std::valarray<T>& get_data() const noexcept;
+		[[nodiscard]] const std::valarray<T>& get_data() const noexcept;
 		void set_data(const std::valarray<T>& valarray) noexcept;
 
 		Vector& operator=(const Vector& vector) noexcept = default;

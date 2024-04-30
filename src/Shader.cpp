@@ -10,7 +10,7 @@ hgui::kernel::Shader::~Shader() noexcept
 	glDeleteProgram(m_id);
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::use() const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::use() noexcept
 {
 	glUseProgram(m_id);
 	return *this;
@@ -21,109 +21,109 @@ GLuint hgui::kernel::Shader::get_id() const noexcept
 	return m_id;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_float(const std::string& uniformName, const float f) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_float(const std::string& uniformName, const float f) noexcept
 {
 	glUniform1f(glGetUniformLocation(m_id, uniformName.c_str()), f);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_int(const std::string& uniformName, const int i) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_int(const std::string& uniformName, const int i) noexcept
 {
 	glUniform1i(glGetUniformLocation(m_id, uniformName.c_str()), i);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const vec2& vec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const vec2& vec2) noexcept
 {
 	glUniform2f(glGetUniformLocation(m_id, uniformName.c_str()), vec2.x, vec2.y);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const point& vec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const point& vec2) noexcept
 {
 	glUniform2f(glGetUniformLocation(m_id, uniformName.c_str()), vec2.x, vec2.y);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const size& vec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec2(const std::string& uniformName, const size& vec2) noexcept
 {
 	glUniform2f(glGetUniformLocation(m_id, uniformName.c_str()), vec2.width, vec2.height);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec3(const std::string& uniformName, const vec3& vec3) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec3(const std::string& uniformName, const vec3& vec3) noexcept
 {
 	glUniform3f(glGetUniformLocation(m_id, uniformName.c_str()), vec3.x, vec3.y, vec3.z);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec3(const std::string& uniformName, const color& vec3) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec3(const std::string& uniformName, const color& vec3) noexcept
 {
 	glUniform3f(glGetUniformLocation(m_id, uniformName.c_str()), vec3.r, vec3.g, vec3.b);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& uniformName, const vec4& vec4) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& uniformName, const vec4& vec4) noexcept
 {
 	glUniform4f(glGetUniformLocation(m_id, uniformName.c_str()), vec4.x, vec4.y, vec4.z, vec4.w);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& uniformName, const color& vec4) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_vec4(const std::string& uniformName, const color& vec4) noexcept
 {
 	glUniform4f(glGetUniformLocation(m_id, uniformName.c_str()), vec4.r, vec4.g, vec4.b, vec4.a);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_double(const std::string& uniformName, const double d) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_double(const std::string& uniformName, const double d) noexcept
 {
 	glUniform1d(glGetUniformLocation(m_id, uniformName.c_str()), d);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const dvec2& dvec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const dvec2& dvec2) noexcept
 {
 	glUniform2d(glGetUniformLocation(m_id, uniformName.c_str()), dvec2.x, dvec2.y);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const Point<double>& dvec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const Point<double>& dvec2) noexcept
 {
 	glUniform2d(glGetUniformLocation(m_id, uniformName.c_str()), dvec2.x, dvec2.y);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const Size<double>& dvec2) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec2(const std::string& uniformName, const Size<double>& dvec2) noexcept
 {
 	glUniform2d(glGetUniformLocation(m_id, uniformName.c_str()), dvec2.width, dvec2.height);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec3(const std::string& uniformName, const dvec3& dvec3) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec3(const std::string& uniformName, const dvec3& dvec3) noexcept
 {
 	glUniform3d(glGetUniformLocation(m_id, uniformName.c_str()), dvec3.x, dvec3.y, dvec3.z);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec3(const std::string& uniformName, const Color<double>& dvec3) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec3(const std::string& uniformName, const Color<double>& dvec3) noexcept
 {
 	glUniform3d(glGetUniformLocation(m_id, uniformName.c_str()), dvec3.r, dvec3.g, dvec3.b);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec4(const std::string& uniformName, const dvec4& dvec4) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec4(const std::string& uniformName, const dvec4& dvec4) noexcept
 {
 	glUniform4d(glGetUniformLocation(m_id, uniformName.c_str()), dvec4.x, dvec4.y, dvec4.z, dvec4.w);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_dvec4(const std::string& uniformName, const Color<double>& dvec4) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_dvec4(const std::string& uniformName, const Color<double>& dvec4) noexcept
 {
 	glUniform4d(glGetUniformLocation(m_id, uniformName.c_str()), dvec4.r, dvec4.g, dvec4.b, dvec4.a);
 	return *this;
 }
 
-const hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const std::string& uniformName, const glm::mat4& mat4) const noexcept
+hgui::kernel::Shader& hgui::kernel::Shader::set_mat4(const std::string& uniformName, const glm::mat4& mat4) noexcept
 {
 	glUniformMatrix4fv(glGetUniformLocation(m_id, uniformName.c_str()), 1, false, glm::value_ptr(mat4));
 	return *this;

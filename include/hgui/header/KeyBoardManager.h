@@ -35,8 +35,8 @@ namespace hgui
 		KeyBoardManager& operator=(KeyBoardManager&& keyboardManage) = delete;
 
 		static void bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action, const std::function<void()>& function);
-		static [[nodiscard]] bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
-		static [[nodiscard]] const std::function<void()>& get_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
+		[[nodiscard]] static bool is_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
+		[[nodiscard]] static const std::function<void()>& get_bind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void unbind(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& action);
 		static void bind_key_callback(const std::variant<std::function<void()>, std::function<void(keys, actions)>>& function);
 

@@ -42,10 +42,10 @@ void hgui::kernel::TextInput::draw() const
 {
 	int width, height;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &width, &height);
-	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f));
-	m_VAO->bind();
-	m_shader->set_mat4("modelMatrix", m_modelMatrix.first)
+	m_shader->use().set_mat4("projectionMatrix", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.0f, 1.0f))
+	        .set_mat4("modelMatrix", m_modelMatrix.first)
 	        .set_vec4("color", m_colors.second);
+	m_VAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 138);
 	m_shader->set_mat4("modelMatrix", m_modelMatrix.second)
 	        .set_vec4("color", m_colors.first);

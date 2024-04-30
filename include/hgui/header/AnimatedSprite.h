@@ -18,7 +18,7 @@ namespace hgui::kernel
 		AnimatedSprite& operator=(const AnimatedSprite& animatedSprite) = delete;
 		AnimatedSprite& operator=(AnimatedSprite&& animatedSprite) = delete;
 
-		const std::shared_ptr<GIF>& get_gif() const;
+		[[nodiscard]] const std::shared_ptr<GIF>& get_gif() const;
 
 		void set_gif(const std::shared_ptr<GIF>& gif);
 
@@ -28,8 +28,8 @@ namespace hgui::kernel
 		void loop();
 		void stop_loop();
 
-		bool is_playing() const;
-		bool is_looping() const;
+		[[nodiscard]] bool is_playing() const;
+		[[nodiscard]] bool is_looping() const;
 
 	private:
 		std::shared_ptr<GIF> m_gif;

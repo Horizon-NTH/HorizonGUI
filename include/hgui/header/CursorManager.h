@@ -29,7 +29,7 @@ namespace hgui
 		static void disable();
 		static void enable();
 		static void use(const std::shared_ptr<kernel::Cursor>& cursor);
-		static std::shared_ptr<kernel::Cursor> get_cursor_used();
+		[[nodiscard]] static std::shared_ptr<kernel::Cursor> get_cursor_used();
 
 	private:
 		static inline std::weak_ptr<kernel::Cursor> m_cursorUsed;
