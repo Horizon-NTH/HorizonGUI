@@ -29,7 +29,7 @@ namespace hgui
 		MouseManager& operator=(MouseManager&& mouseManager) = delete;
 
 		static void bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function);
-		static bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
+		[[nodiscard]] static bool is_bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 		static void unbind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action);
 
 		static void bind_click_callback(const std::variant<std::function<void()>, std::function<void(buttons, actions)>>& function);

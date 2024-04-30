@@ -15,29 +15,29 @@ void init_resources(const py::module& hgui, const py::module& kernel)
 				"Sets an integer uniform variable in the shader.")
 			.def("set_float", &shader::set_float, py::return_value_policy::reference_internal, "uniform_name"_a, "float"_a,
 				"Sets an floating-point uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::vec2&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec2"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::vec2&>(&shader::set_vec2), py::return_value_policy::reference_internal, "uniform_name"_a, "vec2"_a,
 				"Sets an vec2 uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::point&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "point"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::point&>(&shader::set_vec2), py::return_value_policy::reference_internal, "uniform_name"_a, "point"_a,
 				"Sets an point uniform variable in the shader.")
-			.def("set_vec2", py::overload_cast<const std::string&, const hgui::size&>(&shader::set_vec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "size"_a,
+			.def("set_vec2", py::overload_cast<const std::string&, const hgui::size&>(&shader::set_vec2), py::return_value_policy::reference_internal, "uniform_name"_a, "size"_a,
 				"Sets an size uniform variable in the shader.")
-			.def("set_vec3", py::overload_cast<const std::string&, const hgui::vec3&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec3"_a,
+			.def("set_vec3", py::overload_cast<const std::string&, const hgui::vec3&>(&shader::set_vec3), py::return_value_policy::reference_internal, "uniform_name"_a, "vec3"_a,
 				"Sets an vec3 uniform variable in the shader.")
-			.def("set_vec3", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
+			.def("set_vec3", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec3), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
 				"Sets an color uniform variable in the shader.")
-			.def("set_vec4", py::overload_cast<const std::string&, const hgui::vec4&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "vec4"_a,
+			.def("set_vec4", py::overload_cast<const std::string&, const hgui::vec4&>(&shader::set_vec4), py::return_value_policy::reference_internal, "uniform_name"_a, "vec4"_a,
 				"Sets an vec4 uniform variable in the shader.")
-			.def("set_vec4", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
+			.def("set_vec4", py::overload_cast<const std::string&, const hgui::color&>(&shader::set_vec4), py::return_value_policy::reference_internal, "uniform_name"_a, "color"_a,
 				"Sets an color with alpha value uniform variable in the shader.")
 			.def("set_double", &shader::set_double, py::return_value_policy::reference_internal, "uniform_name"_a, "double"_a,
 				"Sets an double uniform variable in the shader.")
-			.def("set_dvec2", py::overload_cast<const std::string&, const hgui::dvec2&>(&shader::set_dvec2, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec2"_a,
+			.def("set_dvec2", py::overload_cast<const std::string&, const hgui::dvec2&>(&shader::set_dvec2), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec2"_a,
 				"Sets an dvec2 uniform variable in the shader.")
-			.def("set_dvec3", py::overload_cast<const std::string&, const hgui::dvec3&>(&shader::set_dvec3, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec3"_a,
+			.def("set_dvec3", py::overload_cast<const std::string&, const hgui::dvec3&>(&shader::set_dvec3), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec3"_a,
 				"Sets an dvec3 uniform variable in the shader.")
-			.def("set_dvec4", py::overload_cast<const std::string&, const hgui::dvec4&>(&shader::set_dvec4, py::const_), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec4"_a,
+			.def("set_dvec4", py::overload_cast<const std::string&, const hgui::dvec4&>(&shader::set_dvec4), py::return_value_policy::reference_internal, "uniform_name"_a, "dvec4"_a,
 				"Sets an dvec4 uniform variable in the shader.")
-			.def("set_mat4", [](const shader& self, const std::string& uniform_name, const std::array<float, 16>& mat4) { self.set_mat4(uniform_name, glm::make_mat4(mat4.data())); }, py::return_value_policy::reference_internal, "uniform_name"_a, "mat4"_a,
+			.def("set_mat4", [](shader& self, const std::string& uniform_name, const std::array<float, 16>& mat4) { self.set_mat4(uniform_name, glm::make_mat4(mat4.data())); }, py::return_value_policy::reference_internal, "uniform_name"_a, "mat4"_a,
 				"Sets an mat4 uniform variable in the shader.");
 
 	using option = hgui::kernel::TextureOption;
