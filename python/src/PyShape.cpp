@@ -74,7 +74,7 @@ void init_shapes(const py::module& kernel)
 				"first_vertex"_a, "second_vertex"_a, "color"_a, "thickness"_a = 10.f, "id"_a = "",
 				"Draws a line between two specified vertices with the given color, thickness, and an optianal id."
 			)
-			.def_property("shapes", py::cpp_function([](const drawer& self) -> std::map<std::string, std::shared_ptr<shape::Shape>>& { return *self.get_shapes(); }, py::return_value_policy::reference_internal), py::cpp_function([](drawer& self, const std::map<std::string, std::shared_ptr<shape>>& shapes)
+			.def_property("shapes", py::cpp_function([](const drawer& self) { return *self.get_shapes(); }, py::return_value_policy::reference_internal), py::cpp_function([](const drawer& self, const std::map<std::string, std::shared_ptr<shape>>& shapes)
 					{
 						*self.get_shapes() = shapes;
 					}),

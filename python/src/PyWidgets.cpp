@@ -153,7 +153,7 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 	using slider = hgui::kernel::Slider;
 	py::class_<slider, widget, std::shared_ptr<slider>>(hgui, "Slider", py::is_final(),
 				"The Slider class is designed to provide a graphical slider within your graphical application. Sliders are interactive controls that allow users to select a value from a specified range.")
-			.def(py::init([](const ranges& range, const hgui::size& size, const hgui::point& position, const hgui::color& inactiveBarColor, const hgui::color& activeBarColor, const hgui::color& sliderColor, const slider::Function& function)
+			.def(py::init([](const ranges& range, const hgui::size& size, const hgui::point& position, const hgui::color& inactiveBarColor, const hgui::color& activeBarColor, const hgui::color& sliderColor, const std::variant<std::function<void()>, std::function<void(float, float, std::shared_ptr<slider>)>>& function)
 					{
 						return hgui::SliderManager::create(range, size, position, inactiveBarColor, activeBarColor, sliderColor, function);
 					}), "range"_a, "size"_a, "position"_a, "inactive_bar_color"_a = hgui::color("#424242"), "activeBar_color"_a = hgui::color("#097fe0"), "slider_color"_a = HGUI_COLOR_WHITE, "function"_a = nullptr,
