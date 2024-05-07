@@ -94,6 +94,8 @@ void hgui::kernel::Window::set_position_callback(const std::variant<std::functio
 
 void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, const int height)
 {
+	if (width == 0 || height == 0)
+		return;
 	auto* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 	if (glad_glViewport != nullptr)
 		glViewport(0, 0, width, height);

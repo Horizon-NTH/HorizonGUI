@@ -129,6 +129,11 @@ void hgui::Renderer::buffer_update()
 {
 	if (m_frameBufferShader)
 	{
-		m_frameBuffer = BufferManager::create(m_frameBufferShader, size(100_em));
+		const auto windowSize = size(100_em);
+		if (windowSize.width == 0.f || windowSize.height == 0.f)
+		{
+			return;
+		}
+		m_frameBuffer = BufferManager::create(m_frameBufferShader, windowSize);
 	}
 }
