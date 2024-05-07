@@ -20,6 +20,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 #else
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
+	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(),
 		monitor ? monitor->get_monitor_ptr() : nullptr, nullptr);
 	if (!m_windowPTR)
