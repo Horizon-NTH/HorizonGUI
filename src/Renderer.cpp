@@ -99,7 +99,9 @@ const hgui::color& hgui::Renderer::get_background_color()
 
 void hgui::Renderer::render()
 {
-	m_frameBufferShader->use().set_int("type", static_cast<int>(m_draws.second.second));
+	m_frameBufferShader->use()
+	                   .set_int("type", static_cast<int>(m_draws.second.second))
+	                   .set_vec2("screenSize", size(100_em));
 	m_frameBuffer->bind();
 	for (const std::string& tag : m_draws.second.first)
 	{
