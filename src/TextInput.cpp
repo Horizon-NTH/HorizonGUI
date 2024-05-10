@@ -197,6 +197,7 @@ void hgui::kernel::TextInput::set_size(const size& newSize)
 	set_position(m_position);
 	init_data();
 	set_text_placment_and_height();
+	update_text();
 }
 
 void hgui::kernel::TextInput::set_label(const std::shared_ptr<Label>& newText)

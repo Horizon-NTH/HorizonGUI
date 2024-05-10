@@ -318,7 +318,10 @@ void hgui::kernel::Button::set_text_placment() const
 {
 	if (m_text)
 	{
+		const auto temp = m_text->get_text();
+		m_text->set_text(m_textValue);
 		m_text->set_height(static_cast<unsigned>(0.4f * m_size.height));
+		m_text->set_text(temp);
 		const auto size = m_text->get_size();
 		point offset;
 		if (size.width > m_size.width)

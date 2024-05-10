@@ -4,10 +4,10 @@
 #include "../include/hgui/header/Image.h"
 #include "../include/hgui/header/Renderer.h"
 
-hgui::kernel::Window::Window(const std::string& name, const size& size, const point& position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::map<options, bool>& options) :
+hgui::kernel::Window::Window(const std::string& name, const size& size, point position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::map<options, bool>& options) :
 	m_name(name),
 	m_size(size),
-	m_position(position)
+	m_position(std::move(position))
 {
 	for (const auto& [option, state] : options)
 	{
@@ -29,7 +29,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 		throw std::runtime_error("ERROR WITH WINDOW CREATION");
 	}
 	glfwSetWindowUserPointer(m_windowPTR, this);
-	glfwSetFramebufferSizeCallback(m_windowPTR, size_callback);
+	glfwSetWindowSizeCallback(m_windowPTR, size_callback);
 	glfwSetWindowPosCallback(m_windowPTR, position_callback);
 	if (icon)
 	{
@@ -42,6 +42,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, const po
 				};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}
+	glfwPollEvents();
 	int width, height;
 	glfwGetFramebufferSize(m_windowPTR, &width, &height);
 	size_callback(m_windowPTR, width, height);
@@ -97,6 +98,8 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	if (width == 0 || height == 0)
 		return;
 	auto* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	if (win->m_size.width == static_cast<float>(width) && win->m_size.height == static_cast<float>(height))
+		return;
 	if (glad_glViewport != nullptr)
 		glViewport(0, 0, width, height);
 	win->m_size = size(width, height);
