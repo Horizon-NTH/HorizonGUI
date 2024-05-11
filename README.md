@@ -70,11 +70,21 @@ and build it. Open the `horizongui.sln` file with Microsoft Visual Studio.
 
 ### Python binding
 
-To install the Python bindings, you can execute the following command:
+To install the Python bindings, you can install it from [PyPi](https://pypi.org/project/hgui/) using this command:
 
 ```bash
+pip install hgui
+```
+
+Or you can build it from source using those commands:
+
+```bash
+git clone https://github.com/Horizon-NTH/HorizonGUI.git --recurse-submodules
+cd HorizonGUI
 pip install ./python
 ```
+
+> **Note**: Both methods can take some time due to the compilation of the underlying C++ library.
 
 Once the installation is complete, you can import the module into your Python script using the following statement:
 
