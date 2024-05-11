@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12+)
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
-project(horizongui VERSION 3.0)
+project(horizongui VERSION 4.0)
 
 set(LIBTYPE STATIC)
 set(ALSOFT_UTILS OFF)
