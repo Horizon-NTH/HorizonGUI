@@ -78,8 +78,11 @@ void hgui::TaskManager::process()
 	}
 	for (const auto& id : taskToDo)
 	{
+		if (!m_tasks.contains(id))
+			continue;
 		std::get<0>(m_tasks[id])();
 		m_tasks.erase(id);
-		m_insertionOrder.erase(std::ranges::find(m_insertionOrder, id));
+		if (const auto it = std::ranges::find(m_insertionOrder, id); it != m_insertionOrder.end())
+			m_insertionOrder.erase(it);
 	}
 }

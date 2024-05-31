@@ -23,6 +23,6 @@ namespace hgui
 		SliderManager& operator=(const SliderManager& sliderManager) = delete;
 		SliderManager& operator=(SliderManager&& sliderManager) = delete;
 
-		[[nodiscard]] static std::shared_ptr<kernel::Slider> create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor = color("#424242"), const color& activeBarColor = color("#097fe0"), const color& sliderColor = HGUI_COLOR_WHITE, const Function& function = {});
+		[[nodiscard]] static std::shared_ptr<kernel::Slider> create(const kernel::Ranges& range, const size& size, const point& position, const std::tuple<color, color, color>& colors = {HGUI_COLOR_WHITE, color("#424242"), color("#097fe0")}, const Function& function = {});
 	};
 }
