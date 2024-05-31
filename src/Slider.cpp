@@ -2,14 +2,12 @@
 #include "../include/hgui/header/StraightLine.h"
 #include "../include/hgui/header/Circle.h"
 
-hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor, const color& activeBarColor, const size& size, const point& position, const color& color, Function function) :
+hgui::kernel::Slider::Slider(const Ranges& range, const size& size, const point& position, const std::tuple<color, color, color>& colors, Function function) :
 	Widget(nullptr, size, position),
 	m_range(range),
-	m_inactiveBarColor(inactiveBarColor),
-	m_activeBarColor(activeBarColor),
 	m_slider(0.f),
 	m_function(std::move(function)),
-	m_color(color)
+	m_colors(colors)
 {
 	m_range.sort();
 	set_points();
@@ -18,9 +16,9 @@ hgui::kernel::Slider::Slider(const Ranges& range, const color& inactiveBarColor,
 
 void hgui::kernel::Slider::draw() const
 {
-	const auto activeBar = std::make_shared<shape::StraightLine>(m_points.first, m_slider, m_activeBarColor, m_size.height / 4.f);
-	const auto inactiveBar = std::make_shared<shape::StraightLine>(m_slider, m_points.second, m_inactiveBarColor, m_size.height / 4.f);
-	const auto slider = std::make_shared<shape::Circle>(m_slider, m_size.height / 2.f, m_color, true, 0.f);
+	const auto activeBar = std::make_shared<shape::StraightLine>(m_points.first, m_slider, std::get<2>(m_colors), m_size.height / 4.f);
+	const auto inactiveBar = std::make_shared<shape::StraightLine>(m_slider, m_points.second, std::get<1>(m_colors), m_size.height / 4.f);
+	const auto slider = std::make_shared<shape::Circle>(m_slider, m_size.height / 2.f, std::get<0>(m_colors), true, 0.f);
 	const auto drawerPosition = m_position - point(m_size.height / 2.f),
 			drawerSize = m_size + point(m_size.height);
 	activeBar->draw(drawerPosition, drawerSize);
@@ -75,6 +73,11 @@ const hgui::point& hgui::kernel::Slider::get_slider_position() const
 const hgui::kernel::Slider::Function& hgui::kernel::Slider::get_function() const
 {
 	return m_function;
+}
+
+const std::tuple<hgui::color, hgui::color, hgui::color>& hgui::kernel::Slider::get_colors() const
+{
+	return m_colors;
 }
 
 void hgui::kernel::Slider::set_position(const point& newPosition)
@@ -146,6 +149,11 @@ void hgui::kernel::Slider::set_slider_position(point newPosition)
 void hgui::kernel::Slider::set_function(const Function& newFunction)
 {
 	m_function = newFunction;
+}
+
+void hgui::kernel::Slider::set_colors(const std::tuple<color, color, color>& newColors)
+{
+	m_colors = newColors;
 }
 
 hgui::point hgui::kernel::Slider::clamp(const point& value) const

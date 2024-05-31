@@ -3,9 +3,9 @@
 #include "../include/hgui/header/TaskManager.h"
 #include "../include/hgui/header/CursorManager.h"
 
-std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const color& inactiveBarColor, const color& activeBarColor, const color& sliderColor, const Function& function)
+std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const std::tuple<color, color, color>& colors, const Function& function)
 {
-	auto slider = std::make_shared<kernel::Slider>(range, inactiveBarColor, activeBarColor, size, position, sliderColor, function);
+	auto slider = std::make_shared<kernel::Slider>(range, size, position, colors, function);
 	std::weak_ptr wwidget = std::static_pointer_cast<kernel::Slider>(slider->shared_from_this());
 	auto cursor = CursorManager::create(cursors::HAND);
 	auto dragged = std::make_shared<bool>(false);

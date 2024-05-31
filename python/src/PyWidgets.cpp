@@ -153,11 +153,11 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 	using slider = hgui::kernel::Slider;
 	py::class_<slider, widget, std::shared_ptr<slider>>(hgui, "Slider", py::is_final(),
 				"The Slider class is designed to provide a graphical slider within your graphical application. Sliders are interactive controls that allow users to select a value from a specified range.")
-			.def(py::init([](const ranges& range, const hgui::size& size, const hgui::point& position, const hgui::color& inactiveBarColor, const hgui::color& activeBarColor, const hgui::color& sliderColor, const std::variant<std::function<void()>, std::function<void(float, float, std::shared_ptr<slider>)>>& function)
+			.def(py::init([](const ranges& range, const hgui::size& size, const hgui::point& position, const std::tuple<hgui::color, hgui::color, hgui::color>& colors, const std::variant<std::function<void()>, std::function<void(float, float, std::shared_ptr<slider>)>>& function)
 					{
-						return hgui::SliderManager::create(range, size, position, inactiveBarColor, activeBarColor, sliderColor, function);
-					}), "range"_a, "size"_a, "position"_a, "inactive_bar_color"_a = hgui::color("#424242"), "activeBar_color"_a = hgui::color("#097fe0"), "slider_color"_a = HGUI_COLOR_WHITE, "function"_a = nullptr,
-				"Constructs a Slider object with the specified range, colors, size, position, and function.")
+						return hgui::SliderManager::create(range, size, position, colors, function);
+					}), "range"_a, "size"_a, "position"_a, "colors"_a = std::tuple{HGUI_COLOR_WHITE, hgui::color("#424242"), hgui::color("#097fe0")}, "function"_a = nullptr,
+				"Constructs a Slider object with the specified range, colors (slider, inactive bar, active bar), size, position, and function.")
 			.def_property("range", py::cpp_function(&slider::get_range, py::return_value_policy::reference_internal), py::cpp_function(&slider::set_range),
 				"Property to access the slider's range.")
 			.def_property("value", py::cpp_function(&slider::get_value, py::return_value_policy::reference_internal), py::cpp_function(&slider::set_value),
@@ -165,7 +165,9 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 			.def_property("slider_position", py::cpp_function(&slider::get_slider_position, py::return_value_policy::reference_internal), py::cpp_function(&slider::set_slider_position),
 				"Property to access the slider's position.")
 			.def_property("function", py::cpp_function(&slider::get_function, py::return_value_policy::reference_internal), py::cpp_function(&slider::set_function),
-				"Property to access the slider's function.");
+				"Property to access the slider's function.")
+			.def_property("colors", py::cpp_function(&slider::get_colors, py::return_value_policy::reference_internal), py::cpp_function(&slider::set_colors),
+				"Property to access the slider's colors (slider, inactive bar, active bar).");
 
 	using sprite = hgui::kernel::Sprite;
 	py::class_<sprite, widget, PySprite, std::shared_ptr<sprite>>(hgui, "Sprite",
