@@ -208,11 +208,11 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 	using textInput = hgui::kernel::TextInput;
 	py::class_<textInput, widget, std::shared_ptr<textInput>>(hgui, "TextInput", py::is_final(),
 				"The TextInput class is designed to provide a graphical text input within your graphical application. Text inputs are interactive controls that allow users to enter text.")
-			.def(py::init([](const hgui::size& size, const hgui::point& position, const std::pair<std::shared_ptr<hgui::kernel::Font>, hgui::color>& text, const std::pair<hgui::color, hgui::color>& colors, const std::pair<std::string, hgui::color>& placeHolder, const std::pair<hgui::color, std::chrono::milliseconds>& caret, const std::variant<std::function<void()>, std::function<void(const std::shared_ptr<hgui::kernel::TextInput>&)>>& onChange, const std::variant<std::function<void()>, std::function<void(const std::shared_ptr<hgui::kernel::TextInput>&)>>& onEnter, const HGUI_PRECISION cornerRadius, const unsigned borderWidth)
+			.def(py::init([](const hgui::size& size, const hgui::point& position, const std::pair<std::shared_ptr<hgui::kernel::Font>, hgui::color>& text, const std::pair<hgui::color, hgui::color>& colors, const std::pair<std::string, hgui::color>& placeHolder, const std::pair<hgui::color, std::chrono::milliseconds>& caret, const std::tuple<hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function>& onChanges, const unsigned sizeLimit, const std::map<hgui::keys, hgui::kernel::TextInput::Function>& onActions, const HGUI_PRECISION cornerRadius, const unsigned borderWidth)
 					{
-						return hgui::TextInputManager::create(size, position, text, colors, placeHolder, caret, onChange, onEnter, cornerRadius, borderWidth);
-					}), "size"_a, "position"_a, "text"_a, "colors"_a = std::pair{HGUI_COLOR_WHITE, hgui::color("#097fe0")}, "place_holder"_a = std::pair{"placeholder", hgui::color("#424242")}, "caret"_a = std::pair{HGUI_COLOR_BLACK, std::chrono::milliseconds(500)}, "on_change"_a = nullptr, "on_enter"_a = nullptr, "corner_radius"_a = 100.f, "border_width"_a = 5u,
-				"Constructs a TextInput object with the specified size, position, text, colors, placeholder, caret, onChange, onEnter, corner radius, and border width.")
+						return hgui::TextInputManager::create(size, position, text, colors, placeHolder, caret, onChanges, sizeLimit, onActions, cornerRadius, borderWidth);
+					}), "size"_a, "position"_a, "text"_a, "colors"_a = std::pair{HGUI_COLOR_WHITE, hgui::color("#097fe0")}, "place_holder"_a = std::pair{"placeholder", hgui::color("#424242")}, "caret"_a = std::pair{HGUI_COLOR_BLACK, std::chrono::milliseconds(500)}, "on_changes"_a = std::tuple<hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function>{}, "size_limit"_a = 0u, "on_actions"_a = std::map<hgui::keys, std::variant<std::function<void()>, std::function<void(const std::shared_ptr<hgui::kernel::TextInput>&)>>>{}, "corner_radius"_a = 100.f, "border_width"_a = 5u,
+				"Constructs a TextInput object with the specified size, position, text, colors, placeholder, caret, onChanges (text change, focus, unfocus), onEnter, corner radius, and border width.")
 			.def("get_caret_position_from_point", &textInput::get_caret_position_from_point, "point"_a,
 				"Retrieves the caret position based on the given point.")
 			.def("focus", &textInput::focus,
@@ -223,10 +223,12 @@ void init_widgets(const py::module& hgui, const py::module& kernel)
 				"Property to access the text input's value.")
 			.def_property("colors", py::cpp_function(&textInput::get_colors, py::return_value_policy::reference_internal), py::cpp_function(&textInput::set_colors),
 				"Property to access the text input's colors.")
+			.def_property("size_limit", py::cpp_function(&textInput::get_size_limit, py::return_value_policy::copy), py::cpp_function(&textInput::set_size_limit),
+				"Property to access the maximum number of character that can enter the user.")
 			.def_property("place_holder", py::cpp_function(&textInput::get_place_holder, py::return_value_policy::reference_internal), py::cpp_function(&textInput::set_place_holder),
 				"Property to access the text input's placeholder.")
-			.def_property("on_change", py::cpp_function(&textInput::get_on_change_function, py::return_value_policy::reference_internal), py::cpp_function(&textInput::set_on_change_function),
-				"Property to access the text input's on change function.")
+			.def_property("on_changes", py::cpp_function(&textInput::get_on_changes_functions, py::return_value_policy::reference_internal), py::cpp_function(&textInput::set_on_changes_functions),
+				"Property to access the text input's on changes functions (text change, focus, unfocus).")
 			.def_property("caret_position", py::cpp_function(&textInput::get_caret_position, py::return_value_policy::copy), py::cpp_function(&textInput::set_caret_position),
 				"Property to access the text input's caret position.")
 			.def_property("font", py::cpp_function(&textInput::get_font, py::return_value_policy::reference_internal), py::cpp_function(&textInput::set_font),

@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "hgui"
-version = "4.0"
+version = "4.0.2"
 authors = [
     { name = "Horizon-NTH" },
 ]

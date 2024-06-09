@@ -71,9 +71,10 @@ and build it. Open the `horizongui.sln` file with Microsoft Visual Studio.
 ### Python binding
 
 To install the Python bindings, you can install it from [PyPi](https://pypi.org/project/hgui/) using this command:
+Don't forget to install the [**scikit-build-core**](https://pypi.org/project/scikit-build-core/) package.
 
 ```bash
-pip install hgui
+pip install scikit-build-core hgui
 ```
 
 Or you can build it from source using those commands:

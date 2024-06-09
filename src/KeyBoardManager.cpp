@@ -81,7 +81,7 @@ void hgui::KeyBoardManager::bind_key_callback(const std::variant<std::function<v
 void hgui::KeyBoardManager::process()
 {
 	std::vector<std::function<void()>> toDo;
-	for (auto& key : kernel::TextInput::m_focused.lock() ? m_apiBinds : decltype(m_apiBinds)(m_keys.begin(), m_keys.end()))
+	for (auto& key : kernel::TextInput::m_processBinds ? m_apiBinds : decltype(m_apiBinds)(m_keys.begin(), m_keys.end()))
 	{
 		if (!key.first.index())
 		{

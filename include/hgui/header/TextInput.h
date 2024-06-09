@@ -19,10 +19,10 @@ namespace hgui::kernel
 		friend TextInputManager;
 		friend KeyBoardManager;
 
+	public:
 		using Function = std::variant<std::function<void()>, std::function<void(const std::shared_ptr<TextInput>&)>>;
 
-	public:
-		TextInput(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, Function onChange, HGUI_PRECISION cornerRadius, unsigned borderWidth);
+		TextInput(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, const std::tuple<Function, Function, Function>& onChanges, unsigned sizeLimit, HGUI_PRECISION cornerRadius, unsigned borderWidth);
 		TextInput(const TextInput& textInput) = delete;
 		TextInput(TextInput&& textInput) = default;
 
@@ -41,12 +41,13 @@ namespace hgui::kernel
 		[[nodiscard]] const std::string& get_value() const;
 		[[nodiscard]] const std::pair<color, color>& get_colors() const;
 		[[nodiscard]] const std::pair<std::string, color>& get_place_holder() const;
-		[[nodiscard]] const Function& get_on_change_function() const;
+		[[nodiscard]] const std::tuple<Function, Function, Function>& get_on_changes_functions() const;
 		[[nodiscard]] bool is_focused() const;
 		[[nodiscard]] unsigned get_caret_position() const;
 		[[nodiscard]] const std::shared_ptr<Font>& get_font() const;
 		[[nodiscard]] const color& get_text_color() const;
 		[[nodiscard]] const std::pair<color, std::chrono::milliseconds>& get_caret() const;
+		[[nodiscard]] const unsigned& get_size_limit() const;
 
 		void set_position(const point& newPosition) override;
 		void set_size(const size& newSize) override;
@@ -54,17 +55,18 @@ namespace hgui::kernel
 		void set_value(const std::string& value);
 		void set_colors(const std::pair<color, color>& colors);
 		void set_place_holder(const std::pair<std::string, color>& placeHolder);
-		void set_on_change_function(const Function& onChange);
+		void set_on_changes_functions(const std::tuple<Function, Function, Function>& onChange);
 		void set_caret_position(unsigned caretPosition);
 		void set_font(const std::shared_ptr<Font>& font) const;
 		void set_text_color(const color& textColor);
 		void set_caret(const std::pair<color, std::chrono::milliseconds>& caret);
+		void set_size_limit(unsigned sizeLimit);
 
 	private:
 		std::shared_ptr<Label> m_text;
 		std::pair<color, color> m_colors;
 		std::pair<std::string, color> m_placeHolder;
-		Function m_onChange;
+		std::tuple<Function, Function, Function> m_onChanges;
 		HGUI_PRECISION m_cornerRadius;
 		HGUI_PRECISION m_cornerAngularRadius;
 		unsigned m_borderWidth;
@@ -79,6 +81,7 @@ namespace hgui::kernel
 		unsigned m_textDisplayedIndex;
 		mutable std::string m_taskID;
 		std::unique_ptr<Drawer> m_drawer;
+		unsigned m_sizeLimit;
 
 		void init_data();
 		void set_text_placment_and_height() const;
@@ -91,6 +94,8 @@ namespace hgui::kernel
 		void suppress_char();
 
 		static inline std::weak_ptr<TextInput> m_focused;
+		static inline bool m_processBinds = false;
+		static inline std::string m_bindTaskID;
 
 		static void assert_is_displayable(const std::string& text, const std::shared_ptr<Font>& font);
 		static unsigned get_advance(const std::string& text, const std::shared_ptr<Font>& font, unsigned size);

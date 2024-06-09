@@ -230,7 +230,7 @@ void init_coordinate(const py::module& hgui)
 				"Addition operator for points and coordinates.")
 			.def("__add__", [](const point& self, const hgui::kernel::GLSLvec2<float>& vec) { return point(self + vec); }, "vector"_a,
 				"Addition operator for points and glsl vec2.")
-			.def("__radd__", [](const hgui::kernel::GLSLvec2<float>& vec, const point& self) { return point(vec + self); }, "vector"_a,
+			.def("__radd__", [](const point& self, const hgui::kernel::GLSLvec2<float>& vec) { return point(vec + self); }, "vector"_a,
 				"Addition operator (reversed) for points and glsl vec2.")
 			.def(coordinate() + py::self, "coordinate"_a,
 				"Addition operator (reversed) for points and coordinates.")
@@ -246,7 +246,7 @@ void init_coordinate(const py::module& hgui)
 				"Subtraction operator for points and coordinates.")
 			.def("__sub__", [](const point& self, const hgui::kernel::GLSLvec2<float>& vec) { return point(self - vec); }, "point"_a,
 				"Subtraction operator for points and glsl vec2.")
-			.def("__rsub__", [](const hgui::kernel::GLSLvec2<float>& vec, const point& self) { return point(vec - self); }, "point"_a,
+			.def("__rsub__", [](const point& self, const hgui::kernel::GLSLvec2<float>& vec) { return point(vec - self); }, "point"_a,
 				"Subtraction operator (reversed) for points and glsl vec2.")
 			.def(coordinate() - py::self, "coordinate"_a,
 				"Subtraction operator (reversed) for points and coordinates.")
@@ -258,7 +258,7 @@ void init_coordinate(const py::module& hgui)
 				"In-place subtraction operator for points and glsl vec2.")
 			.def("__mul__", [](const point& self, const float scalar) { return point(self * scalar); }, "scalar"_a,
 				"Multiplication operator for points with a scalar.")
-			.def("__rmul__", [](const float scalar, const point& self) { return point(scalar * self); }, "scalar"_a,
+			.def("__rmul__", [](const point& self, const float scalar) { return point(scalar * self); }, "scalar"_a,
 				"Multiplication operator (reversed) for points with a scalar.")
 			.def("__imul__", [](point& self, const float scalar) { return point(self *= scalar); }, "scalar"_a,
 				"In-place multiplication operator for points with a scalar.")
@@ -326,7 +326,7 @@ void init_coordinate(const py::module& hgui)
 				"Addition operator for sizes and coordinates.")
 			.def("__add__", [](const size& self, const hgui::kernel::GLSLvec2<float>& vec) { return size(self + vec); }, "vector"_a,
 				"Addition operator for sizes and glsl vec2.")
-			.def("__radd__", [](const hgui::kernel::GLSLvec2<float>& vec, const size& self) { return size(vec + self); }, "vector"_a,
+			.def("__radd__", [](const size& self, const hgui::kernel::GLSLvec2<float>& vec) { return size(vec + self); }, "vector"_a,
 				"Addition operator (reversed) for sizes and glsl vec2.")
 			.def(coordinate() + py::self, "coordinate"_a,
 				"Addition operator (reversed) for sizes and coordinates.")
@@ -342,7 +342,7 @@ void init_coordinate(const py::module& hgui)
 				"Subtraction operator for sizes and coordinates.")
 			.def("__sub__", [](const size& self, const hgui::kernel::GLSLvec2<float>& vec) { return size(self - vec); }, "size"_a,
 				"Subtraction operator for sizes and glsl vec2.")
-			.def("__rsub__", [](const hgui::kernel::GLSLvec2<float>& vec, const size& self) { return size(vec - self); }, "size"_a,
+			.def("__rsub__", [](const size& self, const hgui::kernel::GLSLvec2<float>& vec) { return size(vec - self); }, "size"_a,
 				"Subtraction operator (reversed) for sizes and glsl vec2.")
 			.def(coordinate() - py::self, "coordinate"_a,
 				"Subtraction operator (reversed) for sizes and coordinates.")
@@ -354,7 +354,7 @@ void init_coordinate(const py::module& hgui)
 				"In-place subtraction operator for sizes and glsl vec2.")
 			.def("__mul__", [](const size& self, const float scalar) { return size(self * scalar); }, "scalar"_a,
 				"Multiplication operator for sizes with a scalar.")
-			.def("__rmul__", [](const float scalar, const size& self) { return size(scalar * self); }, "scalar"_a,
+			.def("__rmul__", [](const size& self, const float scalar) { return size(scalar * self); }, "scalar"_a,
 				"Multiplication operator (reversed) for sizes with a scalar.")
 			.def("__imul__", [](size& self, const float scalar) { return size(self *= scalar); }, "scalar"_a,
 				"In-place multiplication operator for sizes with a scalar.")

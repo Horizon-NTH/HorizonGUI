@@ -7,12 +7,12 @@
 #include "../include/hgui/header/Drawer.h"
 #include "../include/hgui/header/TaskManager.h"
 
-hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, Function onChange, const HGUI_PRECISION cornerRadius, const unsigned borderWidth) :
+hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, const std::tuple<Function, Function, Function>& onChanges, const unsigned sizeLimit, const HGUI_PRECISION cornerRadius, const unsigned borderWidth) :
 	Widget(shader, size, position),
 	m_text(text),
 	m_colors(colors),
 	m_placeHolder(placeHolder),
-	m_onChange(std::move(onChange)),
+	m_onChanges(onChanges),
 	m_cornerRadius(std::clamp(cornerRadius, 0.f, 1.f)),
 	m_cornerAngularRadius(std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius),
 	m_borderWidth(borderWidth),
@@ -23,7 +23,8 @@ hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const 
 	m_caret(caret),
 	m_caretPosition(0u),
 	m_textDisplayedIndex(0u),
-	m_drawer(std::make_unique<Drawer>(m_inlineRectanglePosition, m_inlineRectangleSize))
+	m_drawer(std::make_unique<Drawer>(m_inlineRectanglePosition, m_inlineRectangleSize)),
+	m_sizeLimit(sizeLimit)
 {
 	TextInput::set_position(position);
 	init_data();
@@ -83,15 +84,16 @@ unsigned hgui::kernel::TextInput::get_caret_position_from_point(const point& poi
 	if (not is_inside(point))
 		throw std::runtime_error("POINT IS NOT INSIDE THE TEXT INPUT");
 	unsigned index = m_textDisplayedIndex;
-	const auto text = m_text->get_text();
 	const auto font = m_text->get_font();
-	float advance = static_cast<float>(font->get_char(text[index], m_text->get_font_size()).advance >> 6) / 2.f;
-	while (point.x > m_text->get_position().x + advance && index < text.size())
+	float advance = static_cast<float>(font->get_char(m_value[index], m_text->get_font_size()).advance >> 6) / 2.f;
+	while (point.x > m_text->get_position().x + advance && index < m_value.size())
 	{
-		advance += static_cast<float>(font->get_char(text[index], m_text->get_font_size()).advance >> 6) / 2.f;
+		advance += static_cast<float>(font->get_char(m_value[index], m_text->get_font_size()).advance >> 6) / 2.f;
 		index++;
-		advance += static_cast<float>(font->get_char(text[index], m_text->get_font_size()).advance >> 6) / 2.f;
+		advance += static_cast<float>(font->get_char(m_value[index], m_text->get_font_size()).advance >> 6) / 2.f;
 	}
+	if (point.x < m_text->get_position().x and index > 0)
+		index--;
 	return index;
 }
 
@@ -107,8 +109,18 @@ void hgui::kernel::TextInput::focus()
 	m_text->set_color(m_textColor);
 	glfwSetCharCallback(glfwGetCurrentContext(), text_input);
 	m_focused = std::dynamic_pointer_cast<TextInput>(shared_from_this());
+	if (TaskManager::is_program(m_bindTaskID))
+	{
+		TaskManager::deprogram(m_bindTaskID);
+	}
+	m_processBinds = true;
 	update_text();
+	draw_caret();
 	display_caret();
+	if (const auto onFocusWithoutWidget = std::get_if<std::function<void()>>(&std::get<1>(m_onChanges)); onFocusWithoutWidget && *onFocusWithoutWidget)
+		(*onFocusWithoutWidget)();
+	else if (const auto onFocusWithWidget = std::get_if<std::function<void(const std::shared_ptr<TextInput>&)>>(&std::get<1>(m_onChanges)); onFocusWithWidget && *onFocusWithWidget)
+		(*onFocusWithWidget)(m_focused.lock());
 }
 
 void hgui::kernel::TextInput::unfocus()
@@ -118,7 +130,12 @@ void hgui::kernel::TextInput::unfocus()
 	if (not m_text)
 		throw std::runtime_error("TEXT INPUT REQUIRES A LABEL");
 	m_textColor = m_text->get_color();
+	if (const auto onUnfocusWithoutWidget = std::get_if<std::function<void()>>(&std::get<2>(m_focused.lock()->m_onChanges)); onUnfocusWithoutWidget && *onUnfocusWithoutWidget)
+		(*onUnfocusWithoutWidget)();
+	else if (const auto onUnfocusWithWidget = std::get_if<std::function<void(const std::shared_ptr<TextInput>&)>>(&std::get<2>(m_focused.lock()->m_onChanges)); onUnfocusWithWidget && *onUnfocusWithWidget)
+		(*onUnfocusWithWidget)(m_focused.lock());
 	m_focused.reset();
+	m_bindTaskID = TaskManager::program(std::chrono::milliseconds(200), [this] { m_processBinds = false; });
 	update_text();
 	if (TaskManager::is_program(m_taskID))
 	{
@@ -142,9 +159,9 @@ const std::pair<std::string, hgui::color>& hgui::kernel::TextInput::get_place_ho
 	return m_placeHolder;
 }
 
-const hgui::kernel::TextInput::Function& hgui::kernel::TextInput::get_on_change_function() const
+const std::tuple<hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function, hgui::kernel::TextInput::Function>& hgui::kernel::TextInput::get_on_changes_functions() const
 {
-	return m_onChange;
+	return m_onChanges;
 }
 
 bool hgui::kernel::TextInput::is_focused() const
@@ -172,6 +189,11 @@ const hgui::color& hgui::kernel::TextInput::get_text_color() const
 const std::pair<hgui::color, std::chrono::milliseconds>& hgui::kernel::TextInput::get_caret() const
 {
 	return m_caret;
+}
+
+const unsigned& hgui::kernel::TextInput::get_size_limit() const
+{
+	return m_sizeLimit;
 }
 
 void hgui::kernel::TextInput::set_position(const point& newPosition)
@@ -215,9 +237,10 @@ void hgui::kernel::TextInput::set_label(const std::shared_ptr<Label>& newText)
 
 void hgui::kernel::TextInput::set_value(const std::string& value)
 {
-	m_value = value;
+	m_value = value.substr(0, m_sizeLimit ? m_sizeLimit : value.size());
 	assert_is_displayable(value, m_text->get_font());
-	set_caret_position(0u);
+	if (TaskManager::is_program(m_taskID))
+		set_caret_position(0u);
 	update_text();
 }
 
@@ -233,18 +256,14 @@ void hgui::kernel::TextInput::set_place_holder(const std::pair<std::string, colo
 	update_text();
 }
 
-void hgui::kernel::TextInput::set_on_change_function(const Function& onChange)
+void hgui::kernel::TextInput::set_on_changes_functions(const std::tuple<Function, Function, Function>& onChange)
 {
-	m_onChange = onChange;
+	m_onChanges = onChange;
 }
 
 void hgui::kernel::TextInput::set_caret_position(unsigned caretPosition)
 {
 	caretPosition = std::clamp(caretPosition, 0u, static_cast<unsigned>(m_value.size()));
-	if (TaskManager::is_program(m_taskID))
-	{
-		TaskManager::deprogram(m_taskID);
-	}
 	while (caretPosition > m_caretPosition)
 	{
 		increase_caret_position();
@@ -253,8 +272,11 @@ void hgui::kernel::TextInput::set_caret_position(unsigned caretPosition)
 	{
 		decrease_caret_position();
 	}
-	m_drawer->get_shapes()->clear();
-	display_caret();
+	if (TaskManager::is_program(m_taskID))
+	{
+		TaskManager::deprogram(m_taskID);
+		display_caret();
+	}
 }
 
 void hgui::kernel::TextInput::set_font(const std::shared_ptr<Font>& font) const
@@ -269,14 +291,25 @@ void hgui::kernel::TextInput::set_font(const std::shared_ptr<Font>& font) const
 void hgui::kernel::TextInput::set_text_color(const color& textColor)
 {
 	m_textColor = textColor;
-	if (m_text)
+	if (m_text && !(!is_focused() && m_value.empty()))
 		m_text->set_color(textColor);
 }
 
 void hgui::kernel::TextInput::set_caret(const std::pair<color, std::chrono::milliseconds>& caret)
 {
 	m_caret = caret;
-	display_caret();
+	if (TaskManager::is_program(m_taskID))
+	{
+		TaskManager::deprogram(m_taskID);
+		display_caret();
+	}
+}
+
+void hgui::kernel::TextInput::set_size_limit(const unsigned sizeLimit)
+{
+	m_sizeLimit = sizeLimit;
+	m_value = m_value.substr(0, m_sizeLimit);
+	update_text();
 }
 
 void hgui::kernel::TextInput::init_data()
@@ -585,6 +618,8 @@ void hgui::kernel::TextInput::text_input([[maybe_unused]] GLFWwindow* window, co
 {
 	if (const auto focused = m_focused.lock())
 	{
+		if (focused->m_sizeLimit && focused->m_value.size() >= focused->m_sizeLimit)
+			return;
 		try
 		{
 			assert_is_displayable(std::string({static_cast<char>(codepoint)}), focused->get_font());
@@ -592,9 +627,9 @@ void hgui::kernel::TextInput::text_input([[maybe_unused]] GLFWwindow* window, co
 			focused->increase_caret_position();
 		}
 		catch (...) {}
-		if (const auto onChangeWithoutWidget = std::get_if<std::function<void()>>(&focused->m_onChange); onChangeWithoutWidget && *onChangeWithoutWidget)
+		if (const auto onChangeWithoutWidget = std::get_if<std::function<void()>>(&std::get<0>(focused->m_onChanges)); onChangeWithoutWidget && *onChangeWithoutWidget)
 			(*onChangeWithoutWidget)();
-		else if (const auto onChangeWithWidget = std::get_if<std::function<void(const std::shared_ptr<TextInput>&)>>(&focused->m_onChange); onChangeWithWidget && *onChangeWithWidget)
+		else if (const auto onChangeWithWidget = std::get_if<std::function<void(const std::shared_ptr<TextInput>&)>>(&std::get<0>(focused->m_onChanges)); onChangeWithWidget && *onChangeWithWidget)
 			(*onChangeWithWidget)(focused);
 		focused->update_text();
 	}
