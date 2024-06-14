@@ -13,7 +13,7 @@ namespace hgui::kernel
 		explicit AnimatedSprite(const Sprite& animatedSprite) = delete;
 		AnimatedSprite(AnimatedSprite&& animatedSprite) = delete;
 
-		~AnimatedSprite() override = default;
+		~AnimatedSprite() override;
 
 		AnimatedSprite& operator=(const AnimatedSprite& animatedSprite) = delete;
 		AnimatedSprite& operator=(AnimatedSprite&& animatedSprite) = delete;

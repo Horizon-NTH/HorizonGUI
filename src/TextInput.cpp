@@ -37,7 +37,11 @@ hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const 
 	}
 }
 
-hgui::kernel::TextInput::~TextInput() = default;
+hgui::kernel::TextInput::~TextInput()
+{
+	if (TaskManager::is_program(m_taskID))
+		TaskManager::deprogram(m_taskID);
+}
 
 void hgui::kernel::TextInput::draw() const
 {

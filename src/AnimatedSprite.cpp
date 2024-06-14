@@ -11,6 +11,11 @@ hgui::kernel::AnimatedSprite::AnimatedSprite(const std::shared_ptr<Shader>& shad
 {
 }
 
+hgui::kernel::AnimatedSprite::~AnimatedSprite()
+{
+	stop();
+}
+
 const std::shared_ptr<hgui::kernel::GIF>& hgui::kernel::AnimatedSprite::get_gif() const
 {
 	return m_gif;
