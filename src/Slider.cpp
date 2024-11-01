@@ -1,13 +1,14 @@
-#include "../include/hgui/header/Slider.h"
-#include "../include/hgui/header/StraightLine.h"
-#include "../include/hgui/header/Circle.h"
+#include "Slider.h"
+
+#include "Circle.h"
+#include "StraightLine.h"
 
 hgui::kernel::Slider::Slider(const Ranges& range, const size& size, const point& position, const std::tuple<color, color, color>& colors, Function function) :
 	Widget(nullptr, size, position),
 	m_range(range),
+	m_colors(colors),
 	m_slider(0.f),
-	m_function(std::move(function)),
-	m_colors(colors)
+	m_function(std::move(function))
 {
 	m_range.sort();
 	set_points();

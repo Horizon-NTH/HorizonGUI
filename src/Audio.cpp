@@ -1,4 +1,6 @@
-#include "../include/hgui/header/Audio.h"
+#include "Audio.h"
+
+#include <stdexcept>
 
 hgui::kernel::AudioData::AudioData() :
 	frames(),

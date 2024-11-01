@@ -1,90 +1,88 @@
 cmake_minimum_required(VERSION 3.12+)
 cmake_policy(SET CMP0077 NEW)
+cmake_policy(SET CMP0148 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0148 NEW)
 
-project(horizongui VERSION 4.0)
+if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan_provider.cmake")
+	message(STATUS "Downloading conan_provider.cmake from Conan repository")
+	file(DOWNLOAD
+		"https://raw.githubusercontent.com/conan-io/cmake-conan/develop2/conan_provider.cmake"
+		${CMAKE_BINARY_DIR}/conan_provider.cmake)
+endif ()
 
-set(LIBTYPE STATIC)
-set(ALSOFT_UTILS OFF)
-set(ALSOFT_NO_CONFIG_UTIL ON)
-set(ALSOFT_EXAMPLES OFF)
-set(ALSOFT_EAX OFF)
-set(ALSOFT_BACKEND_WINMM OFF)
-set(BUILD_PROGRAMS OFF)
-set(BUILD_EXAMPLES OFF)
-set(BUILD_TESTING OFF)
-set(ENABLE_EXTERNAL_LIBS OFF)
-set(ENABLE_MPEG OFF)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CONAN_BUILD_PROFILE "default;auto-cmake")
+set(CONAN_HOST_PROFILE "default;auto-cmake")
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif ()
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_BINARY_DIR}/conan_provider.cmake")
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft)
+project(horizongui VERSION 0.4.0)
 
 set(HEADER_FILES
-	include/hgui/header/AnimatedSprite.h
-	include/hgui/header/Audio.h
-	include/hgui/header/Buffer.h
-	include/hgui/header/BufferManager.h
-	include/hgui/header/Button.h
-	include/hgui/header/ButtonManager.h
-	include/hgui/header/Canvas.h
-	include/hgui/header/CanvasManager.h
-	include/hgui/header/Circle.h
-	include/hgui/header/Coordinate.hpp
-	include/hgui/header/Cursor.h
-	include/hgui/header/CursorManager.h
-	include/hgui/header/Define.h
-	include/hgui/header/Drawer.h
-	include/hgui/header/Font.h
-	include/hgui/header/FontManager.h
-	include/hgui/header/FrameBuffer.h
-	include/hgui/header/Function.h
-	include/hgui/header/GIF.h
-	include/hgui/header/GLSL.h
-	include/hgui/header/Image.h
-	include/hgui/header/Include.h
-	include/hgui/header/Iterator.hpp
-	include/hgui/header/KeyBoardManager.h
-	include/hgui/header/Label.h
-	include/hgui/header/LabelManager.h
-	include/hgui/header/Maths.hpp
-	include/hgui/header/Monitor.h
-	include/hgui/header/MonitorManager.h
-	include/hgui/header/MouseManager.h
-	include/hgui/header/Rectangle.h
-	include/hgui/header/RenderBuffer.h
-	include/hgui/header/Renderer.h
-	include/hgui/header/Shader.h
-	include/hgui/header/ShaderManager.h
-	include/hgui/header/Shape.h
-	include/hgui/header/Slider.h
-	include/hgui/header/SliderManager.h
-	include/hgui/header/SoundPlayer.h
-	include/hgui/header/SoundPlayerManager.h
-	include/hgui/header/Sprite.h
-	include/hgui/header/SpriteManager.h
-	include/hgui/header/StraightLine.h
-	include/hgui/header/TagManager.h
-	include/hgui/header/TaskManager.h
-	include/hgui/header/Texture.h
-	include/hgui/header/TextureManager.h
-	include/hgui/header/Timer.h
-	include/hgui/header/Tools.h
-	include/hgui/header/Triangle.h
-	include/hgui/header/Vector.hpp
-	include/hgui/header/VertexArrayObject.h
-	include/hgui/header/VertexBufferObject.h
-	include/hgui/header/Widget.h
-	include/hgui/header/Window.h
-	include/hgui/header/WindowManager.h
-	include/hgui/HorizonGUI.h
-	include/hgui/header/TextInput.h
-	include/hgui/header/TextInputManager.h
+	include/AnimatedSprite.h
+	include/Audio.h
+	include/Buffer.h
+	include/BufferManager.h
+	include/Button.h
+	include/ButtonManager.h
+	include/Canvas.h
+	include/CanvasManager.h
+	include/Circle.h
+	include/Coordinate.hpp
+	include/Cursor.h
+	include/CursorManager.h
+	include/Define.h
+	include/Drawer.h
+	include/Font.h
+	include/FontManager.h
+	include/FrameBuffer.h
+	include/Function.h
+	include/GIF.h
+	include/GLSL.h
+	include/Image.h
+	include/Iterator.hpp
+	include/KeyBoardManager.h
+	include/Label.h
+	include/LabelManager.h
+	include/Maths.hpp
+	include/Monitor.h
+	include/MonitorManager.h
+	include/MouseManager.h
+	include/Rectangle.h
+	include/RenderBuffer.h
+	include/Renderer.h
+	include/Shader.h
+	include/ShaderManager.h
+	include/Shape.h
+	include/Slider.h
+	include/SliderManager.h
+	include/SoundPlayer.h
+	include/SoundPlayerManager.h
+	include/Sprite.h
+	include/SpriteManager.h
+	include/StraightLine.h
+	include/TagManager.h
+	include/TaskManager.h
+	include/Texture.h
+	include/TextureManager.h
+	include/Timer.h
+	include/Tools.h
+	include/Triangle.h
+	include/Vector.hpp
+	include/VertexArrayObject.h
+	include/VertexBufferObject.h
+	include/Widget.h
+	include/Window.h
+	include/WindowManager.h
+	include/TextInput.h
+	include/TextInputManager.h
 )
 
 set(SOURCE_FILES
-	src/stbi.cpp
 	src/AnimatedSprite.cpp
 	src/Audio.cpp
 	src/Buffer.cpp
@@ -134,46 +132,25 @@ set(SOURCE_FILES
 	src/Widget.cpp
 	src/Window.cpp
 	src/WindowManager.cpp
-	deps/glad/src/glad.c
 	src/TextInput.cpp
 	src/TextInputManager.cpp
 )
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include/GLFW DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm/glm DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/glad DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/glad/include/KHR DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/stb)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/stb/stb_image_write.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/stb)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/ft2build.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include/freetype DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/openal-soft/include/AL DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/snd)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/deps/libsndfile/include/sndfile.hh DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/snd)
+find_package(glfw3 3.3.8 REQUIRED)
+find_package(Freetype 2.13.2 REQUIRED)
+find_package(glm 1.0.1 REQUIRED)
+find_package(stb REQUIRED)
+find_package(glad 0.1.36 REQUIRED)
+find_package(OpenAL 1.23.1 REQUIRED)
+find_package(SndFile 1.2.2 REQUIRED)
+find_package(pybind11 2.13.5 REQUIRED)
+set(DEPS pybind11::pybind11 glfw freetype glm::glm stb::stb glad::glad OpenAL::OpenAL SndFile::sndfile)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/generate_shaders.cmake)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype OpenAL sndfile)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPS})
 
-function(set_common_target_properties target_name)
-	set_target_properties(${target_name} PROPERTIES
-		ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/$<CONFIG>"
-		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/$<CONFIG>"
-		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/$<CONFIG>"
-	)
-	if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-		set_target_properties(${target_name} PROPERTIES
-			COMPILE_OPTIONS "/Z7"
-		)
-	endif ()
-endfunction()
-
-set_common_target_properties(${PROJECT_NAME})
-set_common_target_properties(freetype)
-set_common_target_properties(glfw)
-set_common_target_properties(OpenAL)
-set_common_target_properties(sndfile)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)

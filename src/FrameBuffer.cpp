@@ -1,6 +1,7 @@
-#include "../include/hgui/header/FrameBuffer.h"
-#include "../include/hgui/header/Texture.h"
-#include "../include/hgui/header/RenderBuffer.h"
+#include "FrameBuffer.h"
+
+#include "RenderBuffer.h"
+#include "Texture.h"
 
 hgui::kernel::FrameBuffer::FrameBuffer() noexcept :
 	m_id()

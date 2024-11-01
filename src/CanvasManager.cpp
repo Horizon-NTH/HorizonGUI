@@ -1,8 +1,8 @@
-#include "../include/hgui/header/CanvasManager.h"
-#include "../include/hgui/header/Canvas.h"
-#include "../include/hgui/header/TagManager.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/GLSL.h"
+#include "CanvasManager.h"
+
+#include "ShaderManager.h"
+#include "Canvas.h"
+#include "GLSL.h"
 
 std::shared_ptr<hgui::kernel::Canvas> hgui::CanvasManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& size, const point& position, const color& color)
 {

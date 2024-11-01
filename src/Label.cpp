@@ -1,9 +1,12 @@
-#include "../include/hgui/header/Label.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/Font.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/Texture.h"
+#include "Label.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
+#include "Font.h"
+#include "Shader.h"
+#include "Texture.h"
 
 hgui::kernel::Label::Label(std::string text, const std::shared_ptr<Shader>& shader, const point& position, const std::shared_ptr<Font>& font, const unsigned int fontSize, const color& color, const bool align, const HGUI_PRECISION scale, const HGUI_PRECISION rotation) :
 	Widget(shader, size(glm::vec2(0.0f)), position),
@@ -218,7 +221,7 @@ void hgui::kernel::Label::calcul_size()
 		m_size.em_width += static_cast<float>(advance >> 6) * m_scale;
 		m_size.update();
 	}
-	m_size.undo_responsivness();
+	m_size.undo_responsiveness();
 }
 
 int hgui::kernel::Label::get_max_bearing_y() const

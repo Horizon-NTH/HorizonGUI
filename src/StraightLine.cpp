@@ -1,9 +1,12 @@
-#include "../include/hgui/header/StraightLine.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/GLSL.h"
+#include "StraightLine.h"
+
+#include <glm/ext/matrix_clip_space.hpp>
+
+#include "GLSL.h"
+#include "Shader.h"
+#include "ShaderManager.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::shape::StraightLine::StraightLine(const point& firstVertex, const point& secondVertex, const color& color, const float thickness) :
 	Shape(true, thickness, color, std::make_tuple(firstVertex, secondVertex, thickness))

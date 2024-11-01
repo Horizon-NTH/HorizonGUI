@@ -1,11 +1,14 @@
-#include "../include/hgui/header/TextInput.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/Label.h"
-#include "../include/hgui/header/Font.h"
-#include "../include/hgui/header/Drawer.h"
-#include "../include/hgui/header/TaskManager.h"
+#include "TextInput.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Drawer.h"
+#include "Font.h"
+#include "Label.h"
+#include "Shader.h"
+#include "TaskManager.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, const std::tuple<Function, Function, Function>& onChanges, const unsigned sizeLimit, const HGUI_PRECISION cornerRadius, const unsigned borderWidth) :
 	Widget(shader, size, position),
@@ -32,7 +35,7 @@ hgui::kernel::TextInput::TextInput(const std::shared_ptr<Shader>& shader, const 
 	{
 		assert_is_displayable(m_placeHolder.first, m_text->get_font());
 		m_text->set_alignement(true);
-		set_text_placment_and_height();
+		set_text_placement_and_height();
 		update_text();
 	}
 }
@@ -210,7 +213,7 @@ void hgui::kernel::TextInput::set_position(const point& newPosition)
 	m_modelMatrix = std::make_pair(scale(m_modelMatrix.first, glm::vec3(m_size.width, m_size.height, 1.0f)),
 		scale(m_modelMatrix.second, glm::vec3(m_inlineRectangleSize.width, m_inlineRectangleSize.height, 1.0f)));
 	if (m_text)
-		set_text_placment_and_height();
+		set_text_placement_and_height();
 }
 
 void hgui::kernel::TextInput::set_size(const size& newSize)
@@ -222,7 +225,7 @@ void hgui::kernel::TextInput::set_size(const size& newSize)
 	m_drawer->set_placement(m_inlineRectanglePosition, m_inlineRectangleSize);
 	set_position(m_position);
 	init_data();
-	set_text_placment_and_height();
+	set_text_placement_and_height();
 	update_text();
 }
 
@@ -233,7 +236,7 @@ void hgui::kernel::TextInput::set_label(const std::shared_ptr<Label>& newText)
 	m_text = newText;
 	m_textColor = m_text->get_color();
 	m_text->set_alignement(true);
-	set_text_placment_and_height();
+	set_text_placement_and_height();
 	update_text();
 	assert_is_displayable(m_placeHolder.first, m_text->get_font());
 	assert_is_displayable(m_value, m_text->get_font());
@@ -286,7 +289,7 @@ void hgui::kernel::TextInput::set_caret_position(unsigned caretPosition)
 void hgui::kernel::TextInput::set_font(const std::shared_ptr<Font>& font) const
 {
 	m_text->set_font(font);
-	set_text_placment_and_height();
+	set_text_placement_and_height();
 	update_text();
 	assert_is_displayable(m_placeHolder.first, font);
 	assert_is_displayable(m_value, font);
@@ -474,7 +477,7 @@ void hgui::kernel::TextInput::init_data()
 	m_VAO->unbind();
 }
 
-void hgui::kernel::TextInput::set_text_placment_and_height() const
+void hgui::kernel::TextInput::set_text_placement_and_height() const
 {
 	if (not m_text)
 		throw std::runtime_error("TEXT INPUT REQUIRES A LABEL");

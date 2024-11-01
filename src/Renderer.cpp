@@ -1,15 +1,16 @@
-#include "../include/hgui/header/Renderer.h"
-#include "../include/hgui/header/GLSL.h"
-#include "../include/hgui/header/TagManager.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/KeyBoardManager.h"
-#include "../include/hgui/header/MouseManager.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/Widget.h"
-#include "../include/hgui/header/Buffer.h"
-#include "../include/hgui/header/BufferManager.h"
-#include "../include/hgui/header/Timer.h"
+#include "Renderer.h"
+
+#include "Buffer.h"
+#include "BufferManager.h"
+#include "GLSL.h"
+#include "KeyBoardManager.h"
+#include "MouseManager.h"
+#include "Shader.h"
+#include "ShaderManager.h"
+#include "TagManager.h"
+#include "TaskManager.h"
+#include "Timer.h"
+#include "Widget.h"
 
 void hgui::Renderer::draw(const std::vector<std::string>& tags, const effects& postProcessingOption)
 {

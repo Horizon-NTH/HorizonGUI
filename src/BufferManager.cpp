@@ -1,7 +1,8 @@
-#include "../include/hgui/header/BufferManager.h"
-#include "../include/hgui/header/Buffer.h"
-#include "../include/hgui/header/TextureManager.h"
-#include "../include/hgui/header/Image.h"
+#include "BufferManager.h"
+
+#include "TextureManager.h"
+#include "Buffer.h"
+#include "Image.h"
 
 std::shared_ptr<hgui::kernel::Buffer> hgui::BufferManager::create(const std::shared_ptr<kernel::Shader>& shader, const size& bufferSize)
 {

@@ -1,6 +1,9 @@
-#include "../include/hgui/header/Font.h"
-#include "../include/hgui/header/Image.h"
-#include "../include/hgui/header/Texture.h"
+#include "Font.h"
+
+#include <freetype/freetype.h>
+
+#include "Texture.h"
+#include "Image.h"
 
 hgui::kernel::Font::Font(std::string fontPath) :
 	m_fontPath(std::move(fontPath))

@@ -1,9 +1,12 @@
-#include "../include/hgui/header/Circle.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/GLSL.h"
+#include "Circle.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Shader.h"
+#include "GLSL.h"
+#include "ShaderManager.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::shape::Circle::Circle(const point& centerPosition, const float radius, const color& color, const bool fill, float thickness) :
 	Shape(fill, thickness, color, std::make_pair(centerPosition, radius))

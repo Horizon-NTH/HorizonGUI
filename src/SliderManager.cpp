@@ -1,7 +1,9 @@
-#include "../include/hgui/header/SliderManager.h"
-#include "../include/hgui/header/TagManager.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/CursorManager.h"
+#include "SliderManager.h"
+
+#include <chrono>
+
+#include "CursorManager.h"
+#include "TaskManager.h"
 
 std::shared_ptr<hgui::kernel::Slider> hgui::SliderManager::create(const kernel::Ranges& range, const size& size, const point& position, const std::tuple<color, color, color>& colors, const Function& function)
 {

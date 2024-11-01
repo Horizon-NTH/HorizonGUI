@@ -1,11 +1,14 @@
-#include "../include/hgui/header/Button.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/Label.h"
-#include "../include/hgui/header/Texture.h"
-#include "../include/hgui/header/Renderer.h"
-#include "../include/hgui/header/Font.h"
+#include "Button.h"
+#include "Label.h"
+#include "Shader.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
+#include "Renderer.h"
+#include "Font.h"
+#include "Texture.h"
 
 hgui::kernel::Button::Button(const std::function<void()>& function, const std::shared_ptr<Shader>& shader, const size& size, const point& position, const std::shared_ptr<Label>& text, const std::tuple<color, color, color>& colors, const HGUI_PRECISION cornerRadius, const bool blurrOnHover, const std::shared_ptr<Texture>& texture) :
 	Widget(shader, size, position),
@@ -25,7 +28,7 @@ hgui::kernel::Button::Button(const std::function<void()>& function, const std::s
 	init_data();
 	if (m_text)
 		m_text->set_alignement(false);
-	set_text_placment();
+	set_text_placement();
 	truncate_text();
 }
 
@@ -104,9 +107,9 @@ void hgui::kernel::Button::set_position(const point& newPosition)
 {
 	Widget::set_position(newPosition);
 	m_modelMatrix = glm::mat4(1.0);
-	m_modelMatrix = translate(m_modelMatrix, glm::vec3(m_position.x, m_position.y, 0.0f));
+	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(m_position.x, m_position.y, 0.0f));
 	m_modelMatrix = scale(m_modelMatrix, glm::vec3(m_size.width, m_size.height, 1.0f));
-	set_text_placment();
+	set_text_placement();
 }
 
 void hgui::kernel::Button::set_size(const size& newSize)
@@ -114,7 +117,7 @@ void hgui::kernel::Button::set_size(const size& newSize)
 	Widget::set_size(newSize);
 	m_cornerAngularRadius = std::min(m_size.width, m_size.height) * 0.5f * m_cornerRadius;
 	init_data();
-	set_text_placment();
+	set_text_placement();
 	truncate_text();
 }
 
@@ -176,14 +179,14 @@ void hgui::kernel::Button::set_label(const std::shared_ptr<Label>& label)
 		m_text->set_alignement(false);
 		m_textValue = m_text->get_text();
 	}
-	set_text_placment();
+	set_text_placement();
 	truncate_text();
 }
 
 void hgui::kernel::Button::set_text(const std::string& text)
 {
 	m_textValue = text;
-	set_text_placment();
+	set_text_placement();
 	truncate_text();
 }
 
@@ -314,7 +317,7 @@ void hgui::kernel::Button::init_data()
 	m_VAO->unbind();
 }
 
-void hgui::kernel::Button::set_text_placment() const
+void hgui::kernel::Button::set_text_placement() const
 {
 	if (m_text)
 	{

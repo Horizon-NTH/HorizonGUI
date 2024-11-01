@@ -1,0 +1,9 @@
+requirements:
+  - glfw/3.3.8
+  - freetype/2.13.2
+  - glm/1.0.1
+  - stb/cci.20240531
+  - glad/0.1.36
+  - openal-soft/1.23.1
+  - libsndfile/1.2.2
+  - pybind11/2.13.5

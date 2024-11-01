@@ -1,11 +1,14 @@
-#include "../include/hgui/header/ButtonManager.h"
-#include "../include/hgui/header/Button.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/Label.h"
-#include "../include/hgui/header/LabelManager.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/CursorManager.h"
-#include "../include/hgui/header/GLSL.h"
+#include "ButtonManager.h"
+
+#include <chrono>
+
+#include "Button.h"
+#include "CursorManager.h"
+#include "LabelManager.h"
+#include "ShaderManager.h"
+#include "TaskManager.h"
+#include "GLSL.h"
+#include "Label.h"
 
 std::shared_ptr<hgui::kernel::Button> hgui::ButtonManager::create(const std::function<void()>& function, const size& size, const point& position, const std::shared_ptr<kernel::Texture>& texture, const std::variant<color, std::tuple<color, color, color>>& colors, const float borderRadius, const bool blurrOnHover, const std::string& text, const std::shared_ptr<kernel::Font>& font, const hgui::color& textColor)
 {

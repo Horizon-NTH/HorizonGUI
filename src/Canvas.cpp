@@ -1,8 +1,11 @@
-#include "../include/hgui/header/Canvas.h"
-#include "../include/hgui/header/Drawer.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
+#include "Canvas.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Drawer.h"
+#include "Shader.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::Canvas::Canvas(const std::shared_ptr<Shader>& shader, const size& size, const point& position, const color& color) :
 	Widget(shader, size, position),

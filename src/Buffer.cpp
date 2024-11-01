@@ -1,11 +1,12 @@
-#include "../include/hgui/header/Buffer.h"
-#include "../include/hgui/header/FrameBuffer.h"
-#include "../include/hgui/header/RenderBuffer.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/Texture.h"
-#include "../include/hgui/header/Image.h"
+#include "Buffer.h"
+
+#include "FrameBuffer.h"
+#include "RenderBuffer.h"
+#include "Shader.h"
+#include "Texture.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
+#include "Image.h"
 
 hgui::kernel::Buffer::Buffer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) :
 	m_shader(shader),

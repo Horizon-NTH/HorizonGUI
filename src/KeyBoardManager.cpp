@@ -1,6 +1,10 @@
-#include "../include/hgui/header/KeyBoardManager.h"
-#include "../include/hgui/header/Timer.h"
-#include "../include/hgui/header/TextInput.h"
+#include "KeyBoardManager.h"
+
+#include <numeric>
+#include <stdexcept>
+
+#include "TextInput.h"
+#include "Timer.h"
 
 bool hgui::kernel::VariantKeyComparator::operator()(const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& leftSide, const std::variant<std::pair<keys, actions>, std::pair<std::vector<keys>, actions>>& rightSide) const
 {

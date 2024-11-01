@@ -1,9 +1,10 @@
-#include "../include/hgui/header/SpriteManager.h"
-#include "../include/hgui/header/Sprite.h"
-#include "../include/hgui/header/AnimatedSprite.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/TextureManager.h"
-#include "../include/hgui/header/GLSL.h"
+#include "SpriteManager.h"
+
+#include "AnimatedSprite.h"
+#include "GLSL.h"
+#include "ShaderManager.h"
+#include "Sprite.h"
+#include "TextureManager.h"
 
 std::shared_ptr<hgui::kernel::Sprite> hgui::SpriteManager::create(const std::variant<std::shared_ptr<kernel::Texture>, std::shared_ptr<kernel::Image>>& texture, const size& size, const point& position, const color& color, HGUI_PRECISION rotation)
 {

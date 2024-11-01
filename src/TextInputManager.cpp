@@ -1,13 +1,14 @@
-#include "../include/hgui/header/TextInputManager.h"
-#include "../include/hgui/header/TextInput.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/Label.h"
-#include "../include/hgui/header/LabelManager.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/CursorManager.h"
-#include "../include/hgui/header/GLSL.h"
-#include "../include/hgui/header/KeyBoardManager.h"
-#include "../include/hgui/header/MouseManager.h"
+#include "TextInputManager.h"
+
+#include "CursorManager.h"
+#include "GLSL.h"
+#include "KeyBoardManager.h"
+#include "Label.h"
+#include "LabelManager.h"
+#include "MouseManager.h"
+#include "ShaderManager.h"
+#include "TaskManager.h"
+#include "TextInput.h"
 
 std::shared_ptr<hgui::kernel::TextInput> hgui::TextInputManager::create(const size& size, const point& position, const std::pair<std::shared_ptr<kernel::Font>, color>& text, const std::pair<color, color>& colors, const std::pair<std::string, color>& placeHolder, const std::pair<color, std::chrono::milliseconds>& caret, const std::tuple<std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>, std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>, std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>>& onChanges, const unsigned sizeLimit, const std::map<keys, std::variant<std::function<void()>, std::function<void(const std::shared_ptr<kernel::TextInput>&)>>>& onActions, const HGUI_PRECISION cornerRadius, const unsigned borderWidth)
 {

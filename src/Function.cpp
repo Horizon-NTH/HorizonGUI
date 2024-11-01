@@ -1,18 +1,22 @@
-#include "../include/hgui/header/Function.h"
-#include "../include/hgui/header/MonitorManager.h"
-#include "../include/hgui/header/SoundPlayerManager.h"
-#include "../include/hgui/header/TagManager.h"
-#include "../include/hgui/header/ButtonManager.h"
-#include "../include/hgui/header/SpriteManager.h"
-#include "../include/hgui/header/LabelManager.h"
-#include "../include/hgui/header/CanvasManager.h"
-#include "../include/hgui/header/KeyBoardManager.h"
-#include "../include/hgui/header/MouseManager.h"
-#include "../include/hgui/header/CursorManager.h"
-#include "../include/hgui/header/Renderer.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/TextInputManager.h"
-#include "../include/hgui/header/TextInput.h"
+#include "Function.h"
+
+#include <iostream>
+
+#include "MonitorManager.h"
+#include "SoundPlayerManager.h"
+#include "TagManager.h"
+#include "Define.h"
+#include "ButtonManager.h"
+#include "SpriteManager.h"
+#include "LabelManager.h"
+#include "CanvasManager.h"
+#include "Renderer.h"
+#include "TextInputManager.h"
+#include "CursorManager.h"
+#include "TextInput.h"
+#include "TaskManager.h"
+#include "KeyBoardManager.h"
+#include "MouseManager.h"
 
 void hgui::init()
 {
@@ -119,7 +123,7 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 			std::cout << "Source: Other";
 			break;
 		default:
-			std::cout << "Source: Unknow";
+			std::cout << "Source: Unknown";
 			break;
 	}
 	std::cout << std::endl;
@@ -154,7 +158,7 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 			std::cout << "Type: Other";
 			break;
 		default:
-			std::cout << "Type: Unknow";
+			std::cout << "Type: Unknown";
 			break;
 	}
 	std::cout << std::endl;
@@ -174,7 +178,7 @@ void hgui::kernel::debug(const GLenum source, const GLenum type, const unsigned 
 			std::cout << "Severity: notification";
 			break;
 		default:
-			std::cout << "Severity: Unknow";
+			std::cout << "Severity: Unknown";
 			break;
 	}
 	std::cout << std::endl;

@@ -1,7 +1,8 @@
-#include "../include/hgui/header/MouseManager.h"
-#include "../include/hgui/header/Widget.h"
-#include "../include/hgui/header/Timer.h"
-#include "../include/hgui/header/Window.h"
+#include "MouseManager.h"
+
+#include "Timer.h"
+#include "Widget.h"
+#include "Window.h"
 
 void hgui::MouseManager::bind(const std::variant<inputs, std::pair<buttons, actions>, std::tuple<inputs, buttons, actions>>& action, const std::function<void()>& function)
 {

@@ -15,11 +15,9 @@ then
     rm -rf build
 fi
 mkdir build
-cd build
-cmake ..
-cmake --build .
+cmake -S . -B build
+cmake --build build
 echo "Build completed."
-cd ..
 if [ "$erase" = true ]
 then
 	rm -rf build

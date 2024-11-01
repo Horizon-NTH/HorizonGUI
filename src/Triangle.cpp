@@ -1,9 +1,12 @@
-#include "../include/hgui/header/Triangle.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/GLSL.h"
+#include "Triangle.h"
+
+#include <glm/ext/matrix_clip_space.hpp>
+
+#include "GLSL.h"
+#include "Shader.h"
+#include "ShaderManager.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::shape::Triangle::Triangle(const point& firstVertex, const point& secondVertex, const point& thirdVertex, const color& color, const bool fill, const float thickness) :
 	Shape(fill, thickness, color, std::array{firstVertex, secondVertex, thirdVertex})

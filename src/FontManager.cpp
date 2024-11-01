@@ -1,5 +1,6 @@
-#include "../include/hgui/header/FontManager.h"
-#include "../include/hgui/header/Font.h"
+#include "FontManager.h"
+
+#include "Font.h"
 
 std::shared_ptr<hgui::kernel::Font> hgui::FontManager::create(const std::string& fontPath)
 {

@@ -1,4 +1,4 @@
-#include "../include/hgui/header/VertexArrayObject.h"
+#include "VertexArrayObject.h"
 
 hgui::kernel::VertexArrayObject::VertexArrayObject() noexcept :
 	m_id()

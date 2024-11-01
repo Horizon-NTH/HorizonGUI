@@ -1,5 +1,9 @@
-#include "../include/hgui/header/SoundPlayer.h"
-#include "../include/hgui/header/Audio.h"
+#include "SoundPlayer.h"
+
+#include <sstream>
+#include <AL/alext.h>
+
+#include "Audio.h"
 
 hgui::kernel::SoundPlayer::SoundPlayer(const std::shared_ptr<Audio>& audio) :
 	m_buffer(),
@@ -69,7 +73,7 @@ bool hgui::kernel::SoundPlayer::is_looping() const
 {
 	ALint loop;
 	alGetSourcei(m_source, AL_LOOPING, &loop);
-	check_error("CHECKNIG LOOPING STATE");
+	check_error("CHECKING LOOPING STATE");
 	return loop == AL_TRUE;
 }
 
@@ -93,7 +97,7 @@ void hgui::kernel::SoundPlayer::check_error(const std::string& message)
 	{
 		std::stringstream errorMessage;
 		errorMessage << "OPENAL ERROR (" << error << "): " << std::endl
-				<< "ERROR OCCURED WHILE " << message;
+				<< "ERROR OCCURRED WHILE " << message;
 		throw std::runtime_error(errorMessage.str());
 	}
 }

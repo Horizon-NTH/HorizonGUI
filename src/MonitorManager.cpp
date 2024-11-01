@@ -1,5 +1,9 @@
-#include "../include/hgui/header/MonitorManager.h"
-#include "../include/hgui/header/Monitor.h"
+#include "MonitorManager.h"
+
+#include <ranges>
+#include <stdexcept>
+
+#include "Monitor.h"
 
 const std::shared_ptr<hgui::kernel::Monitor>& hgui::MonitorManager::get(const std::string& monitorName)
 {

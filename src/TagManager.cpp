@@ -1,4 +1,6 @@
-#include "../include/hgui/header/TagManager.h"
+#include "TagManager.h"
+
+#include <stdexcept>
 
 std::string hgui::TagManager::create_tag(const std::string& newTag)
 {

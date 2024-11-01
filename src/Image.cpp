@@ -1,4 +1,7 @@
-#include "../include/hgui/header/Image.h"
+#include "Image.h"
+
+#include <stb_image.h>
+#include <stb_image_write.h>
 
 hgui::kernel::Image::Image(const std::string& imagePath)
 {
@@ -43,16 +46,16 @@ void hgui::kernel::Image::load_image(const std::string& filePath)
 		case 2:
 			{
 				m_data.channel = channels::GREYSCALE_ALPHA;
-				const auto newData = new stbi_uc[width * height * 4];
+				auto newData = std::make_unique<stbi_uc[]>(width * height * 4);
 				for (int i = 0; i < width * height; ++i)
 				{
-					newData[i * 4] = data[i * 2];          // Red
-					newData[i * 4 + 1] = data[i * 2];      // Green
-					newData[i * 4 + 2] = data[i * 2];      // Blue
-					newData[i * 4 + 3] = data[i * 2 + 1];  // Alpha
+					newData[i * 4] = data[i * 2];				// Red
+					newData[i * 4 + 1] = data[i * 2];			// Green
+					newData[i * 4 + 2] = data[i * 2];			// Blue
+					newData[i * 4 + 3] = data[i * 2 + 1];	// Alpha
 				}
 				stbi_image_free(data);
-				data = newData;
+				data = newData.release();
 			}
 			break;
 		case 3:
@@ -62,7 +65,7 @@ void hgui::kernel::Image::load_image(const std::string& filePath)
 			m_data.channel = channels::RGBA;
 			break;
 		default:
-			m_data.channel = channels::UNKNOW;
+			m_data.channel = channels::UNKNOWN;
 			break;
 	}
 	m_data.pixels = ImageData::pointer(data,

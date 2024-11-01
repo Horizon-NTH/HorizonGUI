@@ -1,8 +1,9 @@
-#include "../include/hgui/header/Window.h"
-#include "../include/hgui/header/Widget.h"
-#include "../include/hgui/header/Monitor.h"
-#include "../include/hgui/header/Image.h"
-#include "../include/hgui/header/Renderer.h"
+#include "Window.h"
+
+#include "Image.h"
+#include "Monitor.h"
+#include "Renderer.h"
+#include "Widget.h"
 
 hgui::kernel::Window::Window(const std::string& name, const size& size, point position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::map<options, bool>& options) :
 	m_name(name),

@@ -1,19 +1,7 @@
-bin 
-build   
-include/ft2build.h  
-include/freetype  
-include/glad  
-include/GLFW  
-include/glm  
-include/KHR  
-include/stb  
-include/AL
-include/snd
-include/hgui/header/GLSL.h
+build
+include/GLSL.h
 .vs
-.gitignore  
-lib
-CMakeSettings.json  
+CMakeSettings.json
 .vscode  
 .idea 
 cmake-build-debug
@@ -21,4 +9,3 @@ cmake-build-release
 cmake-build-relwithdebinfo
 cmake-build-minsizerel
 cmake-build-debug-event-trace
-HorizonGUI.wiki

@@ -1,8 +1,9 @@
-#include "../include/hgui/header/Drawer.h"
-#include "../include/hgui/header/Rectangle.h"
-#include "../include/hgui/header/Triangle.h"
-#include "../include/hgui/header/Circle.h"
-#include "../include/hgui/header/StraightLine.h"
+#include "Drawer.h"
+
+#include "Rectangle.h"
+#include "Triangle.h"
+#include "Circle.h"
+#include "StraightLine.h"
 
 hgui::kernel::Drawer::Drawer(point position, size size) :
 	m_position(std::move(position)),

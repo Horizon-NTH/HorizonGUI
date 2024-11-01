@@ -1,4 +1,4 @@
-#include "../include/hgui/header/VertexBufferObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::VertexBufferObject::VertexBufferObject() noexcept :
 	m_id()

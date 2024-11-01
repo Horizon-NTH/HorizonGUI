@@ -1,9 +1,12 @@
-#include "../include/hgui/header/Rectangle.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/ShaderManager.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
-#include "../include/hgui/header/GLSL.h"
+#include "Rectangle.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "GLSL.h"
+#include "Shader.h"
+#include "ShaderManager.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const point& bottomRightVertex, const color& color, const bool fill, const float thickness) :
 	Shape(fill, thickness, color, std::make_pair(topLeftVertex, bottomRightVertex))
@@ -12,9 +15,9 @@ hgui::kernel::shape::Rectangle::Rectangle(const point& topLeftVertex, const poin
 	{
 		m_shader = ShaderManager::create(HGUI_GLSL_VERTEX_RECTANGLE, HGUI_GLSL_FRAGMENT_RECTANGLE);
 	}
-	point firstVertex = topLeftVertex,
-			secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
-			thirdVertex = bottomRightVertex,
+	const point& firstVertex = topLeftVertex;
+	const point& thirdVertex = bottomRightVertex;
+	auto secondVertex = point(bottomRightVertex.x, topLeftVertex.y),
 			fourthVertex = point(topLeftVertex.x, bottomRightVertex.y);
 	if (fill)
 	{

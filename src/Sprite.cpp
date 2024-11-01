@@ -1,8 +1,11 @@
-#include "../include/hgui/header/Sprite.h"
-#include "../include/hgui/header/Shader.h"
-#include "../include/hgui/header/Texture.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
+#include "Sprite.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Shader.h"
+#include "Texture.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::Sprite::Sprite(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const size& size, const point& position, const color& color, const HGUI_PRECISION rotation) :
     Widget(shader, size, position),

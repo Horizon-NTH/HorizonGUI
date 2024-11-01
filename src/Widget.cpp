@@ -1,9 +1,12 @@
-#include "../include/hgui/header/Widget.h"
-#include "../include/hgui/header/TagManager.h"
-#include "../include/hgui/header/TaskManager.h"
-#include "../include/hgui/header/Timer.h"
-#include "../include/hgui/header/VertexArrayObject.h"
-#include "../include/hgui/header/VertexBufferObject.h"
+#include "Widget.h"
+
+#include <ranges>
+
+#include "TagManager.h"
+#include "TaskManager.h"
+#include "Timer.h"
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
 
 hgui::kernel::Widget::Widget(const std::shared_ptr<Shader>& shader, size size, point position) :
 	m_shader(shader),

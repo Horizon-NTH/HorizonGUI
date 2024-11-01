@@ -1,5 +1,6 @@
-#include "../include/hgui/header/Cursor.h"
-#include "../include/hgui/header/Image.h"
+#include "Cursor.h"
+
+#include "Image.h"
 
 hgui::kernel::Cursor::Cursor(cursors standardCursor) :
 	m_cursorPTR(nullptr),

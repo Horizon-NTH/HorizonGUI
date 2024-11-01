@@ -1,5 +1,8 @@
-#include "../include/hgui/header/GIF.h"
-#include "../include/hgui/header/Image.h"
+#include "GIF.h"
+
+#include <fstream>
+
+#include "Image.h"
 
 hgui::kernel::GIF::GIF(const std::string& gifPath) :
 	m_data()
@@ -100,7 +103,7 @@ void hgui::kernel::GIF::load_gif(const std::string& gifPath)
 			m_data.channel = channels::RGBA;
 			break;
 		default:
-			m_data.channel = channels::UNKNOW;
+			m_data.channel = channels::UNKNOWN;
 			break;
 	}
 	const int stride = static_cast<int>(m_data.size.width) * static_cast<int>(m_data.size.height) * channel;

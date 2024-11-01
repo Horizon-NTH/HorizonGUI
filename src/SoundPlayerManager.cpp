@@ -1,5 +1,8 @@
-#include "../include/hgui/header/SoundPlayerManager.h"
-#include "../include/hgui/header/SoundPlayer.h"
+#include "SoundPlayerManager.h"
+
+#include <sstream>
+
+#include "SoundPlayer.h"
 
 std::shared_ptr<hgui::kernel::SoundPlayer> hgui::SoundPlayerManager::create(const std::shared_ptr<kernel::Audio>& audio)
 {
