@@ -20,7 +20,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_BINARY_DIR}/conan_provider.cmake")
 
-project(horizongui VERSION 0.4.0)
+project(hgui VERSION 0.4.0)
 
 set(HEADER_FILES
 	include/AnimatedSprite.h
@@ -150,7 +150,55 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/generate_shaders.cmake)
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-install(TARGETS ${PROJECT_NAME} DESTINATION lib)
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}
+	EXPORT ${PROJECT_NAME}Targets
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+export(EXPORT ${PROJECT_NAME}Targets
+	FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+	NAMESPACE ${PROJECT_NAME}::
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+	FILE "${PROJECT_NAME}Targets.cmake"
+	NAMESPACE ${PROJECT_NAME}::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY SameMajorVersion
+)
+configure_package_config_file(
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+	INSTALL_DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+install(FILES
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+configure_file(
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/Uninstall.cmake.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/Uninstall.cmake"
+	IMMEDIATE @ONLY
+)
+add_custom_target(uninstall
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/Uninstall.cmake
+)

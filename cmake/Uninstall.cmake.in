@@ -1,0 +1,18 @@
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+  set(CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@")
+endif()
+
+message(STATUS "Uninstalling from ${CMAKE_INSTALL_PREFIX}")
+
+file(GLOB_RECURSE files_to_remove
+  "${CMAKE_INSTALL_PREFIX}/lib/cmake/@PROJECT_NAME@/*"
+  "${CMAKE_INSTALL_PREFIX}/include/@PROJECT_NAME@/*"
+  "${CMAKE_INSTALL_PREFIX}/lib/lib@PROJECT_NAME@*"
+)
+
+foreach(file ${files_to_remove})
+  message(STATUS "Removing ${file}")
+  file(REMOVE ${file})
+endforeach()
+
+message(STATUS "Uninstallation complete.")

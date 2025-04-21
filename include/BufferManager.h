@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Coordinate.hpp"
 
 namespace hgui

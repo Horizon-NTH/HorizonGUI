@@ -2,6 +2,7 @@
 
 #include <variant>
 #include <array>
+#include <memory>
 
 #include "Coordinate.hpp"
 

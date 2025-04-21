@@ -15,18 +15,24 @@
 
 ### C++ library
 
-> You can also simply install a pre-built version [here](https://github.com/Horizon-NTH/HorizonGUI/releases).
+> You can also check the latest release [here](https://github.com/Horizon-NTH/HorizonGUI/releases).
+
+#### Prerequisites
+
+- **[CMake](https://cmake.org/)** is required to generate the build environment.
+- **[Git](https://git-scm.com/)** is required to clone the repository.
+- **[Conan](https://conan.io/)** is required to install dependencies.
+- **[Python](https://www.python.org/)** is required if you want to build the Python binding.
 
 #### Get Source Code
 
-You first need to clone the repository. Make sure to use [git](https://git-scm.com) and don't forget to
-include `--recurse-submodules` when cloning.
+You first need to clone the repository using [git](https://git-scm.com).
 
 ```bash
-git clone https://github.com/Horizon-NTH/HorizonGUI.git --recurse-submodules
+git clone https://github.com/Horizon-NTH/HorizonGUI.git
 ```
 
-You will now able to choose between [script](#script-installation) or [manual](#manual-installation) installation
+You will now be able to choose between [script](#script-installation) or [manual](#manual-installation) installation
 
 #### Script Installation
 
@@ -59,17 +65,10 @@ Build directly using CMake:
 cmake --build .
 ```
 
-This command will create all the lib files you need in `HorizonGUI/lib`.
-
-###### Microsoft Visual Studio
-
-Alternatively, you can use [Microsoft Visual Studio](https://visualstudio.microsoft.com/) to launch the project
-and build it. Open the `horizongui.sln` file with Microsoft Visual Studio.
-
 ### Python binding
 
 To install the Python bindings, you can install it from [PyPi](https://pypi.org/project/hgui/) using this command:
-Don't forget to install the [**scikit-build-core**](https://pypi.org/project/scikit-build-core/) package.
+Remember to install the [**scikit-build-core**](https://pypi.org/project/scikit-build-core/) package.
 
 ```bash
 pip install scikit-build-core hgui
@@ -104,7 +103,7 @@ Please refer to the [wiki](https://github.com/Horizon-NTH/HorizonGUI/wiki).
 - **[STB](https://github.com/nothings/stb)** is used to load and save images.
 - **[GLM](https://glm.g-truc.net/0.9.9/index.html)** is used for mathematical operations.
 - **[OpenAL-Soft](https://github.com/kcat/openal-soft/tree/master)** is used to play sound.
-- **[Libsndfile](http://www.mega-nerd.com/libsndfile/)** is used to load audio file.
+- **[Libsndfile](http://www.mega-nerd.com/libsndfile/)** is used to load an audio file.
 - **[Pybind11](https://github.com/pybind/pybind11)** is used to create python binding.
 
 ## License

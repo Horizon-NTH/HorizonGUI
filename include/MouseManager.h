@@ -2,6 +2,8 @@
 
 #include <functional>
 #include <map>
+#include <variant>
+#include <memory>
 
 #include "Coordinate.hpp"
 
