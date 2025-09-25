@@ -156,7 +156,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/generate_shaders.cmake)
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw freetype OpenAL sndfile)
 
 function(set_common_target_properties target_name)
@@ -177,3 +177,9 @@ set_common_target_properties(freetype)
 set_common_target_properties(glfw)
 set_common_target_properties(OpenAL)
 set_common_target_properties(sndfile)
+
+option(HORIZONGUI_BUILD_EXAMPLES "Build HorizonGUI example applications" OFF)
+
+if (HORIZONGUI_BUILD_EXAMPLES)
+	add_subdirectory(examples)
+endif()

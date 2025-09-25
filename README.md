@@ -8,6 +8,25 @@
 
 **HorizonGUI** is a Graphic User Interface library made in C++ with OpenGL. There are also Python bindings available.
 
+## Showcase Example
+
+![HorizonGUI showcase window](img/showcase.png)
+
+The `examples/showcase` program demonstrates the main HorizonGUI systems working together in a single window. It creates
+UI widgets (labels, slider, button, text input), draws on a canvas, shows static and animated sprites, plays a generated
+tone through the audio stack, and reacts to mouse/keyboard input while renderer effects and delayed tasks are active.
+
+To try the showcase after configuring a build directory, build and run the `hgui-showcase` target:
+
+```bash
+cmake -S . -B build
+cmake --build build --target hgui-showcase
+./build/examples/showcase/bin/hgui-showcase
+```
+
+The executable looks for assets in `examples/assets` and will generate a temporary tone file on first launch, so make
+sure those resources stay alongside the repository when you run it.
+
 ## Installation Instructions
 
 * [C++ library](#c-library)
