@@ -4,12 +4,12 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "hgui"
-version = "4.0.3"
+version = "4.0.4"
 authors = [
     { name = "Horizon-NTH" },
 ]
 description = "Python binding of HorizonGUI a graphical interface in c++ with OpenGl"
-readme = "../README.md"
+readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: C++",
@@ -53,8 +53,18 @@ Documentation = "https://github.com/Horizon-NTH/HorizonGUI/wiki"
 
 [tool.scikit-build]
 wheel.expand-macos-universal-tags = true
-cmake.verbose = true
+build.verbose = true
 logging.level = "INFO"
 cmake.version = ">=3.15"
 build-dir = "build"
-wheel.license-files = ["../LICENSE"]
+cmake.source-dir = "python"
+wheel.license-files = ["LICENSE"]
+
+sdist.include = [
+    "README.md",
+    "LICENSE",
+    "CMakeLists.txt",
+    "python/**",
+    "src/**", "include/**",
+    "deps/libsndfile/**",
+]

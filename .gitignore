@@ -22,3 +22,4 @@ cmake-build-relwithdebinfo
 cmake-build-minsizerel
 cmake-build-debug-event-trace
 HorizonGUI.wiki
+dist
