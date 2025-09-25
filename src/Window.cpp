@@ -4,7 +4,9 @@
 #include "../include/hgui/header/Image.h"
 #include "../include/hgui/header/Renderer.h"
 
-hgui::kernel::Window::Window(const std::string& name, const size& size, point position, const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor, const std::map<options, bool>& options) :
+hgui::kernel::Window::Window(const std::string& name, const size& size, point position,
+                             const std::shared_ptr<Image>& icon, const std::shared_ptr<Monitor>& monitor,
+                             const std::map<options, bool>& options) :
 	m_name(name),
 	m_size(size),
 	m_position(std::move(position))
@@ -22,7 +24,7 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, point po
 #endif
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 	m_windowPTR = glfwCreateWindow(static_cast<int>(size.width), static_cast<int>(size.height), name.c_str(),
-		monitor ? monitor->get_monitor_ptr() : nullptr, nullptr);
+	                               monitor ? monitor->get_monitor_ptr() : nullptr, nullptr);
 	if (!m_windowPTR)
 	{
 		glfwTerminate();
@@ -35,11 +37,11 @@ hgui::kernel::Window::Window(const std::string& name, const size& size, point po
 	{
 		const auto& [size, channel, pixels] = icon->get_data();
 		const GLFWimage ico
-				{
-					.width = static_cast<int>(size.width),
-					.height = static_cast<int>(size.height),
-					.pixels = pixels.get()
-				};
+		{
+			.width = static_cast<int>(size.width),
+			.height = static_cast<int>(size.height),
+			.pixels = pixels.get()
+		};
 		glfwSetWindowIcon(m_windowPTR, 1, &ico);
 	}
 	glfwPollEvents();
@@ -98,7 +100,9 @@ void hgui::kernel::Window::size_callback(GLFWwindow* window, const int width, co
 	if (width == 0 || height == 0)
 		return;
 	auto* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win->m_size.width == static_cast<float>(width) && win->m_size.height == static_cast<float>(height))
+	if (win->m_size.width == static_cast<float>(width) && win->m_size.height == static_cast<float>(height) &&
+		EM<HGUI_PRECISION>::referenceSize.first == static_cast<float>(width) && EM<HGUI_PRECISION>::referenceSize.second
+		== static_cast<float>(height))
 		return;
 	if (glad_glViewport != nullptr)
 		glViewport(0, 0, width, height);
